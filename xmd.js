@@ -69,16 +69,16 @@ const {
   StickerTypes
 } = require('wa-sticker-formatter');
 //import chalk from 'chalk'
-const {
+/*const {
   verifierEtatJid,
   recupererActionJid
 } = require("./bdd/antilien");
 const {
   atbverifierEtatJid,
   atbrecupererActionJid
-} = require("./bdd/antibot");
+} = require("./bdd/antibot");*/
 let evt = require(__dirname + "/keizzah/keith");
-const {
+/*const {
   isUserBanned,
   addUserToBanList,
   removeUserFromBanList
@@ -92,7 +92,7 @@ const {
   isGroupOnlyAdmin,
   addGroupToOnlyAdminList,
   removeGroupFromOnlyAdminList
-} = require("./bdd/onlyAdmin");
+} = require("./bdd/onlyAdmin");*/
 //const //{loadCmd}=require("/keizzah/mesfonctions")
 let {
   reagir
@@ -940,7 +940,7 @@ if (texte && texte.startsWith('>')) {
             
  //---------------------------------------rang-count--------------------------------
              if (texte && auteurMessage.endsWith("s.whatsapp.net")) {
-  const { ajouterOuMettreAJourUserData } = require("./bdd/level"); 
+ /* const { ajouterOuMettreAJourUserData } = require("./bdd/level"); */
   try {
     await ajouterOuMettreAJourUserData(auteurMessage);
   } catch (e) {
@@ -1074,7 +1074,7 @@ if (texte && texte.startsWith('>')) {
                                        await fs.unlink("st1.webp");
 
                                     } else if(action === 'warn') {
-                                        const {getWarnCountByJID ,ajouterUtilisateurAvecWarnCount} = require('./bdd/warn') ;
+                                        /*const {getWarnCountByJID ,ajouterUtilisateurAvecWarnCount} = require('./bdd/warn') ;*/
 
                             let warn = await getWarnCountByJID(auteurMessage) ; 
                             let warnlimit = conf.WARN_COUNT
@@ -1172,7 +1172,7 @@ if (texte && texte.startsWith('>')) {
                await fs.unlink("st1.webp");
 
             } else if(action === 'warn') {
-                const {getWarnCountByJID ,ajouterUtilisateurAvecWarnCount} = require('./bdd/warn') ;
+               /* const {getWarnCountByJID ,ajouterUtilisateurAvecWarnCount} = require('./bdd/warn') ;*/
 
     let warn = await getWarnCountByJID(auteurMessage) ; 
     let warnlimit = conf.WARN_COUNT
@@ -1266,9 +1266,9 @@ if (texte && texte.startsWith('>')) {
     //fin événement message
 
     /******** evenement groupe update ****************/
-    const {
+    /*const {
   recupevents
-} = require('./bdd/welcome');
+} = require('./bdd/welcome');*/
 
 zk.ev.on('group-participants.update', async group => {
   console.log(group);
@@ -1341,9 +1341,9 @@ zk.ev.on('group-participants.update', async group => {
 
     async function activateCrons() {
       const cron = require('node-cron');
-      const {
+      /*const {
         getCron
-      } = require('./bdd/cron');
+      } = require('./bdd/cron');*/
       let crons = await getCron();
       console.log(crons);
       if (crons.length > 0) {
