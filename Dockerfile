@@ -22,4 +22,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["npm", "start" , "xmd.js"]
+CMD ["npm", "start" , "beltahinfo.js"]
