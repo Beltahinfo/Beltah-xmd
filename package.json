@@ -2,13 +2,13 @@
   "name": "BELTAH-MD",
   "version": "2.0.0",
   "description": "",
-  "main": "xmd.js",
+  "main": "beltahinfo.js",
   "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "s": "node xmd.js",
-    "start": "node xmd.js",
-    "beltahinc": "pm2 start xmd.js --attach --max-memory-restart 490M",
+    "s": "node beltahinfo.js",
+    "start": "node beltahinfo.js",
+    "beltahinc": "pm2 start beltahinfo.js --attach --max-memory-restart 490M",
     "c": "tsc"
   },
   "keywords": [
