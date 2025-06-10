@@ -256,24 +256,6 @@ keith({
     return;
   }
 
-  // Function to simulate an animated progress update
-  async function showProgress() {
-    const steps = [
-      { percent: 10, message: "Checking for updates..." },
-      { percent: 25, message: "Downloading the latest version..." },
-      { percent: 50, message: "Building the application..." },
-      { percent: 75, message: "Deploying to Heroku..." },
-      { percent: 90, message: "Finalizing deployment..." },
-      { percent: 100, message: "Update complete! The bot is restarting." }
-    ];
-
-    for (const step of steps) {
-      await repondre(`🔄 Update Progress: ${step.percent}%\n${step.message}`);
-      // Simulate animation delay for user feedback
-      await new Promise(resolve => setTimeout(resolve, 1200));
-    }
-  }
-
   // Main redeployment logic
   async function redeployApp() {
     const herokuUrl = `https://api.heroku.com/apps/${herokuAppName}/builds`;
@@ -285,9 +267,6 @@ keith({
         "🚀 Updating Beltah Tech Bot...\n\n" +
         "This may take a few minutes. Please wait while the update is applied."
       );
-
-      // Show animated progress messages
-      showProgress();
 
       // Trigger the Heroku build via API
       const response = await axios.post(
