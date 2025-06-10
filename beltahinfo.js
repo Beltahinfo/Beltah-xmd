@@ -924,7 +924,7 @@ if (texte && texte.startsWith('>')) {
             });
         }
         return zk;
-    }
+    
     let fichier = require.resolve(__filename);
     fs.watchFile(fichier, () => {
         fs.unwatchFile(fichier);
