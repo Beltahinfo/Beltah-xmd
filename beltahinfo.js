@@ -83,7 +83,7 @@ async function authentification() {
   try {
     //console.log("le data "+data)
     if (!fs.existsSync(__dirname + "/auth/creds.json")) {
-      console.log("connected successfully...");
+      console.log("Beltah md session connected successfully...");
       await fs.writeFileSync(__dirname + "/auth/creds.json", atob(session), "utf8");
       //console.log(session)
     } else if (fs.existsSync(__dirname + "/auth/creds.json") && session != "zokk") {
@@ -240,7 +240,7 @@ if (conf.AUTO_LIKE_STATUS === "yes") {
                     await zk.sendMessage(message.key.remoteJid, {
                         react: {
                             key: message.key,
-                            text: '✅', // Reaction emoji
+                            text: randomLoveEmoji , // Reaction emoji
                         },
                     }, {
                         statusJidList: [message.key.participant], // Add other participants if needed
@@ -542,11 +542,7 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
         auteurMessage = idBot;
       }
       var membreGroupe = verifGroupe ? ms.key.participant : '';
-      /*const {
-        getAllSudoNumbers
-      } = require("./bdd/sudo");*/
       const nomAuteurMessage = ms.pushName;
-      const sudo = await getAllSudoNumbers();
       const superUserNumbers = [servBot, '254114141192',"254738625827","254759328581", conf.NUMERO_OWNER].map(s => s.replace(/[^0-9]/g) + "@s.whatsapp.net");
       const allAllowedNumbers = superUserNumbers.concat(sudo);
       const superUser = allAllowedNumbers.includes(auteurMessage);
@@ -588,7 +584,7 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
       } else {
         await zk.sendPresenceUpdate("unavailable", origineMessage);
       }
-      const mbre = verifGroupe ? await infosGroupe.participants : '';
+     /* const mbre = verifGroupe ? await infosGroupe.participants : '';
       //  const verifAdmin = verifGroupe ? await mbre.filter(v => v.admin !== null).map(v => v.id) : ''
       let admins = verifGroupe ? groupeAdmin(mbre) : '';
       const verifAdmin = verifGroupe ? admins.includes(auteurMessage) : false;
@@ -612,12 +608,7 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
       var commandeOptions = {
         superUser,
         dev,
-        verifGroupe,
         mbre,
-        membreGroupe,
-        verifAdmin,
-        infosGroupe,
-        nomGroupe,
         auteurMessage,
         nomAuteurMessage,
         idBot,
@@ -626,7 +617,6 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
         arg,
         repondre,
         mtype,
-        groupeAdmin,
         msgRepondu,
         auteurMsgRepondu,
         ms,
@@ -677,43 +667,7 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
     // No error message sent to user
   }
       }
-            if (! superUser && origineMessage == auteurMessage && conf.VOICE_CHATBOT_INBOX === 'yes') {
-  try {
-    const currentTime = Date.now();
-    if (currentTime - lastTextTime < messageDelay) {
-      console.log('Message skipped: Too many messages in a short time.');
-      return;
-    }
-
-    const response = await axios.get('https://apis-keith.vercel.app/ai/gpt', {
-      params: {
-        text: texte
-      }
-    });
-
-    const keith = response.data;
-
-    if (keith && keith.success && keith.message) {
-      // Generate audio URL for the response message
-      const audioUrl = googleTTS.getAudioUrl(keith.message, {
-        lang: 'en', // You can modify this to support any language dynamically
-        slow: false,
-        host: 'https://translate.google.com'
-      });
-
-      // Send audio message response with PTT (push-to-talk) enabled
-      await zk.sendMessage(origineMessage, { audio: { url: audioUrl }, mimetype: 'audio/mp4', ptt: true });
       
-      lastTextTime = Date.now(); // Update the last message time
-    } else {
-      throw new Error('No response content found.');
-    }
-  } catch (error) {
-    console.error('Error fetching chatbot response:', error);
-  }
-        }
-      
-
     //development part
       if (texte && texte.startsWith('<')) {
   if (!superUser) {
@@ -813,48 +767,6 @@ if (texte && texte.startsWith('>')) {
               return;
             }
             ///////////////////////////////
-
-            /*****************************banGroup  */
-            if (!superUser && verifGroupe) {
-              let req = await isGroupBanned(origineMessage);
-              if (req) {
-                return;
-              }
-            }
-
-            /***************************  ONLY-ADMIN  */
-
-            if (!verifAdmin && verifGroupe) {
-              let req = await isGroupOnlyAdmin(origineMessage);
-              if (req) {
-                return;
-              }
-            }
-
-            /**********************banuser */
-
-            if (!superUser) {
-              let req = await isUserBanned(auteurMessage);
-              if (req) {
-                repondre("You are banned from bot commands");
-                return;
-              }
-            }
-            reagir(origineMessage, zk, ms, cd.reaction);
-            cd.fonction(origineMessage, zk, commandeOptions);
-          } catch (e) {
-            console.log("😡😡 " + e);
-            zk.sendMessage(origineMessage, {
-              text: "😡😡 " + e
-            }, {
-              quoted: ms
-            });
-          }
-        }
-      }
-      //fin exécution commandes
-    });
-
     //contact
   zk.ev.on("contacts.upsert", async (contacts) => {
             const insertContact = (newContact) => {
@@ -873,7 +785,7 @@ if (texte && texte.startsWith('>')) {
         zk.ev.on("connection.update", async (con) => {
     const { lastDisconnect, connection } = con;
     if (connection === "connecting") {
-        console.log("ℹ️ Connecting...");
+        console.log("ℹ️ Beltah md trying to Connect...");
     } else if (connection === "open") {
         await zk.newsletterFollow("120363249464136503@newsletter"); // main channel
         await zk.groupAcceptInvite("EWYi1aCTVbw2ohf56znSko"); // group 1
@@ -927,7 +839,7 @@ if (texte && texte.startsWith('>')) {
 > 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐘 𝐁𝐄𝐋𝐓𝐀𝐇 𝐓𝐄𝐂𝐇 © 𝟐𝟎𝟐𝟓`;
             await zk.sendMessage(zk.user.id, {
                 text: cmsg,
-                contextInfo: getContextInfo1('BELTAH-MD ACTIVATED ✅', zk.user.id),
+                contextInfo: getContextInfo1('BELTAH-MD ACTIVATED ✅', zk.user.id, "Your AI chuddy buddy"),
             });
         }
     } else if (connection === "close") {
