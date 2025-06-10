@@ -194,9 +194,8 @@ keith({ nomCom: "menu", aliases: ["liste", "helplist", "commandlist"], categorie
 ┃◦ *ɢʀᴇᴇᴛɪɴɢ :*  ${greeting}
 ┃◦ *ᴀʟɪᴠᴇ:* ${formatUptime(process.uptime())}
 ╰──────────────────╯ 
-> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴇʟᴛᴀʜ ᴛᴇᴄʜ ʜᴜʙ
-
-\n\n${readMore}`;
+> ©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴇʟᴛᴀʜ ᴛᴇᴄʜ ʜᴜʙ
+\n${readMore}`;
 
     let commandsList = "\n🛡️ *COMMAND CATEGORIES:* 🛡️\n";
 const sortedCategories = Object.keys(categorizedCommands).sort();
