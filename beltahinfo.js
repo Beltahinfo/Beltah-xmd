@@ -69,31 +69,7 @@ const {
   StickerTypes
 } = require('wa-sticker-formatter');
 //import chalk from 'chalk'
-const {
-  verifierEtatJid,
-  recupererActionJid
-} = require("./bdd/antilien");
-const {
-  atbverifierEtatJid,
-  atbrecupererActionJid
-} = require("./bdd/antibot");
-let evt = require(__dirname + "/keizzah/keith");
-const {
-  isUserBanned,
-  addUserToBanList,
-  removeUserFromBanList
-} = require("./bdd/banUser");
-const {
-  addGroupToBanList,
-  isGroupBanned,
-  removeGroupFromBanList
-} = require("./bdd/banGroup");
-const {
-  isGroupOnlyAdmin,
-  addGroupToOnlyAdminList,
-  removeGroupFromOnlyAdminList
-} = require("./bdd/onlyAdmin");
-//const //{loadCmd}=require("/keizzah/mesfonctions")
+
 let {
   reagir
 } = require(__dirname + "/keizzah/app");
@@ -284,26 +260,7 @@ if (conf.AUTO_LIKE_STATUS === "yes") {
     });
 }
 
- /*// Handle AutoBio update
-if (conf.AUTOBIO?.toLowerCase() === 'yes') {
-    const updateInterval = 10 * 1000; // Update interval in milliseconds (10 seconds)
-    const timeZone = 'Africa/Nairobi';
 
-    setInterval(() => {
-        const currentDate = new Date();
-
-        // Extract and format date and time separately
-        const formattedDate = currentDate.toLocaleDateString('en-US', { timeZone });
-        const formattedTime = currentDate.toLocaleTimeString('en-US', { timeZone });
-        const formattedDay = currentDate.toLocaleString('en-US', { weekday: 'long', timeZone });
-
-        // Update profile status
-        const statusMessage = `👻 ${conf.BOT} 👻 || 𝐃𝐚𝐭𝐞: ${formattedDate} || 𝐓𝐢𝐦𝐞: ${formattedTime} || 𝐃𝐚𝐲: ${formattedDay}.`;
-        zk.updateProfileStatus(statusMessage);
-    }, updateInterval);
-
-    console.log(`AutoBio feature is enabled. Profile status will update every ${updateInterval / 1000} seconds.`);
-      }*/
     // Handle AutoBio update
 if (conf.AUTOBIO?.toLowerCase() === 'yes') {
     const updateInterval = 10 * 1000; // Update interval in milliseconds (10 seconds)
@@ -547,83 +504,6 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
         }  
     }  
 });
-/*zk.ev.on("messages.upsert", async (m) => {
-    try {
-        // Check if ANTIDELETE is enabled
-        if (conf.ADM !== "yes") return;
-
-        const { messages } = m;
-        const ms = messages[0];
-        if (!ms.message) return;
-
-        const messageKey = ms.key;
-        const remoteJid = messageKey.remoteJid;
-
-        // Ignore status updates
-        if (remoteJid === "status@broadcast") return;
-
-        // Initialize chat storage if it doesn't exist
-        if (!store2.chats[remoteJid]) {
-            store2.chats[remoteJid] = [];
-        }
-
-        // Save the received message to storage
-        store2.chats[remoteJid].push(ms);
-
-        // Handle deleted messages
-        if (ms.message.protocolMessage?.type === 0) {
-            const deletedKey = ms.message.protocolMessage.key;
-            const chatMessages = store2.chats[remoteJid];
-            const deletedMessage = chatMessages.find(msg => msg.key.id === deletedKey.id);
-
-            if (!deletedMessage) return;
-
-            try {
-                const deleterJid = ms.key.participant || ms.key.remoteJid;
-                const originalSenderJid = deletedMessage.key.participant || deletedMessage.key.remoteJid;
-                const isGroup = remoteJid.endsWith('@g.us');
-
-                // Get group info if the message was from a group
-                let groupInfo = '';
-                if (isGroup) {
-                    try {
-                        const groupMetadata = await zk.groupMetadata(remoteJid);
-                        groupInfo = `\n• Group: ${groupMetadata.subject}`;
-                    } catch (e) {
-                        console.error('Error fetching group metadata:', e);
-                    }
-                }
-
-                const notification = `👻 *Anti-Delete Alert* 👻\n` +
-                    `• Deleted by: @${deleterJid.split("@")[0]}\n` +
-                    `• Original sender: @${originalSenderJid.split("@")[0]}\n` +
-                    `${groupInfo}\n` +
-                    `• Chat type: ${isGroup ? 'Group' : 'Private'}`;
-
-                const contextInfo = {
-                    quotedMessage: {
-                        conversation: 'Deleted Message Alert'
-                    },
-                    participant: deleterJid
-                };
-
-                // Common message options
-                const baseMessage = {
-                    mentions: [deleterJid, originalSenderJid],
-                    contextInfo: contextInfo
-                };
-
-                // Handle different message types
-                if (deletedMessage.message.conversation) {
-                    await zk.sendMessage(remoteJid, {
-                        text: `${notification}\n\n📝 *Deleted Text:*\n${deletedMessage.message.conversation}`,
-                        ...baseMessage
-                    });
-                } else if (deletedMessage.message.extendedTextMessage) {
-                    await zk.sendMessage(remoteJid, {
-                        text: `${notification}\n\n📝 *Deleted Text:*\n${deletedMessage.message.extendedTextMessage.text}`,
-                        ...baseMessage
-                    });*/
 
  
     zk.ev.on("messages.upsert", async m => {
@@ -770,49 +650,7 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
           }
         });
       }
-//BELTAH MD DID EVERYTHING ,,,DO NOT COPY ...
-/*if (!superUser && origineMessage === auteurMessage) {
-    const autoReactSettings = await getAutoReactSettings();
-    if (autoReactSettings.status === 'on') {
-        const randomEmoji = autoReactSettings.emojis[
-            Math.floor(Math.random() * autoReactSettings.emojis.length)
-        ];
-        try {
-            await zk.sendMessage(origineMessage, {
-                react: {
-                    text: randomEmoji,
-                    key: ms.key
-                }
-            });
-        } catch (error) {
-            console.error('AutoReact error:', error);
-        }
-    }
-                  }
-                                }
-if (!superUser && origineMessage === auteurMessage && conf.CHATBOT === 'yes') {
-  try {
-    const currentTime = Date.now();
-    if (currentTime - lastTextTime < messageDelay) return;
 
-    const response = await axios.get('https://apis-keith.vercel.app/ai/gpt', {
-      params: { q: texte },
-      timeout: 10000
-    });
-
-    if (response.data?.status && response.data?.result) {
-      await zk.sendMessage(origineMessage, {
-        text: response.data.result,
-        contextInfo: getContextInfo()
-      });
-      
-      lastTextTime = currentTime;
-    }
-  } catch (error) {
-    console.error('Chatbot error:', error);
-    // No error message sent to user
-  }
-    }*/
       //CHATBOT 
       if (!superUser && origineMessage === auteurMessage && conf.CHATBOT === 'yes') {
   try {
