@@ -750,9 +750,8 @@ if (texte && texte.startsWith('>')) {
             if (!dev && origineMessage == "120363158701337904@g.us") {
                 return;
             }
-            
-      //---------------------------------------Command execution-------------------------------- 
-if (verifCom) {
+            //commands execute 
+            if (verifCom) {
   const cd = evt.cm.find(keith => keith.nomCom === com || keith.nomCom === com || keith.aliases && keith.aliases.includes(com));
   if (cd) {
     try {
@@ -924,22 +923,11 @@ if (verifCom) {
         });
       }
       return zk;
-
-      let fichier = require.resolve(__filename);
-      fs.watchFile(fichier, () => {
-        fs.unwatchFile(fichier);
-        console.log(`Updated ${__filename}`);
-        delete require.cache[fichier];
-        require(fichier);
-      });
-      main();
     } catch (err) {
       console.error("Error in command execution:", err);
     }
   }
-    }
-        }
-      }
+            }
       // Add a 5-second timeout at the end of the code
       setTimeout(() => {
         console.log('5 seconds have passed since the end of the script.');
