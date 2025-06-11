@@ -751,78 +751,78 @@ if (texte && texte.startsWith('>')) {
                 return;
             }
             
- //---------------------------------------Command execution-------------------------------- 
-      if (verifCom) {
-        const cd = evt.cm.find(keith => keith.nomCom === com || keith.nomCom === com || keith.aliases && keith.aliases.includes(com));
-        if (cd) {
-          try {
-            if (conf.MODE.toLocaleLowerCase() != 'yes' && !superUser) {
-              return;
-            }
+      //---------------------------------------Command execution-------------------------------- 
+if (verifCom) {
+  const cd = evt.cm.find(keith => keith.nomCom === com || keith.nomCom === com || keith.aliases && keith.aliases.includes(com));
+  if (cd) {
+    try {
+      if (conf.MODE.toLocaleLowerCase() != 'yes' && !superUser) {
+        return;
+      }
 
-            /******************* PM_PERMT***************/
+      /******************* PM_PERMT***************/
 
-            if (!superUser && origineMessage === auteurMessage && conf.PM_PERMIT === "yes") {
-              repondre("ᴀᴄᴄᴇss ᴅᴇɴɪᴇᴅ ❗❗\n\n> ʏᴏᴜ ʜᴀᴠᴇ ɴᴏ ᴀᴄᴄᴇss ᴏғ ʙᴇʟᴛᴀʜ-ᴍᴅ ɪɴ ᴘᴍ.");
-              return;
+      if (!superUser && origineMessage === auteurMessage && conf.PM_PERMIT === "yes") {
+        repondre("ᴀᴄᴄᴇss ᴅᴇɴɪᴇᴅ ❗❗\n\n> ʏᴏᴜ ʜᴀᴠᴇ ɴᴏ ᴀᴄᴄᴇss ᴏғ ʙᴇʟᴛᴀʜ-ᴍᴅ ɪɴ ᴘᴍ.");
+        return;
+      }
+      ///////////////////////////////
+      //contact
+      zk.ev.on("contacts.upsert", async (contacts) => {
+        const insertContact = (newContact) => {
+          for (const contact of newContact) {
+            if (store.contacts[contact.id]) {
+              Object.assign(store.contacts[contact.id], contact);
             }
-            ///////////////////////////////
-    //contact
-  zk.ev.on("contacts.upsert", async (contacts) => {
-            const insertContact = (newContact) => {
-                for (const contact of newContact) {
-                    if (store.contacts[contact.id]) {
-                        Object.assign(store.contacts[contact.id], contact);
-                    }
-                    else {
-                        store.contacts[contact.id] = contact;
-                    }
-                }
-                return;
-            };
-            insertContact(contacts);
-        });
-        zk.ev.on("connection.update", async (con) => {
-    const { lastDisconnect, connection } = con;
-    if (connection === "connecting") {
-        console.log("ℹ️ Beltah md trying to Connect...");
-    } else if (connection === "open") {
-        await zk.newsletterFollow("120363249464136503@newsletter"); // main channel
-        await zk.groupAcceptInvite("EWYi1aCTVbw2ohf56znSko"); // group 1
-        await zk.groupAcceptInvite("E6is3oN7RdEDl7OiA3b0S3"); // group 2
-        await zk.groupAcceptInvite("F9eGks0Pnw7JJrozICzBo4"); // group 3
-        console.log("✅ Connection successful! ☺️");
-        console.log("--");
-        await (0, baileys_1.delay)(200);
-        console.log("------");
-        await (0, baileys_1.delay)(300);
-        console.log("------------------/-----");
-        console.log("Beltah MD bot is online 🕸\n\n");
-        console.log("Loading commands...\n");
-        fs.readdirSync(__dirname + "/commands").forEach((fichier) => {
+            else {
+              store.contacts[contact.id] = contact;
+            }
+          }
+          return;
+        };
+        insertContact(contacts);
+      });
+      zk.ev.on("connection.update", async (con) => {
+        const { lastDisconnect, connection } = con;
+        if (connection === "connecting") {
+          console.log("ℹ️ Beltah md trying to Connect...");
+        } else if (connection === "open") {
+          await zk.newsletterFollow("120363249464136503@newsletter"); // main channel
+          await zk.groupAcceptInvite("EWYi1aCTVbw2ohf56znSko"); // group 1
+          await zk.groupAcceptInvite("E6is3oN7RdEDl7OiA3b0S3"); // group 2
+          await zk.groupAcceptInvite("F9eGks0Pnw7JJrozICzBo4"); // group 3
+          console.log("✅ Connection successful! ☺️");
+          console.log("--");
+          await (0, baileys_1.delay)(200);
+          console.log("------");
+          await (0, baileys_1.delay)(300);
+          console.log("------------------/-----");
+          console.log("Beltah MD bot is online 🕸\n\n");
+          console.log("Loading commands...\n");
+          fs.readdirSync(__dirname + "/commands").forEach((fichier) => {
             if (path.extname(fichier).toLowerCase() == ".js") {
-                try {
-                    require(__dirname + "/commands/" + fichier);
-                    console.log(fichier + " installed ✔️");
-                } catch (e) {
-                    console.log(`${fichier} could not be loaded due to the following reasons: ${e}`);
-                }
-                (0, baileys_1.delay)(300);
+              try {
+                require(__dirname + "/commands/" + fichier);
+                console.log(fichier + " installed ✔️");
+              } catch (e) {
+                console.log(`${fichier} could not be loaded due to the following reasons: ${e}`);
+              }
+              (0, baileys_1.delay)(300);
             }
-        });
+          });
 
-        (0, baileys_1.delay)(700);
-        var md;
-        if (conf.MODE.toLocaleLowerCase() === "yes") {
+          (0, baileys_1.delay)(700);
+          var md;
+          if (conf.MODE.toLocaleLowerCase() === "yes") {
             md = "PUBLIC";
-        } else if (conf.MODE.toLocaleLowerCase() === "no") {
+          } else if (conf.MODE.toLocaleLowerCase() === "no") {
             md = "PRIVATE";
-        } else {
+          } else {
             md = "UNDEFINED";
-        }
-        console.log("Command loading completed ✅");
+          }
+          console.log("Command loading completed ✅");
 
-        if ((conf.DP).toLowerCase() === "yes") {
+          if ((conf.DP).toLowerCase() === "yes") {
             let cmsg = `╭═══════⩥
 ║   Owner: *${conf.OWNER_NAME}*
 ║   Prefix : [  ${prefixe}  ]
@@ -838,100 +838,103 @@ if (texte && texte.startsWith('>')) {
 ╰══════════════════⩥
 > 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐘 𝐁𝐄𝐋𝐓𝐀𝐇 𝐓𝐄𝐂𝐇 © 𝟐𝟎𝟐𝟓`;
             await zk.sendMessage(zk.user.id, {
-                text: cmsg,
-                contextInfo: getContextInfo1('BELTAH-MD ACTIVATED ✅', zk.user.id, "Your AI chuddy buddy"),
+              text: cmsg,
+              contextInfo: getContextInfo1('BELTAH-MD ACTIVATED ✅', zk.user.id, "Your AI chuddy buddy"),
             });
-        }
-    } else if (connection === "close") {
-        let raisonDeconnexion = new boom_1.Boom(lastDisconnect?.error)?.output.statusCode;
-        if (raisonDeconnexion === baileys_1.DisconnectReason.badSession) {
+          }
+        } else if (connection === "close") {
+          let raisonDeconnexion = new boom_1.Boom(lastDisconnect?.error)?.output.statusCode;
+          if (raisonDeconnexion === baileys_1.DisconnectReason.badSession) {
             console.log('Wrong session Id format, rescan again...');
-        } else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionClosed) {
+          } else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionClosed) {
             console.log('!!! connexion fermée, reconnexion en cours ...');
             main();
-        } else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionLost) {
+          } else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionLost) {
             console.log('connection error😞 ,,Beltah trying to reconnect...');
             main();
-        } else if (raisonDeconnexion === baileys_1.DisconnectReason?.connectionReplaced) {
+          } else if (raisonDeconnexion === baileys_1.DisconnectReason?.connectionReplaced) {
             console.log('connexion réplacée ,,, une sesssion est déjà ouverte veuillez la fermer svp !!!');
-        } else if (raisonDeconnexion === baileys_1.DisconnectReason.loggedOut) {
+          } else if (raisonDeconnexion === baileys_1.DisconnectReason.loggedOut) {
             console.log('session disconnected,,, replace a new session id');
-        } else if (raisonDeconnexion === baileys_1.DisconnectReason.restartRequired) {
+          } else if (raisonDeconnexion === baileys_1.DisconnectReason.restartRequired) {
             console.log('redémarrage en cours ▶️');
             main();
-        } else {
+          } else {
             console.log("redemarrage sur le coup de l'erreur  ", raisonDeconnexion);
             const { exec } = require("child_process");
             exec("pm2 restart all");
+          }
+          main();
         }
-        main();
-    }
-});
-    //événement authentification 
-    zk.ev.on("creds.update", saveCreds);
-    //fin événement authentification 
-    //
-    /** ************* */
-    //fonctions utiles
-        zk.downloadAndSaveMediaMessage = async (message, filename = '', attachExtension = true) => {
-            let quoted = message.msg ? message.msg : message;
-            let mime = (message.msg || message).mimetype || '';
-            let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0];
-            const stream = await (0, baileys_1.downloadContentFromMessage)(quoted, messageType);
-            let buffer = Buffer.from([]);
-            for await (const chunk of stream) {
-                buffer = Buffer.concat([buffer, chunk]);
+      });
+      //événement authentification 
+      zk.ev.on("creds.update", saveCreds);
+      //fin événement authentification 
+      //
+      /** ************* */
+      //fonctions utiles
+      zk.downloadAndSaveMediaMessage = async (message, filename = '', attachExtension = true) => {
+        let quoted = message.msg ? message.msg : message;
+        let mime = (message.msg || message).mimetype || '';
+        let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0];
+        const stream = await (0, baileys_1.downloadContentFromMessage)(quoted, messageType);
+        let buffer = Buffer.from([]);
+        for await (const chunk of stream) {
+          buffer = Buffer.concat([buffer, chunk]);
+        }
+        let type = await FileType.fromBuffer(buffer);
+        let trueFileName = './' + filename + '.' + type.ext;
+        await fs.writeFileSync(trueFileName, buffer);
+        return trueFileName;
+      };
+      zk.awaitForMessage = async (options = {}) => {
+        return new Promise((resolve, reject) => {
+          if (typeof options !== 'object') reject(new Error('Options must be an object'));
+          if (typeof options.sender !== 'string') reject(new Error('Sender must be a string'));
+          if (typeof options.chatJid !== 'string') reject(new Error('ChatJid must be a string'));
+          if (options.timeout && typeof options.timeout !== 'number') reject(new Error('Timeout must be a number'));
+          if (options.filter && typeof options.filter !== 'function') reject(new Error('Filter must be a function'));
+          const timeout = options?.timeout || undefined;
+          const filter = options?.filter || (() => true);
+          let interval = undefined
+          let listener = (data) => {
+            let { type, messages } = data;
+            if (type == "notify") {
+              for (let message of messages) {
+                const fromMe = message.key.fromMe;
+                const chatId = message.key.remoteJid;
+                const isGroup = chatId.endsWith('@g.us');
+                const isStatus = chatId == 'status@broadcast';
+                const sender = fromMe ? zk.user.id.replace(/:.*@/g, '@') : (isGroup || isStatus) ? message.key.participant.replace(/:.*@/g, '@') : chatId;
+                if (sender == options.sender && chatId == options.chatJid && filter(message)) {
+                  zk.ev.off('messages.upsert', listener);
+                  clearTimeout(interval);
+                  resolve(message);
+                }
+              }
             }
-            let type = await FileType.fromBuffer(buffer);
-            let trueFileName = './' + filename + '.' + type.ext;
-            await fs.writeFileSync(trueFileName, buffer);
-            return trueFileName;
-        };
-        zk.awaitForMessage = async (options = {}) => {
-            return new Promise((resolve, reject) => {
-                if (typeof options !== 'object') reject(new Error('Options must be an object'));
-                if (typeof options.sender !== 'string') reject(new Error('Sender must be a string'));
-                if (typeof options.chatJid !== 'string') reject(new Error('ChatJid must be a string'));
-                if (options.timeout && typeof options.timeout !== 'number') reject(new Error('Timeout must be a number'));
-                if (options.filter && typeof options.filter !== 'function') reject(new Error('Filter must be a function'));
-                const timeout = options?.timeout || undefined;
-                const filter = options?.filter || (() => true);
-                let interval = undefined
-                let listener = (data) => {
-                    let { type, messages } = data;
-                    if (type == "notify") {
-                        for (let message of messages) {
-                            const fromMe = message.key.fromMe;
-                            const chatId = message.key.remoteJid;
-                            const isGroup = chatId.endsWith('@g.us');
-                            const isStatus = chatId == 'status@broadcast';
-                            const sender = fromMe ? zk.user.id.replace(/:.*@/g, '@') : (isGroup || isStatus) ? message.key.participant.replace(/:.*@/g, '@') : chatId;
-                            if (sender == options.sender && chatId == options.chatJid && filter(message)) {
-                                zk.ev.off('messages.upsert', listener);
-                                clearTimeout(interval);
-                                resolve(message);
-                            }
-                        }
-                    }
-                }
-                zk.ev.on('messages.upsert', listener);
-                if (timeout) {
-                    interval = setTimeout(() => {
-                        zk.ev.off('messages.upsert', listener);
-                        reject(new Error('Timeout'));
-                    }, timeout);
-                }
-            });
-        }
-        return zk;
-    
-    let fichier = require.resolve(__filename);
-    fs.watchFile(fichier, () => {
+          }
+          zk.ev.on('messages.upsert', listener);
+          if (timeout) {
+            interval = setTimeout(() => {
+              zk.ev.off('messages.upsert', listener);
+              reject(new Error('Timeout'));
+            }, timeout);
+          }
+        });
+      }
+      return zk;
+
+      let fichier = require.resolve(__filename);
+      fs.watchFile(fichier, () => {
         fs.unwatchFile(fichier);
         console.log(`Updated ${__filename}`);
         delete require.cache[fichier];
         require(fichier);
-    });
-    main();
-}, 5000);
- 
+      });
+      main();
+    } catch (err) {
+      console.error("Error in command execution:", err);
+    }
+  }
+    }
