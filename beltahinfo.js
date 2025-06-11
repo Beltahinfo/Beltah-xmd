@@ -938,7 +938,13 @@ if (verifCom) {
     }
   }
     }
+        }
+      }
       // Add a 5-second timeout at the end of the code
-setTimeout(() => {
-  console.log('5 seconds have passed since the end of the script.');
-}, 5000);
+      setTimeout(() => {
+        console.log('5 seconds have passed since the end of the script.');
+      }, 5000);
+    } // Close main
+  // Call main inside setTimeout, as originally intended
+  main();
+}, 3000); // Close setTimeout started at line 105
