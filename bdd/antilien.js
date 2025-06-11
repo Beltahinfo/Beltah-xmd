@@ -1,8 +1,7 @@
 require("dotenv").config();
 const { Pool } = require("pg");
 let s =require("../set")
-var dbUrl=s.DATABASE_URL?s.DATABASE_URL:"postgresql://beltahke:CdiT5wd6lnosDJyqVtiuHMAeB64DU24b@dpg-d12fn6juibrs73f61n0g-a.oregon-postgres.render.com/beltahtechpg";
-
+var dbUrl=s.DATABASE_URL?s.DATABASE_URL:"postgresql://beltahke:CdiT5wd6lnosDJyqVtiuHMAeB64DU24b@dpg-d12fn6juibrs73f61n0g-a.oregon-postgres.render.com/beltahtechpg"
 const proConfig = {
   connectionString:dbUrl ,
   ssl: {
