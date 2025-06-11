@@ -938,3 +938,7 @@ if (verifCom) {
     }
   }
     }
+      // Add a 5-second timeout at the end of the code
+setTimeout(() => {
+  console.log('5 seconds have passed since the end of the script.');
+}, 5000);
