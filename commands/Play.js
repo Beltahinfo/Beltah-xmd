@@ -150,11 +150,10 @@ keith({
     }, { quoted: fgg });
 
     const apis = [
-      `https://api.davidcyriltech.my.id/download/ytmp3?url=${encodeURIComponent(video.url)}`,
-      `https://www.dark-yasiya-api.site/download/ytmp3?url=${encodeURIComponent(video.url)}`,
+      `https://noobs-api.top/ytmp3?url=${encodeURIComponent(video.url)}`
       `https://api.giftedtech.web.id/api/download/dlmp3?url=${encodeURIComponent(video.url)}&apikey=gifted-md`,
       `https://api.dreaded.site/api/ytdl/audio?url=${encodeURIComponent(video.url)}`
-    ];
+];
 
     const downloadData = await downloadFromApis(apis);
     const { download_url, title } = downloadData.result;
@@ -208,11 +207,11 @@ keith({
     }, { quoted: fgg });
 
     const apis = [
-      `https://api.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(video.url)}`,
-      `https://www.dark-yasiya-api.site/download/ytmp4?url=${encodeURIComponent(video.url)}`,
-      `https://api.giftedtech.web.id/api/download/dlmp4?url=${encodeURIComponent(video.url)}&apikey=gifted-md`,
-      `https://api.dreaded.site/api/ytdl/video?url=${encodeURIComponent(video.url)}`
-    ];
+      `https://noobs-api.top/ytmp4?url=${encodeURIComponent(video.url)}`
+      `https://api.giftedtech.web.id/api/download/dlmp3?url=${encodeURIComponent(video.url)}&apikey=gifted-md`,
+      `https://api.dreaded.site/api/ytdl/audio?url=${encodeURIComponent(video.url)}`
+];
+
 
     const downloadData = await downloadFromApis(apis);
     const { download_url, title } = downloadData.result;
