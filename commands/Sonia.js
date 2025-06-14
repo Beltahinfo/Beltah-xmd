@@ -10,16 +10,13 @@ const { repondre } = require(__dirname + "/../keizzah/context");
 const menuTrack = new Map(); // messageId => { video, userJid }
 
 // Utility: You need to define or import getContextInfo and searchYouTube and downloadFromApis somewhere above this code block.
-// Example for searchYouTube:
 async function searchYouTube(query) {
   const results = await ytSearch(query);
   return results.videos[0];
 }
-// Example for getContextInfo (dummy, adapt as needed):
 function getContextInfo(title, userJid, thumbnail) {
   return { externalAdReply: { title, sourceUrl: '', mediaUrl: thumbnail, mediaType: 1, thumbnailUrl: thumbnail, previewType: 'PHOTO', showAdAttribution: true }, mentionedJid: [userJid] };
 }
-// Example for downloadFromApis (audio):
 async function downloadFromApis(apis) {
   for (let api of apis) {
     try {
@@ -29,11 +26,10 @@ async function downloadFromApis(apis) {
   }
   throw new Error("No working audio API found.");
 }
-// Example for downloadVideoFromApis (video):
 async function downloadVideoFromApis(videoUrl) {
   const apis = [
-  `https://noobs-api.top/ytmp3?url=${encodeURIComponent(video.url)}`
-];
+    `https://noobs-api.top/ytmp4?url=${encodeURIComponent(videoUrl)}`
+  ];
   for (let api of apis) {
     try {
       const { data } = await axios.get(api);
@@ -60,6 +56,11 @@ keith({
     const query = arg.join(" ");
     const video = await searchYouTube(query);
 
+    // Defensive: Ensure video and video fields exist
+    if (!video || !video.title || !video.thumbnail || !video.url) {
+      return repondre(zk, dest, ms, "Couldn't find matching video on YouTube.");
+    }
+
     const menuMessage = `*${video.title}*\n\n` +
       `🧺 DOWNLOAD OPTIONS - Reply with number:\n` +
       `1. 🎵 Download Audio\n` +
@@ -73,7 +74,6 @@ keith({
       contextInfo: getContextInfo(video.title, userJid, video.thumbnail)
     }, { quoted: ms });
 
-    // Track the menu message for reply handling
     menuTrack.set(sentMsg.key.id, { video, userJid });
 
   } catch (error) {
@@ -104,16 +104,26 @@ async function handleIncomingMessage(msg, zk) {
     // Audio download logic
     try {
       const apis = [
-  `https://noobs-api.top/ytmp3?url=${encodeURIComponent(video.url)}`
-];
+        `https://noobs-api.top/ytmp3?url=${encodeURIComponent(video.url)}`
+      ];
       const downloadData = await downloadFromApis(apis);
-      const { download_url, title } = downloadData.result;
 
+      // Defensive: Ensure download_url exists and is a valid string
+      if (
+        !downloadData ||
+        !downloadData.result ||
+        typeof downloadData.result.download_url !== 'string' ||
+        !downloadData.result.download_url
+      ) {
+        throw new Error("Invalid download data received.");
+      }
+
+      const { download_url, title } = downloadData.result;
       const audioPayload = {
         audio: { url: download_url },
         mimetype: 'audio/mp4',
-        caption: `🎵 *${title}*`,
-        contextInfo: getContextInfo(title, userJid, video.thumbnail)
+        caption: `🎵 *${title || video.title}*`,
+        contextInfo: getContextInfo(title || video.title, userJid, video.thumbnail)
       };
       await zk.sendMessage(msg.key.remoteJid, audioPayload, { quoted: msg });
     } catch (e) {
@@ -124,13 +134,22 @@ async function handleIncomingMessage(msg, zk) {
     // Video download logic
     try {
       const downloadData = await downloadVideoFromApis(video.url);
-      const { download_url, title } = downloadData.result;
 
+      if (
+        !downloadData ||
+        !downloadData.result ||
+        typeof downloadData.result.download_url !== 'string' ||
+        !downloadData.result.download_url
+      ) {
+        throw new Error("Invalid download data received.");
+      }
+
+      const { download_url, title } = downloadData.result;
       const videoPayload = {
         video: { url: download_url },
         mimetype: 'video/mp4',
-        caption: `🎥 *${title}*`,
-        contextInfo: getContextInfo(title, userJid, video.thumbnail)
+        caption: `🎥 *${title || video.title}*`,
+        contextInfo: getContextInfo(title || video.title, userJid, video.thumbnail)
       };
       await zk.sendMessage(msg.key.remoteJid, videoPayload, { quoted: msg });
     } catch (e) {
