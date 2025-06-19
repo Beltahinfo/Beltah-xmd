@@ -101,9 +101,10 @@ keith(
                           `*🌐 Latency:* ${latency}ms\n` +
                           `> *⚡ Powered by Beltah Tech Team*`;
 
+            // Removed contextInfo from this sendMessage as requested
       await zk.sendMessage(
         dest,
-        { text: pingMessage, contextInfo: getContextInfo("Ping Command Results") },
+        { text: pingMessage },
         { quoted: fgg }
       );
     } catch (error) {
@@ -142,9 +143,10 @@ keith(
                             `*🛸 Uptime:* ${formattedUptime}\n` +
                             `> *⚡ Powered by Beltah Tech Team*`;
 
+            // Removed contextInfo from this sendMessage as requested
       await zk.sendMessage(
         dest,
-        { text: uptimeMessage, contextInfo: getContextInfo("Uptime Command Results") },
+        { text: uptimeMessage },
         { quoted: fgg }
       );
     } catch (error) {
