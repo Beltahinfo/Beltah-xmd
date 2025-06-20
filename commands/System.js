@@ -311,3 +311,98 @@ keith({
     );
   }
 });
+const { keith } = require('../keizzah/keith');
+const axios = require('axios');
+
+const { HEROKU_API_KEY, HEROKU_APP_NAME } = process.env;
+
+module.exports = [
+  {
+    name: 'update',
+    get flashOnly() {
+      return keith();
+    },
+    description: 'Check for new GitHub commits and optionally trigger update.',
+    category: 'HEROKU',
+    ownerOnly: true,
+
+    execute: async (bot, msg, args) => {
+      const fromJid = msg.key?.remoteJid || msg.chat || msg.from;
+
+      if (!HEROKU_API_KEY || !HEROKU_APP_NAME) {
+        return bot.sendMessage(fromJid, {
+          text: '⚠️ HEROKU_API_KEY or HEROKU_APP_NAME is not set in environment.'
+        }, { quoted: msg });
+      }
+
+      const subcommand = args[0]?.toLowerCase();
+
+      try {
+        if (subcommand === 'now') {
+          await bot.sendMessage(fromJid, {
+            text: '🚀 Updating bot now. Please wait 1-2 minutes...'
+          }, { quoted: msg });
+
+          await axios.post(
+            `https://api.heroku.com/apps/${HEROKU_APP_NAME}/builds`,
+            {
+              source_blob: {
+                url: 'https://github.com/Beltahinfo/Beltah-xmd/tarball/main'
+              }
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${HEROKU_API_KEY}`,
+                Accept: 'application/vnd.heroku+json; version=3',
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+
+          return bot.sendMessage(fromJid, {
+            text: '✅ Redeploy triggered successfully!'
+          }, { quoted: msg });
+
+        } else {
+          // Get latest commit info from GitHub
+          const githubRes = await axios.get(
+            'https://api.github.com/repos/Beltahinfo/Beltah-xmd/commits/main'
+          );
+          const latestCommit = githubRes.data;
+          const latestSha = latestCommit.sha;
+
+          // Get last build info from Heroku
+          const herokuRes = await axios.get(
+            `https://api.heroku.com/apps/${HEROKU_APP_NAME}/builds`,
+            {
+              headers: {
+                Authorization: `Bearer ${HEROKU_API_KEY}`,
+                Accept: 'application/vnd.heroku+json; version=3'
+              }
+            }
+          );
+
+          const lastBuild = herokuRes.data[0];
+          const deployedSha = lastBuild?.source_blob?.url || '';
+          const alreadyDeployed = deployedSha.includes(latestSha);
+
+          if (alreadyDeployed) {
+            return bot.sendMessage(fromJid, {
+              text: '✅ Bot is already up to date with the latest commit.'
+            }, { quoted: msg });
+          }
+
+          return bot.sendMessage(fromJid, {
+            text: `🆕 New commit found!\n\n*Message:* ${latestCommit.commit.message}\n*Author:* ${latestCommit.commit.author.name}\n\nType *update now* to update your bot.`
+          }, { quoted: msg });
+        }
+      } catch (error) {
+        const errMsg = error.response?.data?.message || error.message;
+        console.error('Update failed:', errMsg);
+        return bot.sendMessage(fromJid, {
+          text: `❌ Error: ${errMsg}`
+        }, { quoted: msg });
+      }
+    }
+  }
+];
