@@ -55,10 +55,10 @@ function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, th
       forwardingScore: 999,
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
-         newsletterJid: "120363249464136503@newsletter",
-         newsletterName: "🤖 𝐁𝐄𝐋𝐓𝐀𝐇 𝐀𝐈 𝐂𝐇𝐀𝐓𝐁𝐎𝐓 🤖",
-         serverMessageId: Math.floor(100000 + Math.random() * 900000),
-     },
+        newsletterJid: "120363249464136503@newsletter",
+        newsletterName: "Beltah Tech Info",
+        serverMessageId: Math.floor(100000 + Math.random() * 900000),
+      },
       externalAdReply: {
         showAdAttribution: true,
         title,
@@ -74,6 +74,7 @@ function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, th
 }
 
 // Commands
+
 // Ping Command
 keith(
   {
@@ -94,14 +95,16 @@ keith(
         { quoted: fgg }
       );
 
+      // Start latency measurement after the typing simulation
       const start = Date.now();
+      // Optionally, you can add a tiny async wait here for more accurate latency, but it's usually not necessary
       const latency = Date.now() - start;
 
       const pingMessage = `*📡 PING RESULTS 📡*\n\n` +
                           `*🌐 Latency:* ${latency}ms\n` +
                           `> *⚡ Powered by Beltah Tech Team*`;
 
-            // Removed contextInfo from this sendMessage as requested
+      // Removed contextInfo from this sendMessage as requested
       await zk.sendMessage(
         dest,
         { text: pingMessage },
@@ -143,7 +146,7 @@ keith(
                             `*🛸 Uptime:* ${formattedUptime}\n` +
                             `> *⚡ Powered by Beltah Tech Team*`;
 
-            // Removed contextInfo from this sendMessage as requested
+      // Removed contextInfo from this sendMessage as requested
       await zk.sendMessage(
         dest,
         { text: uptimeMessage },
@@ -156,73 +159,7 @@ keith(
       });
     }
   }
-); 
-/*// Ping Command
-keith(
-  {
-    nomCom: 'ping',
-    aliases: ['speed', 'latency'],
-    desc: 'To check bot response time',
-    categorie: 'system',
-    reaction: '👻',
-    fromMe: true,
-  },
-  async (dest, zk) => {
-    try {
-      const start = Date.now();
-      await zk.sendPresenceUpdate('composing', dest); // Simulate typing
-      const latency = Date.now() - start;
-
-      const pingMessage = `*📡 PING RESULTS 📡*\n\n` +
-                          `*🌐 Latency:* ${latency}ms\n` +
-                          `> *⚡ Powered by Beltah Tech Team*`;
-
-      await zk.sendMessage(
-        dest,
-        { text: pingMessage, contextInfo: getContextInfo("Ping Command Results") },
-        { quoted: fgg }
-      );
-    } catch (error) {
-      console.error(`Error in ping command: ${error.message}`);
-      await zk.sendMessage(dest, {
-        text: `⚠️ An error occurred while processing the ping command. Please try again later.`,
-      });
-    }
-  }
 );
-
-// Uptime Command
-keith(
-  {
-    nomCom: 'uptime',
-    aliases: ['runtime', 'running'],
-    desc: 'To check runtime',
-    categorie: 'system',
-    reaction: '⚠️',
-    fromMe: true,
-  },
-  async (dest, zk) => {
-    try {
-      const botUptime = process.uptime(); // Uptime in seconds
-      const formattedUptime = formatRuntime(botUptime);
-
-      const uptimeMessage = `*⏰ BOT UPTIME ⏰*\n\n` +
-                            `*🛸 Uptime:* ${formattedUptime}\n` +
-                            `> *⚡ Powered by Beltah Tech Team*`;
-
-      await zk.sendMessage(
-        dest,
-        { text: uptimeMessage, contextInfo: getContextInfo("Uptime Command Results") },
-        { quoted: fgg }
-      );
-    } catch (error) {
-      console.error(`Error in uptime command: ${error.message}`);
-      await zk.sendMessage(dest, {
-        text: `⚠️ An error occurred while processing the uptime command. Please try again later.`,
-      });
-    }
-  }
-);*/
 
 module.exports = {
   getContextInfo,
