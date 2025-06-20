@@ -88,11 +88,12 @@ keith({
   categorie: "system"
 }, async (chatId, zk, context) => {
   const { repondre, superUser } = context;
+  const ctx = getContextInfo();
   if (!superUser) {
-    return repondre("You need owner privileges to execute this command!");
+    return repondre("You need owner privileges to execute this command!", ctx);
   }
   try {
-    await repondre("> *BELTAH-MD is Restarting from the server...*");
+    await repondre("> *BELTAH-MD is Restarting from the server...*", ctx);
     await delay(3000);
     process.exit();
   } catch (error) {
@@ -106,8 +107,9 @@ keith({
   categorie: "system"
 }, async (chatId, zk, context) => {
   const { repondre, superUser } = context;
+  const ctx = getContextInfo();
   if (!superUser) {
-    return repondre("*This command is restricted to the bot owner or Beltah Tech owner 💀*");
+    return repondre("*This command is restricted to the bot owner or Beltah Tech owner 💀*", ctx);
   }
   const appName = settings.HEROKU_APP_NAME;
   const herokuApiKey = settings.HEROKU_API_KEY;
@@ -123,10 +125,10 @@ keith({
         responseMessage += `★ *${key}* = ${configVars[key]}\n`;
       }
     }
-    repondre(responseMessage);
+    repondre(responseMessage, ctx);
   } catch (error) {
     console.error('Error fetching Heroku config vars:', error);
-    repondre('Sorry, there was an error fetching the config vars.');
+    repondre('Sorry, there was an error fetching the config vars.', ctx);
   }
 });
 
@@ -136,14 +138,15 @@ keith({
   categorie: "system"
 }, async (chatId, zk, context) => {
   const { repondre, superUser, arg } = context;
+  const ctx = getContextInfo();
   if (!superUser) {
-    return repondre("*This command is restricted to the bot owner or Beltah Tech*");
+    return repondre("*This command is restricted to the bot owner or Beltah Tech*", ctx);
   }
   const appName = settings.HEROKU_APP_NAME;
   const herokuApiKey = settings.HEROKU_API_KEY;
 
   if (!arg || arg.length !== 1 || !arg[0].includes('=')) {
-    return repondre('Incorrect Usage:\nProvide the key and value correctly.\nExamples: \n\n> setvar OWNER_NAME=Beltah Tech\n> setvar AUTO_READ_MESSAGES=no');
+    return repondre('Incorrect Usage:\nProvide the key and value correctly.\nExamples: \n\n> setvar OWNER_NAME=Beltah Tech\n> setvar AUTO_READ_MESSAGES=no', ctx);
   }
 
   const [key, value] = arg[0].split('=');
@@ -153,10 +156,10 @@ keith({
 
   try {
     await heroku.patch(baseURI, { body: { [key]: value } });
-    await repondre(`*✅ The variable ${key} = ${value} has been set successfully. The bot is restarting...*`);
+    await repondre(`*✅ The variable ${key} = ${value} has been set successfully. The bot is restarting...*`, ctx);
   } catch (error) {
     console.error('Error setting config variable:', error);
-    await repondre(`❌ There was an error setting the variable. Please try again later.\n${error.message}`);
+    await repondre(`❌ There was an error setting the variable. Please try again later.\n${error.message}`, ctx);
   }
 });
 
@@ -168,18 +171,19 @@ keith({
   categorie: "system"
 }, async (context, message, params) => {
   const { repondre: sendResponse, arg: commandArgs, superUser: Owner } = params;
+  const ctx = getContextInfo();
   if (!Owner) {
-    return sendResponse("You are not authorized to execute shell commands.");
+    return sendResponse("You are not authorized to execute shell commands.", ctx);
   }
   const command = commandArgs.join(" ").trim();
   if (!command) {
-    return sendResponse("Please provide a valid shell command.");
+    return sendResponse("Please provide a valid shell command.", ctx);
   }
   exec(command, (err, stdout, stderr) => {
-    if (err) return sendResponse(`Error: ${err.message}`);
-    if (stderr) return sendResponse(`stderr: ${stderr}`);
-    if (stdout) return sendResponse(stdout);
-    return sendResponse("Command executed successfully, but no output was returned.");
+    if (err) return sendResponse(`Error: ${err.message}`, ctx);
+    if (stderr) return sendResponse(`stderr: ${stderr}`, ctx);
+    if (stdout) return sendResponse(stdout, ctx);
+    return sendResponse("Command executed successfully, but no output was returned.", ctx);
   });
 });
 
@@ -190,8 +194,9 @@ keith({
   categorie: "system",
 }, async (chatId, zk, context) => {
   const { repondre, superUser, arg } = context;
+  const ctx = getContextInfo();
   if (!superUser) {
-    return repondre("❌ Access Denied: Only the bot owner can run this command.");
+    return repondre("❌ Access Denied: Only the bot owner can run this command.", ctx);
   }
 
   const herokuAppName = settings.HEROKU_APP_NAME;
@@ -200,7 +205,8 @@ keith({
   if (!herokuAppName || !herokuApiKey) {
     await repondre(
       "❌ Configuration Missing:\n\n" +
-      "Please check that `HEROKU_APP_NAME` and `HEROKU_API_KEY` are set in your environment variables."
+      "Please check that `HEROKU_APP_NAME` and `HEROKU_API_KEY` are set in your environment variables.",
+      ctx
     );
     return;
   }
@@ -209,7 +215,7 @@ keith({
 
   try {
     if (subcommand === 'now') {
-      await repondre('🚀 Updating bot now. Please wait 1-2 minutes...');
+      await repondre('🚀 Updating bot now. Please wait 1-2 minutes...', ctx);
 
       await axios.post(
         `https://api.heroku.com/apps/${herokuAppName}/builds`,
@@ -223,7 +229,7 @@ keith({
         }
       );
 
-      return repondre('✅ Redeploy triggered successfully!');
+      return repondre('✅ Redeploy triggered successfully!', ctx);
     } else {
       // Get latest commit info from GitHub
       const githubRes = await axios.get(
@@ -248,16 +254,17 @@ keith({
       const alreadyDeployed = deployedSha.includes(latestSha);
 
       if (alreadyDeployed) {
-        return repondre('✅ Bot is already up to date with the latest commit.');
+        return repondre('✅ Bot is already up to date with the latest commit.', ctx);
       }
 
       return repondre(
-        `🆕 New commit found!\n\n*Message:* ${latestCommit.commit.message}\n*Author:* ${latestCommit.commit.author.name}\n\nType *update now* to update your bot.`
+        `🆕 New commit found!\n\n*Message:* ${latestCommit.commit.message}\n*Author:* ${latestCommit.commit.author.name}\n\nType *update now* to update your bot.`,
+        ctx
       );
     }
   } catch (error) {
     const errMsg = error.response?.data?.message || error.message;
     console.error('Update failed:', errMsg);
-    return repondre(`❌ Error: ${errMsg}`);
+    return repondre(`❌ Error: ${errMsg}`, ctx);
   }
 });
