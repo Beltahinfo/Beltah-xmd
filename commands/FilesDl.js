@@ -4,7 +4,25 @@ const axios = require('axios');
 const fs = require('fs-extra');
 const { mediafireDl } = require("../keizzah/dl/Function");
 const conf = require(__dirname + "/../set");
-
+// Utility: Context Info for WhatsApp messages
+const getContextInfo = (title = '', userJid = '', thumbnailUrl = '', confObj = conf) => ({
+  mentionedJid: userJid ? [userJid] : [],
+  forwardingScore: 999,
+  isForwarded: true,
+  forwardedNewsletterMessageInfo: {
+    newsletterJid: "120363249464136503@newsletter",
+    newsletterName: "Beltah Tech Info ",
+    serverMessageId: Math.floor(100000 + Math.random() * 900000),
+  },
+  externalAdReply: {
+    showAdAttribution: true,
+    title: confObj.BOT || '',
+    body: title || "YOU AI ASSISTANT BOT",
+    thumbnailUrl: thumbnailUrl || confObj.URL || 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg',
+    sourceUrl: confObj.GURL || 'https://wa.me/254114141192',
+    mediaType: 1,
+    renderLargerThumbnail: false,
+  }
 
 keith({
   nomCom: 'apk',
