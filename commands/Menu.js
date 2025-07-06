@@ -56,7 +56,7 @@ const fetchGitHubStats = async () => {
 const DEFAULT_PARTICIPANT = '0@s.whatsapp.net';
 const DEFAULT_REMOTE_JID = 'status@broadcast';
 const DEFAULT_THUMBNAIL_URL = 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg';
-const DEFAULT_TITLE = "BELTAH-MD MENU";
+const DEFAULT_TITLE = "BELTAH-MD AI";
 const DEFAULT_BODY = "Your AI Assistant Chuddy Buddy";
 
 // Default message configuration
@@ -89,7 +89,7 @@ function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, th
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
          newsletterJid: "120363249464136503@newsletter",
-         newsletterName: "🤖 𝐁𝐄𝐋𝐓𝐀𝐇 𝐀𝐈 𝐂𝐇𝐀𝐓𝐁𝐎𝐓 🤖",
+         newsletterName: "Beltah Tech Updates",
          serverMessageId: Math.floor(100000 + Math.random() * 900000),
      },
       externalAdReply: {
@@ -206,7 +206,7 @@ for (const category of sortedCategories) {
     for (const command of sortedCommands) {
         commandsList += `┃ ◦ ${toFancyLowercaseFont(command)}\n`;
     }
-    commandsList += "╰──────────────────╯\n";
+    commandsList += "╰──────────────╯\n";
 }
 
 commandsList += `${readMore}\n> 🔐 *𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐘 𝐁𝐄𝐋𝐓𝐀𝐇 𝐓𝐄𝐂𝐇 𝐓𝐄𝐀𝐌 ©𝟐𝟎𝟐𝟓* 🔐\n`;
@@ -214,8 +214,8 @@ try{
         const senderName = message.sender || message.from;
         await client.sendMessage(message, {
              text: responseMessage + commandsList,
-             contextInfo: getContextInfo("BELTAH-MD MAIN MENU", senderName, 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg')
-         }, { quoted: fgg });
+             contextInfo: getContextInfo("BELTAH-MD AI", senderName, 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg')
+         }, { quoted: ms });
     } catch (error) {
         console.error("Menu error: ", error);
         respond("🥵🥵 Menu error: " + error);
