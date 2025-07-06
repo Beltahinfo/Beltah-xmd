@@ -1,51 +1,50 @@
-
 const { keith } = require('../keizzah/keith');
 const Heroku = require('heroku-client');
 const s = require("../set");
 const axios = require("axios");
-const speed = require("performance-now");
 const { exec } = require("child_process");
 const conf = require(__dirname + "/../set");
-//Example context inf
-function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, thumbnailUrl = DEFAULT_THUMBNAIL_URL) {
+
+// Forwarded context info generator (single, consistent format)
+function getForwardedContextInfo(title = conf.BOT, userJid = conf.OWNER_NUMBER, thumbnailUrl = conf.URL) {
   try {
     return {
       mentionedJid: [userJid],
       forwardingScore: 999,
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
-         newsletterJid: "120363249464136503@newsletter",
-         newsletterName: "Beltah Tech Updates",
-         serverMessageId: Math.floor(100000 + Math.random() * 900000),
-     },
+        newsletterJid: "120363249464136503@newsletter",
+        newsletterName: "Beltah Tech Updates",
+        serverMessageId: Math.floor(100000 + Math.random() * 900000),
+      },
       externalAdReply: {
         showAdAttribution: true,
         title,
-        body: DEFAULT_BODY,
+        body: conf.OWNER_NAME,
         thumbnailUrl,
-        sourceUrl: settings.GURL || '',
+        sourceUrl: conf.GURL || '',
       },
     };
   } catch (error) {
-    console.error(`Error in getContextInfo: ${error.message}`);
-    return {}; // Prevent breaking on error
+    console.error(`Error in getForwardedContextInfo: ${error.message}`);
+    return {};
   }
-} 
-// Function for delay simulation
+}
+
+// Delay simulation
 function delay(ms) {
-  console.log(`⏱️ delay for ${ms}ms`);
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-// Format the uptime into a human-readable string
+
+// Uptime formatter
 function runtime(seconds) {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const secondsLeft = Math.floor(seconds % 60);
-
   return `${hours}h ${minutes}m ${secondsLeft}s`;
 }
 
-// New loading animation with different symbols and larger progress bar
+// Loading animation with progress bar
 async function loading(dest, zk) {
   const lod = [
     "⬛⬛⬜⬜⬜⬜⬛⬛20%",
@@ -55,15 +54,14 @@ async function loading(dest, zk) {
     "⬛⬛⬜⬜⬜⬜⬛⬛100%",
     "*Pinging response✅*"
   ];
-
   let { key } = await zk.sendMessage(dest, { text: 'Loading Please Wait' });
-
   for (let i = 0; i < lod.length; i++) {
     await zk.sendMessage(dest, { text: lod[i], edit: key });
-    await delay(500); // Adjust the speed of the animation here
+    await delay(500);
   }
 }
 
+// Command: test/alive/testing
 keith({
   nomCom: "test",
   aliases: ["alive", "testing"],
@@ -71,8 +69,6 @@ keith({
   reaction: "🌏"
 }, async (dest, zk, commandeOptions) => {
   const { ms } = commandeOptions;
-
-  // Array of sound file URLs
   const audioFiles = [
     'https://files.catbox.moe/hpwsi2.mp3',
     'https://files.catbox.moe/xci982.mp3',
@@ -91,301 +87,168 @@ keith({
     'https://files.catbox.moe/dc88bx.m4a',
     'https://files.catbox.moe/tn32z0.m4a'
   ];
-
-  // Randomly pick an audio file from the list
   const selectedAudio = audioFiles[Math.floor(Math.random() * audioFiles.length)];
-
-  // Audio message object
   const audioMessage = {
-    audio: {
-      url: selectedAudio,
-    },
+    audio: { url: selectedAudio },
     mimetype: 'audio/mpeg',
-    ptt: true,  // Marking this as a "Push-to-Talk" message
+    ptt: true,
     waveform: [100, 0, 100, 0, 100, 0, 100],
     fileName: 'shizo',
-    contextInfo: {
-      externalAdReply: {
-        title: '🟢 BELTAH-MD ONLINE 🟢',
-        body: conf.OWNER_NAME,
-        thumbnailUrl: conf.URL,
-        sourceUrl: conf.GURL, // Corrected variable name
-        mediaType: 1,
-        renderLargerThumbnail: true,
-      },
-    },
+    contextInfo: getForwardedContextInfo('🟢 BELTAH-MD ONLINE 🟢'),
   };
-
-  // Send the audio message with the context of the original message
   await zk.sendMessage(dest, audioMessage, { quoted: ms });
 });
 
-
+// Command: restart/reboot
 keith({
   nomCom: 'restart',
   aliases: ['reboot'],
   categorie: "system"
 }, async (chatId, zk, context) => {
   const { repondre, superUser } = context;
-
-  // Check if the user is a super user
-  if (!superUser) {
-    return repondre("You need owner privileges to execute this command!");
-  }
-
+  if (!superUser) return repondre("You need owner privileges to execute this command!");
   try {
-    // Inform the user that the bot is restarting
     await repondre("*Restarting...*");
-
-    // Function to create a delay
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-    // Wait for 3 seconds before restarting
-    await sleep(3000);
-
-    // Exit the process to restart the bot
+    await delay(3000);
     process.exit();
   } catch (error) {
     console.error("Error during restart:", error);
   }
 });
-// thanks  chatgpt
 
-
-// Command to retrieve Heroku config vars
+// Command: allvar (show Heroku config vars)
 keith({
   nomCom: 'allvar',
   categorie: "system"
 }, async (chatId, zk, context) => {
   const { repondre, superUser } = context;
-
-  // Check if the command is issued by the owner
-  if (!superUser) {
-    return repondre("*This command is restricted to the bot owner*");
-  }
-
+  if (!superUser) return repondre("*This command is restricted to the bot owner*");
   const appname = s.HEROKU_APP_NAME;
   const herokuapi = s.HEROKU_API_KEY;
-
-  const heroku = new Heroku({
-    token: herokuapi,
-  });
-
+  const heroku = new Heroku({ token: herokuapi });
   const baseURI = `/apps/${appname}/config-vars`;
-
   try {
-    // Fetch config vars from Heroku API
     const configVars = await heroku.get(baseURI);
-
     let str = '*╭───༺All my Heroku vars༻────╮*\n\n';
-    
-    // Loop through the returned config vars and format them
     for (let key in configVars) {
       if (configVars.hasOwnProperty(key)) {
         str += `★ *${key}* = ${configVars[key]}\n`;
       }
     }
-
-    // Send the formatted response back to the user
-    repondre(str);
-
+    zk.sendMessage(chatId, {
+      text: str,
+      contextInfo: getForwardedContextInfo('Heroku Vars'),
+    });
   } catch (error) {
     console.error('Error fetching Heroku config vars:', error);
-    repondre('Sorry, there was an error fetching the config vars.');
+    zk.sendMessage(chatId, {
+      text: 'Sorry, there was an error fetching the config vars.',
+      contextInfo: getForwardedContextInfo('Heroku Vars'),
+    });
   }
 });
 
-// Command to set a Heroku config var
+// Command: setvar (set Heroku config var)
 keith({
   nomCom: 'setvar',
   categorie: "system"
 }, async (chatId, zk, context) => {
   const { repondre, superUser, arg } = context;
-
-  // Check if the command is issued by the owner
-  if (!superUser) {
-    return repondre("*This command is restricted to the bot owner or Alpha owner 💀*");
-  }
-
+  if (!superUser) return repondre("*This command is restricted to the bot owner or Alpha owner 💀*");
   const appname = s.HEROKU_APP_NAME;
   const herokuapi = s.HEROKU_API_KEY;
-
   if (!arg || arg.length !== 1 || !arg[0].includes('=')) {
     return repondre('Incorrect Usage:\nProvide the key and value correctly.\nExample: setvar ANTICALL=yes');
   }
-
   const [key, value] = arg[0].split('=');
-
-  const heroku = new Heroku({
-    token: herokuapi,
-  });
-
+  const heroku = new Heroku({ token: herokuapi });
   const baseURI = `/apps/${appname}/config-vars`;
-
   try {
-    // Set the new config var
-    await heroku.patch(baseURI, {
-      body: {
-        [key]: value,
-      },
+    await heroku.patch(baseURI, { body: { [key]: value } });
+    await zk.sendMessage(chatId, {
+      text: `*✅ The variable ${key} = ${value} has been set successfully. The bot is restarting...*`,
+      contextInfo: getForwardedContextInfo('Heroku Var Set'),
     });
-
-    // Notify success
-    await repondre(`*✅ The variable ${key} = ${value} has been set successfully. The bot is restarting...*`);
   } catch (error) {
     console.error('Error setting config variable:', error);
-    await repondre(`❌ There was an error setting the variable. Please try again later.\n${error.message}`);
+    await zk.sendMessage(chatId, {
+      text: `❌ There was an error setting the variable. Please try again later.\n${error.message}`,
+      contextInfo: getForwardedContextInfo('Heroku Var Set'),
+    });
   }
 });
 
+// Command: shell/getcmd/cmd
 keith({
   nomCom: "shell",
   aliases: ["getcmd", "cmd"],
   reaction: '🗿',
   categorie: "coding"
 }, async (context, message, params) => {
-  const { repondre: sendResponse, arg: commandArgs, superUser: Owner, auteurMessage } = params;
-
-  // Ensure that the sender is the superuser (Owner)
-  if (!Owner) {
-    return sendResponse("You are not authorized to execute shell commands.");
-  }
-
+  const { repondre: sendResponse, arg: commandArgs, superUser: Owner } = params;
+  if (!Owner) return sendResponse("You are not authorized to execute shell commands.");
   const command = commandArgs.join(" ").trim();
-
-  // Ensure the command is not empty
-  if (!command) {
-    return sendResponse("Please provide a valid shell command.");
-  }
-
-  // Execute the shell command
+  if (!command) return sendResponse("Please provide a valid shell command.");
   exec(command, (err, stdout, stderr) => {
-    if (err) {
-      return sendResponse(`Error: ${err.message}`);
-    }
-
-    if (stderr) {
-      return sendResponse(`stderr: ${stderr}`);
-    }
-
-    if (stdout) {
-      return sendResponse(stdout);
-    }
-
-    // If there's no output, let the user know
-    return sendResponse("Command executed successfully, but no output was returned.");
+    const contextInfo = getForwardedContextInfo('Shell Output');
+    if (err) return message.sendMessage(context, { text: `Error: ${err.message}`, contextInfo });
+    if (stderr) return message.sendMessage(context, { text: `stderr: ${stderr}`, contextInfo });
+    if (stdout) return message.sendMessage(context, { text: stdout, contextInfo });
+    return message.sendMessage(context, { text: "Command executed successfully, but no output was returned.", contextInfo });
   });
 });
 
-keith(
-  {
-    nomCom: 'ping',
-    aliases: ['speed', 'latency'],
-    desc: 'To check bot response time',
-    categorie: 'system', // Fixed the typo here (Categorie -> categorie)
-    reaction: '✅',
-    fromMe: true, // Removed quotes to make it a boolean
-  },
-  async (dest, zk) => {
-    // Call the new loading animation without delaying the rest of the bot
-    const loadingPromise = loading(dest, zk);
+// Command: ping/speed/latency
+keith({
+  nomCom: 'ping',
+  aliases: ['speed', 'latency'],
+  desc: 'To check bot response time',
+  categorie: 'system',
+  reaction: '✅',
+  fromMe: true,
+}, async (dest, zk) => {
+  const loadingPromise = loading(dest, zk);
+  const pingResults = Array.from({ length: 2 }, () => Math.floor(Math.random() * 10000 + 1000));
+  const formattedResults = pingResults.map(ping => `${conf.OWNER_NAME} Speed ${ping} ms `);
+  await zk.sendMessage(dest, {
+    text: `${formattedResults.join(', ')}`,
+    contextInfo: getForwardedContextInfo('Ping Results'),
+  });
+  await loadingPromise;
+});
 
-    // Generate 3 ping results with large random numbers for a more noticeable effect
-    const pingResults = Array.from({ length: 2 }, () => Math.floor(Math.random() * 10000 + 1000));
-
-    // Create larger font for ping results (using special characters for a bigger look)
-    const formattedResults = pingResults.map(ping => `${conf.OWNER_NAME} Speed ${ping} ms `);
-
-    // Send the ping results with the updated text and format
-    await zk.sendMessage(dest, {
-      text: `${formattedResults.join(', ')}`,
-      contextInfo: {
-        externalAdReply: {
-          title: conf.BOT,
-          body: `${formattedResults.join(" | ")}`,
-          thumbnailUrl: conf.URL, // Replace with your bot profile photo URL
-          sourceUrl: conf.GURL, // Your channel URL
-          mediaType: 1,
-          showAdAttribution: true, // Verified badge
-        },
-      },
-    });
-
-    console.log("Ping results sent successfully with new loading animation and formatted results!");
-
-    // Ensure loading animation completes after the ping results
-    await loadingPromise;
-  }
-);
-
-// React function if needed for further interaction
-function react(dest, zk, msg, reaction) {
-  zk.sendMessage(dest, { react: { text: reaction, key: msg.key } });
-}
-
+// Command: uptime/runtime/running
 keith({
   nomCom: 'uptime',
   aliases: ['runtime', 'running'],
   desc: 'To check runtime',
-  categorie: 'system', // Fixed the typo here (Categorie -> categorie)
+  categorie: 'system',
   reaction: '🫆',
-  fromMe: true, // Removed quotes to make it a boolean
+  fromMe: true,
 }, async (dest, zk, commandeOptions) => {
-  const { ms, arg, repondre } = commandeOptions;
-
-  // Get bot's runtime
-  const botUptime = process.uptime(); // Get the bot uptime in seconds
-
-  // Send uptime information to the user
+  const botUptime = process.uptime();
   await zk.sendMessage(dest, {
-    text: `*${conf.OWNER_NAME} UPTIME IS ${runtime(botUptime)}*`,
-    contextInfo: {
-      externalAdReply: {
-        title: `${conf.BOT} UPTIME`,
-        body: `Bot Uptime: ${runtime(botUptime)}`, // Format the uptime before sending
-        thumbnailUrl: conf.URL, // Replace with your bot profile photo URL
-        sourceUrl: conf.GURL, // Your channel URL
-        mediaType: 1,
-        showAdAttribution: true, // Verified badge
-      },
-    },
+    text: `*${conf.BOT} UPTIME || ${runtime(botUptime)}*`,
+    contextInfo: getForwardedContextInfo('Uptime'),
   });
-
-  console.log("Runtime results sent successfully!");
-
-  // Ensure loading animation completes after sending the uptime message
-  await delay(ms); // Await the delay to simulate the loading animation
 });
 
-// React function to allow interaction after sending message
-function react(dest, zk, msg, reaction) {
-  zk.sendMessage(dest, { react: { text: reaction, key: msg.key } });
-}
-
-
+// Command: update/redeploy/sync
 keith({
   nomCom: 'update',
   aliases: ['redeploy', 'sync'],
   categorie: "system"
 }, async (chatId, zk, context) => {
   const { repondre, superUser } = context;
-
-  // Check if the command is issued by the owner
-  if (!superUser) {
-    return repondre("*This command is restricted to the bot owner*");
-  }
-
-  // Ensure Heroku app name and API key are set
+  if (!superUser) return repondre("*This command is restricted to the bot owner*");
   const herokuAppName = s.HEROKU_APP_NAME;
   const herokuApiKey = s.HEROKU_API_KEY;
-
-  // Check if Heroku app name and API key are set in environment variables
   if (!herokuAppName || !herokuApiKey) {
-    await repondre("It looks like the Heroku app name or API key is not set. Please make sure you have set the `HEROKU_APP_NAME` and `HEROKU_API_KEY` environment variables.");
-    return;
+    return zk.sendMessage(chatId, {
+      text: "It looks like the Heroku app name or API key is not set. Please make sure you have set the `HEROKU_APP_NAME` and `HEROKU_API_KEY` environment variables.",
+      contextInfo: getForwardedContextInfo('Update Error'),
+    });
   }
-
-  // Function to redeploy the app
   async function redeployApp() {
     try {
       const response = await axios.post(
@@ -402,22 +265,22 @@ keith({
           },
         }
       );
-
-      // Notify the user about the update and redeployment
-      await repondre("*Your bot is getting updated, wait 2 minutes for the redeploy to finish! This will install the latest version of BELTAH-MD.*");
-      console.log("Build details:", response.data);
+      await zk.sendMessage(chatId, {
+        text: "*Your bot is getting updated.",
+        contextInfo: getForwardedContextInfo('Update'),
+      });
     } catch (error) {
-      // Handle any errors during the redeployment process
       const errorMessage = error.response?.data || error.message;
-      await repondre(`*Failed to update and redeploy. ${errorMessage} Please check if you have set the Heroku API key and Heroku app name correctly.*`);
-      console.error("Error triggering redeploy:", errorMessage);
+      await zk.sendMessage(chatId, {
+        text: `*Failed to update and redeploy. ${errorMessage} Please check if you have set the Heroku API key and Heroku app name correctly.*`,
+        contextInfo: getForwardedContextInfo('Update Error'),
+      });
     }
   }
-
-  // Trigger the redeployment function
   redeployApp();
 });
 
+// Command: fetch/get/find
 keith({
   nomCom: "fetch",
   aliases: ["get", "find"],
@@ -426,73 +289,50 @@ keith({
 }, async (sender, zk, context) => {
   const { repondre: sendResponse, arg: args } = context;
   const urlInput = args.join(" ");
-
-  // Check if URL starts with http:// or https://
   if (!/^https?:\/\//.test(urlInput)) {
     return sendResponse("Start the *URL* with http:// or https://");
   }
-
   try {
     const url = new URL(urlInput);
     const fetchUrl = `${url.origin}${url.pathname}?${url.searchParams.toString()}`;
-    
-    // Fetch the URL content
     const response = await axios.get(fetchUrl, { responseType: 'arraybuffer' });
-
-    // Check if the response is okay
     if (response.status !== 200) {
-      return sendResponse(`Failed to fetch the URL. Status: ${response.status} ${response.statusText}`);
+      return zk.sendMessage(sender, {
+        text: `Failed to fetch the URL. Status: ${response.status} ${response.statusText}`,
+        contextInfo: getForwardedContextInfo('Fetch Error'),
+      });
     }
-
     const contentLength = response.headers['content-length'];
     if (contentLength && parseInt(contentLength) > 104857600) {
-      return sendResponse(`Content-Length exceeds the limit: ${contentLength}`);
+      return zk.sendMessage(sender, {
+        text: `Content-Length exceeds the limit: ${contentLength}`,
+        contextInfo: getForwardedContextInfo('Fetch Error'),
+      });
     }
-
     const contentType = response.headers['content-type'];
-    console.log('Content-Type:', contentType);
-
-    // Fetch the response as a buffer
     const buffer = Buffer.from(response.data);
-
-    // Handle different content types
+    const commonMsgOptions = { quoted: context.ms, contextInfo: getForwardedContextInfo('Fetch Result') };
     if (/image\/.*/.test(contentType)) {
-      // Send image message
-      await zk.sendMessage(sender, {
-        image: { url: fetchUrl },
-        caption: `> > *${conf.BOT}*`
-      }, { quoted: context.ms });
+      await zk.sendMessage(sender, { image: { url: fetchUrl }, caption: `> > *${conf.BOT}*` }, commonMsgOptions);
     } else if (/video\/.*/.test(contentType)) {
-      // Send video message
-      await zk.sendMessage(sender, {
-        video: { url: fetchUrl },
-        caption: `> > *${conf.BOT}*`
-      }, { quoted: context.ms });
+      await zk.sendMessage(sender, { video: { url: fetchUrl }, caption: `> > *${conf.BOT}*` }, commonMsgOptions);
     } else if (/audio\/.*/.test(contentType)) {
-      // Send audio message
-      await zk.sendMessage(sender, {
-        audio: { url: fetchUrl },
-        caption: `> > *${conf.BOT}*`
-      }, { quoted: context.ms });
+      await zk.sendMessage(sender, { audio: { url: fetchUrl }, caption: `> > *${conf.BOT}*` }, commonMsgOptions);
     } else if (/text|json/.test(contentType)) {
       try {
-        // Try parsing the content as JSON
         const json = JSON.parse(buffer);
-        console.log("Parsed JSON:", json);
-        sendResponse(JSON.stringify(json, null, 10000)); // Limit response size to 10000 characters
+        await zk.sendMessage(sender, { text: JSON.stringify(json, null, 2).slice(0, 10000) }, { contextInfo: getForwardedContextInfo('Fetch Result') });
       } catch {
-        // If parsing fails, send the raw text response
-        sendResponse(buffer.toString().slice(0, 10000)); // Limit response size to 10000 characters
+        await zk.sendMessage(sender, { text: buffer.toString().slice(0, 10000) }, { contextInfo: getForwardedContextInfo('Fetch Result') });
       }
     } else {
-      // Send other types of documents
-      await zk.sendMessage(sender, {
-        document: { url: fetchUrl },
-        caption: `> > *${conf.BOT}*`
-      }, { quoted: context.ms });
+      await zk.sendMessage(sender, { document: { url: fetchUrl }, caption: `> > *${conf.BOT}*` }, commonMsgOptions);
     }
   } catch (error) {
     console.error("Error fetching data:", error.message);
-    sendResponse(`Error fetching data: ${error.message}`);
+    await zk.sendMessage(sender, {
+      text: `Error fetching data: ${error.message}`,
+      contextInfo: getForwardedContextInfo('Fetch Error'),
+    });
   }
 });
