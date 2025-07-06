@@ -1150,78 +1150,76 @@ if (verifCom) {
     });
     //fin événement message
 
-    /******** evenement groupe update ****************/
-    const {
-  recupevents
-} = require('./bdd/welcome');
+    /******** Simplified group-participants.update event ********/
+const { recupevents } = require('./bdd/welcome');
+
+// Helper to fetch group profile picture URL
+async function getGroupProfilePictureUrl(zk, groupId) {
+  try {
+    return await zk.profilePictureUrl(groupId, "image");
+  } catch (e) {
+    // fallback image if group has no profile pic
+    return "https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg";
+  }
+}
+
+// Context for forwarded/newsletter messages
+function makeContextInfo(userJid = '', groupPicUrl = '' , groupName = '') {
+  return {
+    mentionedJid: userJid ? [userJid] : [],
+    forwardingScore: 999,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: "120363249464136503@newsletter",
+      newsletterName: "Beltah Tech Updates",
+      serverMessageId: Math.floor(100000 + Math.random() * 900000),
+    },
+    externalAdReply: {
+      showAdAttribution: true,
+      title: groupName,
+      body: '🟢 Powering Excellent Automation 🟢',
+      thumbnailUrl: groupPicUrl,
+      sourceUrl: "https://wa.me/254114141192",
+      mediaType: 1,
+      renderLargerThumbnail: false,
+    }
+  };
+}
 
 zk.ev.on('group-participants.update', async group => {
-  console.log(group);
   try {
     const metadata = await zk.groupMetadata(group.id);
+    const groupPicUrl = await getGroupProfilePictureUrl(zk, group.id);
+    const groupName = metadata.subject;
 
+    // Welcome new members
     if (group.action === 'add' && (await recupevents(group.id, "welcome")) === 'on') {
-      let welcomeMessage = `Welcome to *${metadata.subject}* Group! 🎉\n\n`;
-      welcomeMessage += `Please take a moment to read the group description and rules to ensure a pleasant experience for everyone.\n`;
-      welcomeMessage += `For any issue, feel free to reach out to the group admins.\n\n`;
-
-      const newMembers = group.participants;
-      for (let member of newMembers) {
-        welcomeMessage += `👤 *@${member.split("@")[0]}*\n`;
+      for (let member of group.participants) {
+        const welcomeMessage = ` Hello *@${member.split("@")[0]}* welcome here.`;
+        await zk.sendMessage(group.id, {
+          text: welcomeMessage,
+          mentions: [member],
+          contextInfo: makeContextInfo(groupName, groupPicUrl),
+        });
       }
-
-      welcomeMessage += `\n> 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐘 𝐁𝐄𝐋𝐓𝐀𝐇 𝐓𝐄𝐂𝐇 © 𝟐𝟎𝟐𝟓`;
-
-      zk.sendMessage(group.id, {
-        text: welcomeMessage,
-        mentions: newMembers,
-        contextInfo: getContextInfo1('BELTAH-MD WELCOME MESSAGE', group.author),
-      });
-    } else if (group.action === 'remove' && (await recupevents(group.id, "goodbye")) === 'on') {
-      let goodbyeMessage = `*BELTAH-MD* detected a poor comrade on *${metadata.subject}* Group:\n\n`;
-      const removedMembers = group.participants;
-      for (let member of removedMembers) {
-        goodbyeMessage += `👤 *@${member.split("@")[0]}* has run out of data 🥲, let's pray for the poor.\n`;
-      }
-
-      goodbyeMessage += `\n> 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐘 𝐁𝐄𝐋𝐓𝐀𝐇 𝐓𝐄𝐂𝐇 © 𝟐𝟎𝟐𝟓`;
-
-      zk.sendMessage(group.id, {
-        text: goodbyeMessage,
-        mentions: removedMembers,
-        contextInfo: getContextInfo1('BELTAH-MD GOODBYE MESSAGE', group.author),
-      });
-    } else if (group.action === 'promote' && (await recupevents(group.id, "antipromote")) === 'on') {
-      if (group.author === metadata.owner || 
-          group.author === conf.NUMERO_OWNER + '@s.whatsapp.net' || 
-          group.author === decodeJid(zk.user.id) || 
-          group.author === group.participants[0]) {
-        console.log('SuperUser action detected, no intervention needed.');
-        return;
-      }
-
-      // Handle cases where unauthorized promotions occur
-      const promotedMembers = group.participants;
-      let antiPromoteMessage = `Unauthorized promotion detected in *${metadata.subject}* Group:\n\n`;
-      for (let member of promotedMembers) {
-        antiPromoteMessage += `👤 *@${member.split("@")[0]}*\n`;
-      }
-
-      antiPromoteMessage += `\nAction has been logged for review by the group admins.`;
-
-      zk.sendMessage(group.id, {
-        text: antiPromoteMessage,
-        mentions: promotedMembers,
-        contextInfo: getContextInfo1('Anti-Promote Message', group.author),
-      });
     }
+    // Goodbye members
+    else if (group.action === 'remove' && (await recupevents(group.id, "goodbye")) === 'on') {
+      for (let member of group.participants) {
+        const goodbyeMessage = `👋 *@${member.split("@")[0]}* has left the group.`;
+        await zk.sendMessage(group.id, {
+          text: goodbyeMessage,
+          mentions: [member],
+          contextInfo: makeContextInfo(groupName, groupPicUrl),
+        });
+      }
+    }
+    // (No anti-promote logic here as per user request to keep only join/leave)
   } catch (error) {
     console.error('Error handling group-participants.update:', error);
   }
 });
-
-    /******** fin d'evenement groupe update *************************/
-
+/******** fin d'evenement groupe update simplifié ********/
     /*****************************Cron setup */
 
     async function activateCrons() {
@@ -1291,8 +1289,8 @@ zk.ev.on('group-participants.update', async group => {
         console.log("ℹ️BELTAH-MD connecting to your account...");
     } else if (connection === "open") {
         await zk.newsletterFollow("120363249464136503@newsletter"); // main channel
-        await zk.groupAcceptInvite("F9eGks0Pnw7JJrozICzBo4?mode=r_t"); // group 1
-        await zk.groupAcceptInvite("LVvp9x9lPtN0S9RWfwwoWh?mode=r_t"); // group 2
+      //  await zk.groupAcceptInvite("F9eGks0Pnw7JJrozICzBo4?mode=r_t"); // group 1
+      //  await zk.groupAcceptInvite("LVvp9x9lPtN0S9RWfwwoWh?mode=r_t"); // group 2
         console.log("✅BELTAH MD Connected successful! ☺️");
         console.log("--");
         await (0, baileys_1.delay)(200);
