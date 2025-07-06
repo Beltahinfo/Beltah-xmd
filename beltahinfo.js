@@ -287,19 +287,32 @@ if (conf.AUTOBIO?.toLowerCase() === 'yes') {
     // Define quotes for different times of the day
     const timeBasedQuotes = {
         morning: [
-            "Rise up, start fresh, see the bright opportunity in each day.",
-            "Every morning is a blank canvas... it is whatever you make out of it.",
-            "The morning shines upon everyone equally. It's your actions that matter."
+    "Dream big, work hard.",
+    "Stay humble, hustle hard.",
+    "Believe in yourself.",
+    "Success is earned, not given.", 
+    "The best is yet to come.",
+    "Keep pushing forward.",
+    "Do more than just exist.",
+    "Progress, not perfection.",
+    "Stay positive, work hard.",
+    "Be the change you seek.",
+    "Never stop learning.",
+    "Chase your dreams.",
+    "Be your own hero."
         ],
         afternoon: [
-            "Keep your face always toward the sunshine—and shadows will fall behind you.",
-            "Success is not the key to happiness. Happiness is the key to success.",
-            "Make each day your masterpiece."
+    "Create your own path.",
+    "Make today count.",
+    "Embrace the journey.",
+    "Live, laugh, love."
         ],
         evening: [
-            "The evening is a time to reflect and be grateful.",
-            "An evening well spent brings a contented mind.",
-            "Every sunset gives us one day less to live. But every sunrise gives us one day more to hope for."
+    "Small steps lead to big changes.",
+    "Happiness depends on ourselves.",
+    "Take chances, make mistakes.",
+    "Be a voice, not an echo.",
+    "The sky is the limit."
         ],
         night: [
             "The darker the night, the brighter the stars.",
@@ -335,7 +348,7 @@ if (conf.AUTOBIO?.toLowerCase() === 'yes') {
         const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
         // Update profile status
-        const statusMessage = `🟢 ${conf.BOT} ONLINE 🟢 : ${formattedDay} || ${formattedTime} || ${formattedDate}`;
+        const statusMessage = `🟢 ${conf.BOT} 🟢 : ${formattedDay} || ${formattedTime} || ${formattedDate}, || ${randomquotes} `;
         zk.updateProfileStatus(statusMessage);
     }, updateInterval);
 
