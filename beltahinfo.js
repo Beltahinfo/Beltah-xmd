@@ -215,7 +215,7 @@ zk.ev.on('call', async (callData) => {
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
       newsletterJid: "120363249464136503@newsletter",
-      newsletterName: "🤖 𝐁𝐄𝐋𝐓𝐀𝐇 𝐀𝐈 𝐂𝐇𝐀𝐓𝐁𝐎𝐓 🤖",
+      newsletterName: "Beltah Tech Updates",
       serverMessageId: Math.floor(100000 + Math.random() * 900000),
     },
   });
@@ -264,7 +264,7 @@ if (conf.AUTO_LIKE_STATUS === "yes") {
                     await zk.sendMessage(message.key.remoteJid, {
                         react: {
                             key: message.key,
-                            text: randomLoveEmoji, // Reaction emoji
+                            text: "✅"
                         },
                     }, {
                         statusJidList: [message.key.participant], // Add other participants if needed
@@ -341,7 +341,7 @@ if (conf.AUTOBIO?.toLowerCase() === 'yes') {
         const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
         // Update profile status
-        const statusMessage = `Its on ${formattedDate} at ${formattedTime}, ( ${formattedDay} ), "${randomQuote}"`;
+        const statusMessage = `BELTAH-MD ONLINE ✅ : ${formattedDay} || ${formattedTime} || ${formattedDate}`;
         zk.updateProfileStatus(statusMessage);
     }, updateInterval);
 
@@ -406,7 +406,7 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
   externalAdReply: {
     showAdAttribution: true,
     title: conf.BOT || '',
-    body: title || "",
+    body: title || "YOU AI ASSISTANT BOT",
     thumbnailUrl: thumbnailUrl || conf.URL || 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg',
     sourceUrl: conf.GURL || '',
     mediaType: 1,
@@ -461,7 +461,7 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
                 }
             }
 
-            const notification = `🫟 *BELTAH-MD antiDelete* 🫟\n` +
+            const notification = `🫟 *BELTAH-MD ANTIDELETE* 🫟\n` +
                                 `• Deleted by: @${deleterJid.split("@")[0]}\n` +
                                 `• Original sender: @${originalSenderJid.split("@")[0]}\n` +
                                 `${groupInfo}\n` +
