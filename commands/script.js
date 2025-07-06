@@ -63,7 +63,7 @@ function getContextInfo(
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
         newsletterJid: "120363249464136503@newsletter",
-        newsletterName: "🤖 𝐁𝐄𝐋𝐓𝐀𝐇 𝐁𝐎𝐓 🤖",
+        newsletterName: "Beltah Tech Updates",
         serverMessageId: Math.floor(100000 + Math.random() * 900000),
       },
       externalAdReply: {
@@ -124,7 +124,7 @@ keith(
           {
             text: message,
             contextInfo: getContextInfo(
-              "BELTAH-MD REPOSITORY-OVERVIEW",
+              "BELTAH-MD REPO",
               auteurMessage,
               DEFAULTS.THUMBNAIL_URL
             ),
