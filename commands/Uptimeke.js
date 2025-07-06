@@ -6,6 +6,26 @@ const speed = require("performance-now");
 const { exec } = require("child_process");
 const conf = require(__dirname + "/../set");
 
+const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {}) => ({
+  mentionedJid: userJid ? [userJid] : [],
+  forwardingScore: 999,
+  isForwarded: true,
+  forwardedNewsletterMessageInfo: {
+    newsletterJid: "120363249464136503@newsletter",
+    newsletterName: "Beltah Tech Info ",
+    serverMessageId: Math.floor(100000 + Math.random() * 900000),
+  },
+  externalAdReply: {
+    showAdAttribution: true,
+    title: conf.BOT || '',
+    body: title || "YOU AI ASSISTANT BOT",
+    thumbnailUrl: thumbnailUrl || conf.URL || 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg',
+    sourceUrl: conf.GURL || 'https://wa.me/254114141192',
+    mediaType: 1,
+    renderLargerThumbnail: false,
+  }
+});
+
 // Function to create a delay
 function delay(ms) {
   console.log(`⏱️ Delay for ${ms}ms`);
