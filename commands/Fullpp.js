@@ -1,10 +1,10 @@
 const { keith } = require("../keizzah/keith");
 const { generateProfilePicture } = require("../keizzah/dl/Function");
-const { S_WHATSAPP_NET } = require('@whiskeysockets/bailey');
+const { S_WHATSAPP_NET } = require('@whiskeysockets/baileys');
 const fs = require("fs");
 
 keith({
-  nomCom: "fullpp",
+  nomCom: "pp",
   aliases: ["updatepp", "ppfull"],
   reaction: '👻',
   categorie: "search"
