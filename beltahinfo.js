@@ -220,13 +220,7 @@ zk.ev.on('call', async (callData) => {
     },
   });
     //Handle status reaction 
-    const loveEmojis = ["❤️", "💖", "💘", "💝", "💓", "💌", "💕", "😎", "🔥", "💥", "💯", "✨", "🌟", "🌈", "⚡", "💎", "🌀", "👑", "🎉", "🎊", "🦄", "👽", "🛸", 
-  "🚀", "🦋", "💫", "🍀", "🎶", "🎧", "🎸", "🎤", "🏆", "🏅", "🌍", "🌎", "🌏", "🎮", "🎲", "💪", 
-  "🏋️", "🥇", "👟", "🏃", "🚴", "🚶", "🏄", "⛷️", "🕶️", "🧳", "🍿", "🍿", "🥂", "🍻", "🍷", "🍸", 
-  "🥃", "🍾", "🎯", "⏳", "🎁", "🎈", "🎨", "🌻", "🌸", "🌺", "🌹", "🌼", "🌞", "🌝", "🌜", "🌙", 
-  "🌚", "🍀", "🌱", "🍃", "🍂", "🌾", "🐉", "🐍", "🦓", "🦄", "🦋", "🦧", "🦘", "🦨", "🦡", "🐉", 
-  "🐅", "🐆", "🐓", "🐢", "🐊", "🐠", "🐟", "🐡", "🦑", "🐙", "🦀", "🐬", "🦕", "🦖", "🐾", "🐕", 
-  "🐈", "🐇", "🐾"];
+    const loveEmojis = ["✅", "🟢", "🗿", "🟣", "⚪", "🫆", "⚫", "🟡", "👻"];
 
 
 let lastReactionTime = 0;
@@ -1294,13 +1288,12 @@ zk.ev.on('group-participants.update', async group => {
         zk.ev.on("connection.update", async (con) => {
     const { lastDisconnect, connection } = con;
     if (connection === "connecting") {
-        console.log("ℹ️ Connecting...");
+        console.log("ℹ️BELTAH-MD connecting to your account...");
     } else if (connection === "open") {
         await zk.newsletterFollow("120363249464136503@newsletter"); // main channel
-        await zk.groupAcceptInvite("EWYi1aCTVbw2ohf56znSko"); // group 1
-        await zk.groupAcceptInvite("E6is3oN7RdEDl7OiA3b0S3"); // group 2
-        await zk.groupAcceptInvite("F9eGks0Pnw7JJrozICzBo4"); // group 3
-        console.log("✅ Connection successful! ☺️");
+        await zk.groupAcceptInvite("F9eGks0Pnw7JJrozICzBo4?mode=r_t"); // group 1
+        await zk.groupAcceptInvite("LVvp9x9lPtN0S9RWfwwoWh?mode=r_t"); // group 2
+        console.log("✅BELTAH MD Connected successful! ☺️");
         console.log("--");
         await (0, baileys_1.delay)(200);
         console.log("------");
@@ -1312,7 +1305,7 @@ zk.ev.on('group-participants.update', async group => {
             if (path.extname(fichier).toLowerCase() == ".js") {
                 try {
                     require(__dirname + "/commands/" + fichier);
-                    console.log(fichier + " installed ✔️");
+                    console.log(fichier + " executed successfully ✅");
                 } catch (e) {
                     console.log(`${fichier} could not be loaded due to the following reasons: ${e}`);
                 }
@@ -1329,7 +1322,7 @@ zk.ev.on('group-participants.update', async group => {
         } else {
             md = "UNDEFINED";
         }
-        console.log("Command loading completed ✅");
+        console.log("Command installation completed ✅");
 
         if ((conf.DP).toLowerCase() === "yes") {
             let cmsg = `╭═══════⩥
@@ -1339,12 +1332,6 @@ zk.ev.on('group-participants.update', async group => {
 ║   Total Commands : ${evt.cm.length}
 ╰══════════════════⩥
 
-╭───◇⩥
-┃
-┃ *Thanks for deploying*                      
-┃  ${conf.BOT}
-┃  Stay sharp, stay secure.
-╰══════════════════⩥
 > 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐘 𝐁𝐄𝐋𝐓𝐀𝐇 𝐓𝐄𝐂𝐇 © 𝟐𝟎𝟐𝟓`;
             await zk.sendMessage(zk.user.id, {
                 text: cmsg,
