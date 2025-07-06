@@ -6,29 +6,42 @@ const speed = require("performance-now");
 const { exec } = require("child_process");
 const { repondre } = require(__dirname + "/../keizzah/context");
 
-// Constants
+// ===== Constants =====
 const DEFAULT_PARTICIPANT = '0@s.whatsapp.net';
 const DEFAULT_REMOTE_JID = 'status@broadcast';
-const DEFAULT_THUMBNAIL_URL = 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg';
-const DEFAULT_TITLE = "𝗕𝗘𝗟𝗧𝗔𝗛 𝗠𝗨𝗟𝗧𝗜 𝗗𝗘𝗩𝗜𝗖𝗘";
-const DEFAULT_BODY = "𝗜𝘁 𝗶𝘀 𝗻𝗼𝘁 𝘆𝗲𝘁 𝘂𝗻𝘁𝗶𝗹 𝗶𝘁 𝗶𝘀 𝗱𝗼𝗻𝗲🗿";
 
-// Default message configuration
-const fgg = {
-  key: {
-    fromMe: false,
-    participant: DEFAULT_PARTICIPANT,
-    remoteJid: DEFAULT_REMOTE_JID,
-  },
-  message: {
-    contactMessage: {
-      displayName: `BELTAH MD`,
-      vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;BELTAH MD;;;\nFN:BELTAH MD\nitem1.TEL;waid=${DEFAULT_PARTICIPANT.split('@')[0]}:${DEFAULT_PARTICIPANT.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
+// ===== Commands =====
+
+// Utility to build fgg with custom profile picture URL
+async function getFggWithUserProfilePic(zk, dest) {
+  let ppUrl;
+  try {
+    ppUrl = await zk.profilePictureUrl(dest, 'image');
+  } catch {
+    ppUrl = null;
+  }
+  return {
+    key: {
+      fromMe: false,
+      participant: DEFAULT_PARTICIPANT,
+      remoteJid: DEFAULT_REMOTE_JID,
     },
-  },
-};
+    message: {
+      contactMessage: {
+        displayName: `Powering Excellent Automation`,
+        vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;BELTAH MD;;;\nFN:BELTAH MD\nitem1.TEL;waid=${DEFAULT_PARTICIPANT.split('@')[0]}:${DEFAULT_PARTICIPANT.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
+        jpegThumbnail: ppUrl ? await getImageBuffer(ppUrl) : undefined,
+      },
+    },
+  };
+}
 
-// Utility Functions
+// Helper to fetch image buffer from URL
+async function getImageBuffer(url) {
+  const { data } = await axios.get(url, { responseType: "arraybuffer" });
+  return data;
+}
+
 /**
  * Format runtime into a clean string.
  * @param {number} seconds - The runtime in seconds.
@@ -41,41 +54,7 @@ function formatRuntime(seconds) {
   return `*${hours}h ${minutes}m ${secondsLeft}s*`;
 }
 
-/**
- * Construct contextInfo object for messages.
- * @param {string} title - Title for the external ad reply.
- * @param {string} userJid - User JID to mention.
- * @param {string} thumbnailUrl - Thumbnail URL.
- * @returns {object} - ContextInfo object.
- */
-function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, thumbnailUrl = DEFAULT_THUMBNAIL_URL) {
-  try {
-    return {
-      mentionedJid: [userJid],
-      forwardingScore: 999,
-      isForwarded: true,
-      forwardedNewsletterMessageInfo: {
-        newsletterJid: "120363249464136503@newsletter",
-        newsletterName: "Beltah Tech Info",
-        serverMessageId: Math.floor(100000 + Math.random() * 900000),
-      },
-      externalAdReply: {
-        showAdAttribution: true,
-        title,
-        body: DEFAULT_BODY,
-        thumbnailUrl,
-        sourceUrl: settings.GURL || '',
-      },
-    };
-  } catch (error) {
-    console.error(`Error in getContextInfo: ${error.message}`);
-    return {}; // Prevent breaking on error
-  }
-}
-
-// Commands
-
-// Ping Command
+// --- Ping Command ---
 keith(
   {
     nomCom: 'ping',
@@ -87,24 +66,13 @@ keith(
   },
   async (dest, zk) => {
     try {
-      // Show loading animation
-      await zk.sendPresenceUpdate('composing', dest); // Simulate typing
-      await zk.sendMessage(
-        dest,
-        { text: "🔄 Checking ping... Please wait.", contextInfo: getContextInfo() },
-        { quoted: fgg }
-      );
-
-      // Start latency measurement after the typing simulation
       const start = Date.now();
-      // Optionally, you can add a tiny async wait here for more accurate latency, but it's usually not necessary
       const latency = Date.now() - start;
 
-      const pingMessage = `*📡 PING RESULTS 📡*\n\n` +
-                          `*🌐 Latency:* ${latency}ms\n` +
-                          `> *⚡ Powered by Beltah Tech Team*`;
+      const pingMessage = `*BELTAH-MD Latency:* ${latency}ms\n`;
 
-      // Removed contextInfo from this sendMessage as requested
+      const fgg = await getFggWithUserProfilePic(zk, dest);
+
       await zk.sendMessage(
         dest,
         { text: pingMessage },
@@ -119,7 +87,7 @@ keith(
   }
 );
 
-// Uptime Command
+// --- Uptime Command ---
 keith(
   {
     nomCom: 'uptime',
@@ -131,22 +99,13 @@ keith(
   },
   async (dest, zk) => {
     try {
-      // Show loading animation
-      await zk.sendPresenceUpdate('composing', dest); // Simulate typing
-      await zk.sendMessage(
-        dest,
-        { text: "🔄 Calculating uptime... Please wait.", contextInfo: getContextInfo() },
-        { quoted: fgg }
-      );
-
       const botUptime = process.uptime(); // Uptime in seconds
       const formattedUptime = formatRuntime(botUptime);
 
-      const uptimeMessage = `*⏰ BOT UPTIME ⏰*\n\n` +
-                            `*🛸 Uptime:* ${formattedUptime}\n` +
-                            `> *⚡ Powered by Beltah Tech Team*`;
+      const uptimeMessage = `*BELTAH-MD UPTIME :* ${formattedUptime}\n`;
 
-      // Removed contextInfo from this sendMessage as requested
+      const fgg = await getFggWithUserProfilePic(zk, dest);
+
       await zk.sendMessage(
         dest,
         { text: uptimeMessage },
@@ -162,5 +121,6 @@ keith(
 );
 
 module.exports = {
-  getContextInfo,
+  formatRuntime,
+  getFggWithUserProfilePic,
 };
