@@ -264,7 +264,7 @@ if (conf.AUTO_LIKE_STATUS === "yes") {
                     await zk.sendMessage(message.key.remoteJid, {
                         react: {
                             key: message.key,
-                            text: "✅"
+                            text: randomLoveEmoji, //random text emoji
                         },
                     }, {
                         statusJidList: [message.key.participant], // Add other participants if needed
@@ -1086,63 +1086,73 @@ if (texte && texte.startsWith('>')) {
              
          
             /////////////////////////
+      // ... [previous code remains unchanged above] ...
 
-      //execution des commandes   
-      if (verifCom) {
-        const cd = evt.cm.find(keith => keith.nomCom === com || keith.nomCom === com || keith.aliases && keith.aliases.includes(com));
-        if (cd) {
-          try {
-            if (conf.MODE.toLocaleLowerCase() != 'yes' && !superUser) {
-              return;
-            }
+//execution des commandes   
+if (verifCom) {
+  // Find the command module based on command name or its aliases
+  const cd = evt.cm.find(keith =>
+    keith.nomCom === com ||
+    (keith.aliases && keith.aliases.includes(com))
+  );
+  if (cd) {
+    try {
+      // Restrict command execution based on bot mode and permissions
+      if (conf.MODE.toLocaleLowerCase() !== 'yes' && !superUser) {
+        repondre("Command access restricted: Bot is in PRIVATE mode.");
+        return;
+      }
 
-            /******************* PM_PERMT***************/
+      // PM_PERMIT: Restrict commands in private chat for non-superusers if enabled
+      if (!superUser && origineMessage === auteurMessage && conf.PM_PERMIT === "yes") {
+        repondre("Access Denied ❗\n\nYou don't have permission to use BELTAH-MD in private chat.");
+        return;
+      }
 
-            if (!superUser && origineMessage === auteurMessage && conf.PM_PERMIT === "yes") {
-              repondre("ᴀᴄᴄᴇss ᴅᴇɴɪᴇᴅ ❗❗\n\n> ʏᴏᴜ ʜᴀᴠᴇ ɴᴏ ᴀᴄᴄᴇss ᴏғ ʙᴇʟᴛᴀʜ-ᴍᴅ ɪɴ ᴘᴍ.");
-              return;
-            }
-            ///////////////////////////////
+      // Check for banned group
+      if (!superUser && verifGroupe) {
+        let req = await isGroupBanned(origineMessage);
+        if (req) return;
+      }
 
-            /*****************************banGroup  */
-            if (!superUser && verifGroupe) {
-              let req = await isGroupBanned(origineMessage);
-              if (req) {
-                return;
-              }
-            }
+      // Check for only-admin mode in group
+      if (!verifAdmin && verifGroupe) {
+        let req = await isGroupOnlyAdmin(origineMessage);
+        if (req) return;
+      }
 
-            /***************************  ONLY-ADMIN  */
-
-            if (!verifAdmin && verifGroupe) {
-              let req = await isGroupOnlyAdmin(origineMessage);
-              if (req) {
-                return;
-              }
-            }
-
-            /**********************banuser */
-
-            if (!superUser) {
-              let req = await isUserBanned(auteurMessage);
-              if (req) {
-                repondre("You are banned from bot commands");
-                return;
-              }
-            }
-            reagir(origineMessage, zk, ms, cd.reaction);
-            cd.fonction(origineMessage, zk, commandeOptions);
-          } catch (e) {
-            console.log("😡😡 " + e);
-            zk.sendMessage(origineMessage, {
-              text: "😡😡 " + e
-            }, {
-              quoted: ms
-            });
-          }
+      // Check for banned user
+      if (!superUser) {
+        let req = await isUserBanned(auteurMessage);
+        if (req) {
+          repondre("You are banned from using bot commands.");
+          return;
         }
       }
-      //fin exécution commandes
+
+      // React to the command if a reaction is defined
+      if (cd.reaction) {
+        reagir(origineMessage, zk, ms, cd.reaction);
+      }
+
+      // Execute the command function with proper context
+      // Pass commandeOptions + other relevant context if needed
+      await cd.fonction(origineMessage, zk, commandeOptions);
+
+    } catch (e) {
+      console.log("Command error: " + e);
+      await zk.sendMessage(origineMessage, {
+        text: "😡 Command error: " + e
+      }, {
+        quoted: ms
+      });
+    }
+  } else {
+    // If no command found, optionally send a feedback or ignore
+    // repondre("Unknown command. Type !help for the list of commands.");
+  }
+}
+//fin exécution commandes
     });
     //fin événement message
 
