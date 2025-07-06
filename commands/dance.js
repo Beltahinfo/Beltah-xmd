@@ -98,7 +98,7 @@ async function downloadFromApis(apis) {
 
 // Audio download command
 keith({
-  nomCom: "sing",
+  nomCom: "play",
   aliases: ["song", "playdoc", "audio", "mp3"],
   categorie: "download",
   reaction: "🎵"
@@ -119,7 +119,7 @@ keith({
     }, { quoted: fgg });
 
     const apis = [
-      `https://api.davidcyriltech.my.id/download/ytmp3?url=${encodeURIComponent(video.url)}`,
+      `https://apis-keith.vercel.app/download/dlmp3?url=${encodeURIComponent(video.url)}`,
       `https://www.dark-yasiya-api.site/download/ytmp3?url=${encodeURIComponent(video.url)}`,
       `https://api.giftedtech.web.id/api/download/dlmp3?url=${encodeURIComponent(video.url)}&apikey=gifted-md`,
       `https://api.dreaded.site/api/ytdl/audio?url=${encodeURIComponent(video.url)}`
