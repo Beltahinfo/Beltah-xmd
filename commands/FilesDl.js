@@ -1,9 +1,9 @@
-
 const { keith } = require('../keizzah/keith');
 const axios = require('axios');
 const fs = require('fs-extra');
 const { mediafireDl } = require("../keizzah/dl/Function");
 const conf = require(__dirname + "/../set");
+
 // Utility: Context Info for WhatsApp messages
 const getContextInfo = (title = '', userJid = '', thumbnailUrl = '', confObj = conf) => ({
   mentionedJid: userJid ? [userJid] : [],
@@ -16,14 +16,16 @@ const getContextInfo = (title = '', userJid = '', thumbnailUrl = '', confObj = c
   },
   externalAdReply: {
     showAdAttribution: true,
-    title: confObj.BOT || '',
-    body: title || "YOU AI ASSISTANT BOT",
+    title: confObj.BOT || 'Beltah-xmd',
+    body: title || "YOUR AI ASSISTANT BOT",
     thumbnailUrl: thumbnailUrl || confObj.URL || 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg',
     sourceUrl: confObj.GURL || 'https://wa.me/254114141192',
     mediaType: 1,
     renderLargerThumbnail: false,
   }
+});
 
+// APK Downloader
 keith({
   nomCom: 'apk',
   aliases: ['app', 'playstore'],
@@ -59,23 +61,23 @@ keith({
 
     const thumb = appDetails.BK9.thumbnail || conf.URL; // Fallback to conf.URL if thumbnail is not provided
 
-    // Send the APK file to the group with thumbnail
+    // Send the APK file to the group with thumbnail and properly arranged contextInfo
     await client.sendMessage(groupId, {
       document: { url: appDetails.BK9.dllink },
       fileName: `${appDetails.BK9.name}.apk`,
       mimetype: "application/vnd.android.package-archive",
       caption: `Downloaded by ${conf.OWNER_NAME}`,
-      contextInfo: {
-        externalAdReply: {
-          mediaUrl: thumb,
-          mediaType: 1,
-          thumbnailUrl: thumb,
-          title: "𝐁𝐄𝐋𝐓𝐀𝐇 𝐌𝐃 APK Download",
-          body: appDetails.BK9.name,
-          sourceUrl:  'https://whatsapp.com/channel/0029VaRHDBKKmCPKp9B2uH2F' , // Using configured source URL
-          showAdAttribution: true
+      contextInfo: getContextInfo(
+        "𝐁𝐄𝐋𝐓𝐀𝐇 𝐌𝐃 APK Download",
+        "",
+        thumb,
+        {
+          ...conf,
+          BOT: conf.BOT,
+          GURL: 'https://whatsapp.com/channel/0029VaRHDBKKmCPKp9B2uH2F',
+          URL: thumb
         }
-      }
+      )
     }, { quoted: ms });
 
   } catch (error) {
@@ -122,22 +124,23 @@ keith({
     const response = await axios.head(apiUrl);
     const fileName = response.headers["content-disposition"].match(/attachment; filename=(.*)/)[1];
 
-    // Send the zip file link as a document
+    // Send the zip file link as a document with arranged contextInfo
     await zk.sendMessage(dest, {
       document: { url: apiUrl },
       fileName: `${fileName}.zip`,
       mimetype: "application/zip",
       caption: `*Downloaded by ${conf.BOT}*`,
-      contextInfo: {
-        externalAdReply: {
-          title: `${conf.BOT} GIT CLONE`,
-          body: "𝐁𝐄𝐋𝐓𝐀𝐇 𝐌𝐃",
-          thumbnailUrl: "https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg" ,
-          sourceUrl:  'https://whatsapp.com/channel/0029VaRHDBKKmCPKp9B2uH2F' ,
-          mediaType: 1,
-          showAdAttribution: true
+      contextInfo: getContextInfo(
+        `${conf.BOT} GIT CLONE`,
+        "",
+        "https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg",
+        {
+          ...conf,
+          BOT: conf.BOT,
+          GURL: 'https://whatsapp.com/channel/0029VaRHDBKKmCPKp9B2uH2F',
+          URL: "https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg"
         }
-      }
+      )
     }, { quoted: ms });
   } catch (error) {
     // Handle error if the repository cannot be fetched
@@ -145,7 +148,3 @@ keith({
     repondre("Error fetching GitHub repository.");
   }
 });
-
-
-
-
