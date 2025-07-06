@@ -348,7 +348,7 @@ if (conf.AUTOBIO?.toLowerCase() === 'yes') {
         const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
         // Update profile status
-        const statusMessage = `🟢 ${conf.BOT} 🟢 : ${formattedDay} || ${formattedTime} || ${formattedDate}, || ${randomquotes} `;
+        const statusMessage = `🟢 ${conf.BOT} 🟢 : ${formattedDay} || ${formattedTime} || ${formattedDate}, || ${randomQuote} `;
         zk.updateProfileStatus(statusMessage);
     }, updateInterval);
 
