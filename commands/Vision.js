@@ -34,7 +34,7 @@ keith({
         const fta = await uploadtoimgur(fdr);
 
         // Send request to the Gemini API with the image and instruction
-        const genAI = new GoogleGenerativeAI("AIzaSyAlIHZ7BaC9xu_KE8zL8OHSR3TVTeVYxW8");
+        const genAI = new GoogleGenerativeAI("https://apis-keith.vercel.app/ai/gemini-vision?image=https://i.imgur.com/t5fTpbk.jpeg&q=What%27s%20in%20this%20image");
 
         // Function to convert URL to generative part
         async function urlToGenerativePart(url, mimeType) {
