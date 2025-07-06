@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: BELTAH-MD
-    env: node
-    region: singapore
-    buildCommand: "yarn install"
-    startCommand: "npm start"
-    plan: free
