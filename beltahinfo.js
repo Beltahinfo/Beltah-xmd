@@ -335,7 +335,7 @@ if (conf.AUTOBIO?.toLowerCase() === 'yes') {
         const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
         // Update profile status
-        const statusMessage = `BELTAH-MD ONLINE ✅ : ${formattedDay} || ${formattedTime} || ${formattedDate}`;
+        const statusMessage = `🟢 ${conf.BOT} ONLINE 🟢 : ${formattedDay} || ${formattedTime} || ${formattedDate}`;
         zk.updateProfileStatus(statusMessage);
     }, updateInterval);
 
