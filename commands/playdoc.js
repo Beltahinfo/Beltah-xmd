@@ -2,7 +2,7 @@ const { keith } = require("../keizzah/keith");
 const axios = require('axios');
 const ytSearch = require('yt-search');
 const conf = require(__dirname + '/../set');
-const { repondre } = require(__dirname + "/../keizzah/context");
+//const { repondre } = require(__dirname + "/../keizzah/context");
 
 // ContextInfo configuration
 const getContextInfo = (title = '', userJid = '', thumbnailUrl = '', sourceUrl = '') => ({
@@ -17,7 +17,7 @@ const getContextInfo = (title = '', userJid = '', thumbnailUrl = '', sourceUrl =
   externalAdReply: {
     showAdAttribution: true,
     title: conf.BOT || 'Music Downloader',
-    body: title || "Media Downloader",
+    body: title || "🟢 Powering Smart Automation 🟢",
     thumbnailUrl: thumbnailUrl || conf.URL || '',
     sourceUrl: sourceUrl || '',
     mediaType: 1,
