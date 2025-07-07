@@ -47,7 +47,7 @@ function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, th
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
          newsletterJid: "120363249464136503@newsletter",
-         newsletterName: "🤖 𝐁𝐄𝐋𝐓𝐀𝐇 𝐀𝐈 𝐂𝐇𝐀𝐓𝐁𝐎𝐓 🤖",
+         newsletterName: "Beltah Tech Updates",
          serverMessageId: Math.floor(100000 + Math.random() * 900000),
      },
       externalAdReply: {
