@@ -209,9 +209,9 @@ keith({
 }, async (dest, zk) => {
   const loadingPromise = loading(dest, zk);
   const pingResults = Array.from({ length: 1 }, () => Math.floor(Math.random() * 10000 + 1000));
-  const formattedResults = pingResults.map(ping => `${conf.BOT} Speed ${ping} ms `);
+  const formattedResults = pingResults.map(ping => `${conf.BOT} SPEED || ${ping} ms `);
   await zk.sendMessage(dest, {
-    text: `${formattedResults.join(', ')}`,
+    text: `*${formattedResults.join(', ')}*`,
     contextInfo: getForwardedContextInfo('Ping Results'),
   });
   await loadingPromise;
