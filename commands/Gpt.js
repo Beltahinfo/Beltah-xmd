@@ -34,7 +34,7 @@ let lastTextTime = 0;
 keith({
   nomCom: "gpt",
   aliases: ["gpt4", "ai"],
-  reaction: '👻',
+  reaction: '📝',
   categorie: "AI"
 }, async (dest, zk, commandeOptions) => {
   const { ms, arg, auteurMessage } = commandeOptions;
@@ -63,14 +63,11 @@ keith({
     if (response.data?.status && response.data?.result) {
       // Format message in italic and mention sender
       const italicMessage = `_${response.data.result}_`;
-      await zk.sendMessage(
-        dest,
-        {
-          text: italicMessage,
-          contextInfo: getContextInfo("BELTAH-MD GPT RESPONSE", auteurMessage),
-        },
-        { quoted: ms }
-      );
+      
+      await zk.sendMessage(dest, {
+             text: italicMessage,
+             contextInfo: getContextInfo("BELTAH-MD GPT4", '' , 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg')
+         }, { quoted: ms });
       lastTextTime = currentTime;
     } else {
       repondre(zk, dest, ms, "Failed to get a valid response from the AI.");
