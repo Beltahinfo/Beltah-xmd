@@ -62,40 +62,6 @@ const boom_1 = require("@hapi/boom");
 const conf = require("./set");
 let fs = require("fs-extra");
 let path = require("path");
-// Place this near other function definitions, not inside any event handler
-const fetch = require('node-fetch');
-
-async function sendLatestCommits(chatId, zk) {
-    const repoOwner = 'Beltahinfo';
-    const repoName = 'Beltah-xmd';
-    const branch = 'main';
-    const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/commits?sha=${branch}&per_page=5`;
-
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-            throw new Error(`GitHub API error: ${response.status}`);
-        }
-        const commits = await response.json();
-        if (!Array.isArray(commits) || commits.length === 0) {
-            throw new Error('No commits found.');
-        }
-
-        let msg = `🟢 *Latest Commits for ${repoOwner}/${repoName} (${branch}):*\n\n`;
-        for (const commit of commits) {
-            const sha = commit.sha.substring(0, 7);
-            const message = commit.commit.message.split('\n')[0];
-            const author = commit.commit.author.name;
-            const date = new Date(commit.commit.author.date).toLocaleString();
-            const url = commit.html_url;
-            msg += `🔹 [${sha}](${url})\n• ${message}\n• by *${author}* on ${date}\n\n`;
-        }
-
-        await zk.sendMessage(chatId, { text: msg }, { linkPreview: false });
-    } catch (e) {
-        await zk.sendMessage(chatId, { text: `❌ Error fetching commits: ${e.message}` });
-    }
-  }
 const FileType = require('file-type');
 const {
   Sticker,
@@ -1099,7 +1065,7 @@ if (texte && texte.startsWith('>')) {
     let warn = await getWarnCountByJID(auteurMessage) ; 
     let warnlimit = conf.WARN_COUNT
  if ( warn >= warnlimit) { 
-  var kikmsg = `bot detected ;you will be remove because of reaching warn-limit`;
+  var kikmsg = `BOT DETECTED!!! ;you will be remove because of reaching warn-limit`;
     
      await zk.sendMessage(origineMessage, { text: kikmsg , mentions: [auteurMessage] }, { quoted: ms }) ;
 
@@ -1110,7 +1076,7 @@ if (texte && texte.startsWith('>')) {
 
     } else {
         var rest = warnlimit - warn ;
-      var  msg = `bot detected , your warn_count was upgrade ;\n rest : ${rest} `;
+      var  msg = `BOT DETECTED !!!, your warn_count was upgrade ;\n rest : ${rest} `;
 
       await ajouterUtilisateurAvecWarnCount(auteurMessage)
 
@@ -1188,17 +1154,7 @@ if (verifCom) {
         quoted: ms
       });
     }
-  } else if (verifCom) {
-  // ... existing code ...
-  if (cd) {
-    // ... command execution ...
-  } else if (com === 'commits') {
-    await sendLatestCommits(origineMessage, zk);
-    return;
   } else {
-    // Optionally handle unknown commands
-  }
-  }
     // If no command found, optionally send a feedback or ignore
     // repondre("Unknown command. Type !help for the list of commands.");
   }
