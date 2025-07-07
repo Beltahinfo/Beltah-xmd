@@ -6,18 +6,14 @@ const { Catbox } = require("node-catbox");
 const fs = require('fs-extra');
 const { repondre } = require(__dirname + "/../keizzah/context");
 
-// Initialize Catbox
 const catbox = new Catbox();
 
-// Common contextInfo configuration
-// Constants
 const DEFAULT_PARTICIPANT = '0@s.whatsapp.net';
 const DEFAULT_REMOTE_JID = 'status@broadcast';
 const DEFAULT_THUMBNAIL_URL = 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg';
 const DEFAULT_TITLE = "BELTAH-MD MENU";
 const DEFAULT_BODY = "𝗜𝘁 𝗶𝘀 𝗻𝗼𝘁 𝘆𝗲𝘁 𝘂𝗻𝘁𝗶𝗹 𝗶𝘁 𝗶𝘀 𝗱𝗼𝗻𝗲🗿";
 
-// Default message configuration
 const fgg = {
   key: {
     fromMe: false,
@@ -34,10 +30,6 @@ const fgg = {
 
 /**
  * Construct contextInfo object for messages.
- * @param {string} title - Title for the external ad reply.
- * @param {string} userJid - User JID to mention.
- * @param {string} thumbnailUrl - Thumbnail URL.
- * @returns {object} - ContextInfo object.
  */
 function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, thumbnailUrl = DEFAULT_THUMBNAIL_URL) {
   try {
@@ -46,42 +38,23 @@ function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, th
       forwardingScore: 999,
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
-         newsletterJid: "120363249464136503@newsletter",
-         newsletterName: "Beltah Tech Updates",
-         serverMessageId: Math.floor(100000 + Math.random() * 900000),
-     },
+        newsletterJid: "120363249464136503@newsletter",
+        newsletterName: "Beltah Tech Updates",
+        serverMessageId: Math.floor(100000 + Math.random() * 900000),
+      },
       externalAdReply: {
         showAdAttribution: true,
-        title : conf.BOT || 'BELTAH-MD DOWNLOADS', 
+        title: conf.BOT || 'BELTAH-MD DOWNLOADS',
         body: DEFAULT_BODY,
-        thumbnailUrl: thumbnailUrl || conf.URL || '', 
+        thumbnailUrl: thumbnailUrl || conf.URL || '',
         sourceUrl: conf.GURL || 'https://wa.me/254114141192',
       },
     };
   } catch (error) {
     console.error(`Error in getContextInfo: ${error.message}`);
-    return {}; // Prevent breaking on error
+    return {};
   }
 }
-/*const getContextInfo = (title = '', userJid = '', thumbnailUrl = '') => ({
-  mentionedJid: [userJid],
-  forwardingScore: 999,
-  isForwarded: true,
-  forwardedNewsletterMessageInfo: {
-    newsletterJid: "120363249464136503@newsletter",
-    newsletterName: "Beltah Tech Updates 👻",
-    serverMessageId: Math.floor(100000 + Math.random() * 900000),
-  },
-  externalAdReply: {
-    showAdAttribution: true,
-    title: conf.BOT || 'Beltah md Downloader',
-    body: title || "Media Downloader",
-    thumbnailUrl: thumbnailUrl || conf.URL || '',
-    sourceUrl: conf.GURL || '',
-    mediaType: 1,
-    renderLargerThumbnail: false
-  }
-});*/
 
 // Function to upload a file to Catbox and return the URL
 async function uploadToCatbox(filePath) {
@@ -97,7 +70,7 @@ async function uploadToCatbox(filePath) {
   }
 }
 
-// Common function for YouTube search
+// YouTube search helper
 async function searchYouTube(query) {
   try {
     const searchResults = await ytSearch(query);
@@ -111,134 +84,103 @@ async function searchYouTube(query) {
   }
 }
 
-// Common function for downloading media from APIs
-async function downloadFromApis(apis) {
-  for (const api of apis) {
-    try {
-      const response = await axios.get(api, { timeout: 15000 });
-      if (response.data?.success) {
-        return response.data;
-      }
-    } catch (error) {
-      console.warn(`API ${api} failed:`, error.message);
-      continue;
-    }
+// Download media from the unified API
+async function downloadFromKeithApi(url, type) {
+  try {
+    const apiUrl = `https://apis-keith.vercel.app/download/dlmp3?url=${encodeURIComponent(url)}`;
+    const res = await axios.get(apiUrl, { timeout: 20000 });
+    if (!res.data?.result) throw new Error('No result found from API.');
+    if (type === "audio" && !res.data.result.audio) throw new Error('Audio URL not found.');
+    if (type === "video" && !res.data.result.video) throw new Error('Video URL not found.');
+    return res.data.result;
+  } catch (error) {
+    throw new Error(`Download failed: ${error.message}`);
   }
-  throw new Error('Failed to retrieve download URL from all sources.');
 }
 
-// Audio download command
+// Selection table for Audio/Video
+function getMediaSelectionTable(title, videoId) {
+  return `
+╔════════════════════════╗
+║        CHOOSE TYPE     ║
+╠════════════════════════╣
+║ 1️⃣  Audio (MP3)        ║
+║ 2️⃣  Video (MP4)        ║
+╚════════════════════════╝
+
+Reply with *1* for audio or *2* for video.
+Requested: *${title}*
+ID: *${videoId.slice(0, 8)}*
+  `.trim();
+}
+
+// Universal play/video command (table-based selection)
 keith({
   nomCom: "play",
-  aliases: ["song", "playdoc", "audio", "mp3"],
+  aliases: ["song", "audio", "mp3", "video", "film", "mp4"],
   categorie: "download",
   reaction: "🎵"
 }, async (dest, zk, commandOptions) => {
-  const { arg, ms, userJid } = commandOptions;
-
+  const { arg, ms, userJid, reply_message, body } = commandOptions;
   try {
     if (!arg[0]) {
-      return repondre(zk, dest, ms, "Please provide a song name.");
+      return repondre(zk, dest, ms, "Please provide a song or video name.");
     }
 
+    // Check if user replied with a selection number (1 or 2)
+    const userReply = (body || "").trim();
+    if ((userReply === "1" || userReply === "2") && reply_message && reply_message.key && reply_message.key.id) {
+      // Retrieve context for selection
+      const context = zk.mediaSelectionContext || {};
+      const videoData = context[reply_message.key.id];
+      if (!videoData) return repondre(zk, dest, ms, "Session expired. Please use the command again.");
+
+      const { video, userJid: storedUserJid } = videoData;
+      const type = userReply === "1" ? "audio" : "video";
+      await zk.sendMessage(dest, {
+        text: `BELTAH-MD Downloading ${type === "audio" ? "audio" : "video"}... This may take a moment...`,
+        contextInfo: getContextInfo(`Downloading Requested ${type === "audio" ? "Audio" : "Video"}`, storedUserJid, video.thumbnail)
+      }, { quoted: fgg });
+
+      // Download from API
+      const result = await downloadFromKeithApi(video.url, type);
+      const { title, audio, video: videoUrl, thumbnail } = result;
+
+      if (type === "audio") {
+        await zk.sendMessage(dest, {
+          audio: { url: audio }, mimetype: 'audio/mp4',
+          caption: `🎵 *${title}*`,
+          contextInfo: getContextInfo(title, storedUserJid, thumbnail || video.thumbnail)
+        }, { quoted: ms });
+      } else {
+        await zk.sendMessage(dest, {
+          video: { url: videoUrl }, mimetype: 'video/mp4',
+          caption: `🎥 *${title}*`,
+          contextInfo: getContextInfo(title, storedUserJid, thumbnail || video.thumbnail)
+        }, { quoted: ms });
+      }
+      // Clean up selection context
+      delete zk.mediaSelectionContext[reply_message.key.id];
+      return;
+    }
+
+    // If not selection, perform search and show table
     const query = arg.join(" ");
     const video = await searchYouTube(query);
-    
+
+    // Save context for next reply
+    zk.mediaSelectionContext = zk.mediaSelectionContext || {};
+    zk.mediaSelectionContext[ms.key.id] = { video, userJid };
+
+    // Send selection table for user to pick
     await zk.sendMessage(dest, {
-      text: "BELTAH-MD Downloading audio... This may take a moment...",
-      contextInfo: getContextInfo("Downloading Requested Audio", userJid, video.thumbnail)
-    }, { quoted: fgg });
-
-    const apis = [
-      `https://noobs-api.top/ytmp3?url=${encodeURIComponent(video.url)}`
-      `https://api.giftedtech.web.id/api/download/dlmp3?url=${encodeURIComponent(video.url)}&apikey=gifted-md`,
-      `https://api.dreaded.site/api/ytdl/audio?url=${encodeURIComponent(video.url)}`
-];
-
-    const downloadData = await downloadFromApis(apis);
-    const { download_url, title } = downloadData.result;
-
-    const messagePayloads = [
-      {
-        audio: { url: download_url },
-        mimetype: 'audio/mp4',
-        caption: `🎵 *${title}*`,
-        contextInfo: getContextInfo(title, userJid, video.thumbnail)
-      },
-      {
-        document: { url: download_url },
-        mimetype: 'audio/mpeg',
-        fileName: `${title}.mp3`.replace(/[^\w\s.-]/gi, ''),
-        caption: `📁 *${title}* (Document)`,
-        contextInfo: getContextInfo(title, userJid, video.thumbnail)
-      }
-    ];
-
-    for (const payload of messagePayloads) {
-      await zk.sendMessage(dest, payload, { quoted: ms });
-    }
+      text: getMediaSelectionTable(video.title, video.videoId),
+      contextInfo: getContextInfo("Choose Audio or Video", userJid, video.thumbnail)
+    }, { quoted: ms });
 
   } catch (error) {
-    console.error('Audio download error:', error);
-    repondre(zk, dest, ms, `Download failed: ${error.message}`);
-  }
-});
-
-// Video download command
-keith({
-  nomCom: "video",
-  aliases: ["videodoc", "film", "mp4"],
-  categorie: "download",
-  reaction: "🎥"
-}, async (dest, zk, commandOptions) => {
-  const { arg, ms, userJid } = commandOptions;
-
-  try {
-    if (!arg[0]) {
-      return repondre(zk, dest, ms, "Please provide a video name.");
-    }
-
-    const query = arg.join(" ");
-    const video = await searchYouTube(query);
-    
-    await zk.sendMessage(dest, {
-      text: "⬇️ Downloading video... This may take a moment...",
-      contextInfo: getContextInfo("Downloading", userJid, video.thumbnail)
-    }, { quoted: fgg });
-
-    const apis = [
-      `https://noobs-api.top/ytmp4?url=${encodeURIComponent(video.url)}`
-      `https://api.giftedtech.web.id/api/download/dlmp3?url=${encodeURIComponent(video.url)}&apikey=gifted-md`,
-      `https://api.dreaded.site/api/ytdl/audio?url=${encodeURIComponent(video.url)}`
-];
-
-
-    const downloadData = await downloadFromApis(apis);
-    const { download_url, title } = downloadData.result;
-
-    const messagePayloads = [
-      {
-        video: { url: download_url },
-        mimetype: 'video/mp4',
-        caption: `🎥 *${title}*`,
-        contextInfo: getContextInfo(title, userJid, video.thumbnail)
-      },
-      {
-        document: { url: download_url },
-        mimetype: 'video/mp4',
-        fileName: `${title}.mp4`.replace(/[^\w\s.-]/gi, ''),
-        caption: `📁 *${title}* (Document)`,
-        contextInfo: getContextInfo(title, userJid, video.thumbnail)
-      }
-    ];
-
-    for (const payload of messagePayloads) {
-      await zk.sendMessage(dest, payload, { quoted: ms });
-    }
-
-  } catch (error) {
-    console.error('Video download error:', error);
-    repondre(zk, dest, ms, `Download failed: ${error.message}`);
+    console.error('Download error:', error);
+    repondre(zk, dest, ms, `Failed: ${error.message}`);
   }
 });
 
@@ -249,7 +191,6 @@ keith({
   reaction: '👨🏿‍💻'
 }, async (dest, zk, commandOptions) => {
   const { msgRepondu, userJid, ms } = commandOptions;
-
   try {
     if (!msgRepondu) {
       return repondre(zk, dest, ms, "Please mention an image, video, or audio.");
