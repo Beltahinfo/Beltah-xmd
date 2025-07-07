@@ -18,8 +18,6 @@ const fgg = {
   message: {
     contactMessage: {
       displayName: `🟢 Beltah Tech Info 🟢`,
-      // ERROR WAS HERE: `${0@s.whatsapp.net.split('@')[0]}` is not valid JS. Should be a variable, not 0@...
-      // Let's use a placeholder for waid, as 0@s.whatsapp.net is not a variable.
       vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;BELTAH TECH 254;;;\nFN:BELTAH MD\nitem1.TEL;waid=0:0\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
     },
   },
@@ -95,84 +93,70 @@ async function downloadFromKeithApi(url, type) {
   }
 }
 
-// Selection table for Audio/Video
-function getMediaSelectionTable(title, videoId) {
-  return `
-╔════════════════════════╗
-║        CHOOSE TYPE     ║
-╠════════════════════════╣
-║ 1️⃣  Audio (MP3)        ║
-║ 2️⃣  Video (MP4)        ║
-╚════════════════════════╝
-
-Reply with *1* for audio or *2* for video.
-Requested: *${title}*
-ID: *${videoId.slice(0, 8)}*
-  `.trim();
-}
-
-// Universal play/video command (table-based selection)
+// Universal play command (audio)
 keith({
   nomCom: "play",
-  aliases: ["song", "audio", "mp3", "video", "film", "mp4"],
+  aliases: ["song", "audio", "mp3"],
   categorie: "download",
   reaction: "🎵"
 }, async (dest, zk, commandOptions) => {
-  const { arg, ms, userJid, reply_message, body } = commandOptions;
+  const { arg, ms, userJid } = commandOptions;
   try {
     if (!arg[0]) {
-      return repondre(zk, dest, ms, "Please provide a song or video name.");
+      return repondre(zk, dest, ms, "Please provide a song name or YouTube link.");
     }
-
-    // Check if user replied with a selection number (1 or 2)
-    const userReply = (body || "").trim();
-    if ((userReply === "1" || userReply === "2") && reply_message && reply_message.key && reply_message.key.id) {
-      // Retrieve context for selection
-      const context = zk.mediaSelectionContext || {};
-      const videoData = context[reply_message.key.id];
-      if (!videoData) return repondre(zk, dest, ms, "Session expired. Please use the command again.");
-
-      const { video, userJid: storedUserJid } = videoData;
-      const type = userReply === "1" ? "audio" : "video";
-      await zk.sendMessage(dest, {
-        text: `BELTAH-MD Downloading ${type === "audio" ? "audio" : "video"}... This may take a moment...`,
-        contextInfo: getContextInfo(`Downloading Requested ${type === "audio" ? "Audio" : "Video"}`, storedUserJid, video.thumbnail)
-      }, { quoted: fgg });
-
-      // Download from API
-      const result = await downloadFromKeithApi(video.url, type);
-      const { title, audio, video: videoUrl, thumbnail } = result;
-
-      if (type === "audio") {
-        await zk.sendMessage(dest, {
-          audio: { url: audio }, mimetype: 'audio/mp4',
-          caption: `🎵 *${title}*`,
-          contextInfo: getContextInfo(title, storedUserJid, thumbnail || video.thumbnail)
-        }, { quoted: ms });
-      } else {
-        await zk.sendMessage(dest, {
-          video: { url: videoUrl }, mimetype: 'video/mp4',
-          caption: `🎥 *${title}*`,
-          contextInfo: getContextInfo(title, storedUserJid, thumbnail || video.thumbnail)
-        }, { quoted: ms });
-      }
-      // Clean up selection context
-      delete zk.mediaSelectionContext[reply_message.key.id];
-      return;
-    }
-
-    // If not selection, perform search and show table
     const query = arg.join(" ");
     const video = await searchYouTube(query);
 
-    // Save context for next reply
-    zk.mediaSelectionContext = zk.mediaSelectionContext || {};
-    zk.mediaSelectionContext[ms.key.id] = { video, userJid };
-
-    // Send selection table for user to pick
     await zk.sendMessage(dest, {
-      text: getMediaSelectionTable(video.title, video.videoId),
-      contextInfo: getContextInfo("Choose Audio or Video", userJid, video.thumbnail)
+      text: `BELTAH-MD Downloading audio... This may take a moment...`,
+      contextInfo: getContextInfo(`Downloading Requested Audio`, userJid, video.thumbnail)
+    }, { quoted: fgg });
+
+    // Download from API
+    const result = await downloadFromKeithApi(video.url, "audio");
+    const { title, audio, thumbnail } = result;
+
+    await zk.sendMessage(dest, {
+      audio: { url: audio }, mimetype: 'audio/mp4',
+      caption: `🎵 *${title}*`,
+      contextInfo: getContextInfo(title, userJid, thumbnail || video.thumbnail)
+    }, { quoted: ms });
+
+  } catch (error) {
+    console.error('Download error:', error);
+    repondre(zk, dest, ms, `Failed: ${error.message}`);
+  }
+});
+
+// Universal video command (video)
+keith({
+  nomCom: "video",
+  aliases: ["film", "mp4"],
+  categorie: "download",
+  reaction: "🎥"
+}, async (dest, zk, commandOptions) => {
+  const { arg, ms, userJid } = commandOptions;
+  try {
+    if (!arg[0]) {
+      return repondre(zk, dest, ms, "Please provide a video name or YouTube link.");
+    }
+    const query = arg.join(" ");
+    const video = await searchYouTube(query);
+
+    await zk.sendMessage(dest, {
+      text: `BELTAH-MD Downloading video... This may take a moment...`,
+      contextInfo: getContextInfo(`Downloading Requested Video`, userJid, video.thumbnail)
+    }, { quoted: fgg });
+
+    // Download from API
+    const result = await downloadFromKeithApi(video.url, "video");
+    const { title, video: videoUrl, thumbnail } = result;
+
+    await zk.sendMessage(dest, {
+      video: { url: videoUrl }, mimetype: 'video/mp4',
+      caption: `🎥 *${title}*`,
+      contextInfo: getContextInfo(title, userJid, thumbnail || video.thumbnail)
     }, { quoted: ms });
 
   } catch (error) {
