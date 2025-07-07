@@ -2,14 +2,14 @@ const { keith } = require('../keizzah/keith');
 const axios = require('axios');
 const wiki = require('wikipedia');
 const conf = require(__dirname + "/../set");
-const { repondre } = require(__dirname + "/../keizzah/context");
+//const { repondre } = require(__dirname + "/../keizzah/context");
 
 // Constants
 const DEFAULT_PARTICIPANT = '0@s.whatsapp.net';
 const DEFAULT_REMOTE_JID = 'status@broadcast';
 const DEFAULT_THUMBNAIL_URL = 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg';
-const DEFAULT_TITLE = "BELTAH TECH BOT";
-const DEFAULT_BODY = "Your AI Assistant Chuddy Buddy";
+const DEFAULT_TITLE = "Beltah Tech Updates";
+const DEFAULT_BODY = "🟢 Powering Smart Automation 🟢";
 
 // Default message configuration
 const fgg = {
@@ -41,7 +41,7 @@ function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, th
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
          newsletterJid: "120363249464136503@newsletter",
-         newsletterName: "🤖 𝐁𝐄𝐋𝐓𝐀𝐇 𝐀𝐈 𝐂𝐇𝐀𝐓𝐁𝐎𝐓 🤖",
+         newsletterName: "Beltah Tech Updates",
          serverMessageId: Math.floor(100000 + Math.random() * 900000),
      },
       externalAdReply: {
@@ -49,7 +49,7 @@ function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, th
         title,
         body: DEFAULT_BODY,
         thumbnailUrl,
-        sourceUrl: conf.GURL || '',
+        sourceUrl: conf.GURL || 'https://wa.me/254114141192',
       },
     };
   } catch (error) {
@@ -116,9 +116,7 @@ keith({
 
 ⧭ *NOW READ:* ${data.text}
 
-⧭ *LANGUAGE:* ${data.translation_name}
-
-> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙʟᴛᴀʜ ʜᴀᴄᴋɪɴɢ ᴛᴇᴀᴍ`;
+⧭ *LANGUAGE:* ${data.translation_name}`;
     
     await zk.sendMessage(dest, {
       text: messageText,
