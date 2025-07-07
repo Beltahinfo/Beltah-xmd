@@ -7,23 +7,17 @@ const fs = require('fs-extra');
 const { repondre } = require(__dirname + "/../keizzah/context");
 
 const catbox = new Catbox();
-
-const DEFAULT_PARTICIPANT = '0@s.whatsapp.net';
-const DEFAULT_REMOTE_JID = 'status@broadcast';
-const DEFAULT_THUMBNAIL_URL = 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg';
-const DEFAULT_TITLE = "BELTAH-MD MENU";
-const DEFAULT_BODY = "𝗜𝘁 𝗶𝘀 𝗻𝗼𝘁 𝘆𝗲𝘁 𝘂𝗻𝘁𝗶𝗹 𝗶𝘁 𝗶𝘀 𝗱𝗼𝗻𝗲🗿";
-
+//FGG CONSTANTS
 const fgg = {
   key: {
     fromMe: false,
-    participant: DEFAULT_PARTICIPANT,
-    remoteJid: DEFAULT_REMOTE_JID,
+    participant: '0@s.whatsapp.net',
+    remoteJid: "status@broadcast",
   },
   message: {
     contactMessage: {
-      displayName: `Beltah Tech Info`,
-      vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;BELTAH MD;;;\nFN:BELTAH MD\nitem1.TEL;waid=${DEFAULT_PARTICIPANT.split('@')[0]}:${DEFAULT_PARTICIPANT.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
+      displayName: `🟢 Beltah Tech Info 🟢`,
+      vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;BELTAH TECH 254;;;\nFN:BELTAH MD\nitem1.TEL;waid=${0@s.whatsapp.net.split('@')[0]}:${0@s.whatsapp.net.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
     },
   },
 };
@@ -31,7 +25,7 @@ const fgg = {
 /**
  * Construct contextInfo object for messages.
  */
-function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, thumbnailUrl = DEFAULT_THUMBNAIL_URL) {
+function getContextInfo(title = '' , userJid = '' , thumbnailUrl = '' ) {
   try {
     return {
       mentionedJid: [userJid],
@@ -45,8 +39,8 @@ function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, th
       externalAdReply: {
         showAdAttribution: true,
         title: conf.BOT || 'BELTAH-MD DOWNLOADS',
-        body: DEFAULT_BODY,
-        thumbnailUrl: thumbnailUrl || conf.URL || '',
+        body: "🟢 Powering Smart Automaton 🟢",
+        thumbnailUrl: conf.URL || '',
         sourceUrl: conf.GURL || 'https://wa.me/254114141192',
       },
     };
