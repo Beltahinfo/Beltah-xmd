@@ -22,7 +22,7 @@ function getContextInfo({
       },
       externalAdReply: {
         showAdAttribution: true,
-        title: conf?.BOT || "BELTAH-MD",
+        title: conf?.BOT || "BELTAH-MD GPT4",
         body: "🟢 Powering Smart Automation 🟢",
         thumbnailUrl: thumbnailUrl || conf?.URL || "",
         sourceUrl: conf?.GURL || "https://wa.me/254114141192",
