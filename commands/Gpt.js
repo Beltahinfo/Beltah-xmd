@@ -1,10 +1,31 @@
 const { keith } = require("../keizzah/keith");
 const axios = require('axios');
-//const { sendMessage, repondre } = require(__dirname + "/../keizzah/context");
 
-// Optional: Import your config if needed
-// const conf = require("../config"); // Uncomment if you use conf.CHATBOT
-
+//Context to read forwarded info 
+function getContextInfo(title = '', userJid = '', thumbnailUrl = '') {
+  try {
+    return {
+      mentionedJid: [userJid],
+      forwardingScore: 999,
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: "120363249464136503@newsletter",
+        newsletterName: "Beltah Tech Updates",
+        serverMessageId: Math.floor(100000 + Math.random() * 900000),
+      },
+      externalAdReply: {
+        showAdAttribution: true,
+        title: conf.BOT || 'BELTAH-MD',
+        body: "🟢 Powering Smart Automation 🟢",
+        thumbnailUrl: conf.URL || '',
+        sourceUrl: conf.GURL || 'https://wa.me/254114141192',
+      },
+    };
+  } catch (error) {
+    console.error(`Error in getContextInfo: ${error.message}`);
+    return {};
+  }
+}
 // Delay and last text timestamp for rate-limiting (can be adjusted)
 const messageDelay = 8000; // 8 seconds
 let lastTextTime = 0;
@@ -46,17 +67,7 @@ keith({
       const italicMessage = `_${response.data.result}_`;
       await zk.sendMessage(dest, {
         text: italicMessage,
-        mentions: [auteurMessage], // Mention the sender
-        contextInfo: {
-          externalAdReply: {
-            title: "BELTAH MD GPT4",
-            body: "KEEP LEARNING WITH BELTAH-MD",
-            thumbnailUrl: "https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg",
-            sourceUrl: "https://whatsapp.com/channel/0029VaRHDBKKmCPKp9B2uH2F",
-            mediaType: 1,
-            showAdAttribution: true,
-          },
-        },
+        contextInfo: getContextInfo("BELTAH-MD GPT RESPONSE", auteurMessage);
       }, { quoted: ms });
 
       lastTextTime = currentTime;
