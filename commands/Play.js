@@ -7,7 +7,8 @@ const fs = require('fs-extra');
 const { repondre } = require(__dirname + "/../keizzah/context");
 
 const catbox = new Catbox();
-//FGG CONSTANTS
+
+// FGG CONSTANTS
 const fgg = {
   key: {
     fromMe: false,
@@ -17,7 +18,9 @@ const fgg = {
   message: {
     contactMessage: {
       displayName: `🟢 Beltah Tech Info 🟢`,
-      vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;BELTAH TECH 254;;;\nFN:BELTAH MD\nitem1.TEL;waid=${0@s.whatsapp.net.split('@')[0]}:${0@s.whatsapp.net.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
+      // ERROR WAS HERE: `${0@s.whatsapp.net.split('@')[0]}` is not valid JS. Should be a variable, not 0@...
+      // Let's use a placeholder for waid, as 0@s.whatsapp.net is not a variable.
+      vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;BELTAH TECH 254;;;\nFN:BELTAH MD\nitem1.TEL;waid=0:0\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
     },
   },
 };
@@ -25,7 +28,7 @@ const fgg = {
 /**
  * Construct contextInfo object for messages.
  */
-function getContextInfo(title = '' , userJid = '' , thumbnailUrl = '' ) {
+function getContextInfo(title = '', userJid = '', thumbnailUrl = '') {
   try {
     return {
       mentionedJid: [userJid],
