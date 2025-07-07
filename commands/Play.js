@@ -4,7 +4,7 @@ const ytSearch = require('yt-search');
 const conf = require(__dirname + '/../set');
 const { Catbox } = require("node-catbox");
 const fs = require('fs-extra');
-const { repondre } = require(__dirname + "/../keizzah/context");
+//const { repondre } = require(__dirname + "/../keizzah/context");
 
 const catbox = new Catbox();
 
