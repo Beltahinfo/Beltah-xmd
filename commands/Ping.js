@@ -208,8 +208,8 @@ keith({
   fromMe: true,
 }, async (dest, zk) => {
   const loadingPromise = loading(dest, zk);
-  const pingResults = Array.from({ length: 2 }, () => Math.floor(Math.random() * 10000 + 1000));
-  const formattedResults = pingResults.map(ping => `${conf.OWNER_NAME} Speed ${ping} ms `);
+  const pingResults = Array.from({ length: 1 }, () => Math.floor(Math.random() * 10000 + 1000));
+  const formattedResults = pingResults.map(ping => `${conf.BOT} Speed ${ping} ms `);
   await zk.sendMessage(dest, {
     text: `${formattedResults.join(', ')}`,
     contextInfo: getForwardedContextInfo('Ping Results'),
@@ -245,7 +245,7 @@ keith({
   const herokuApiKey = s.HEROKU_API_KEY;
   if (!herokuAppName || !herokuApiKey) {
     return zk.sendMessage(chatId, {
-      text: "It looks like the Heroku app name or API key is not set. Please make sure you have set the `HEROKU_APP_NAME` and `HEROKU_API_KEY` environment variables.",
+      text: "Please make sure you have set the `HEROKU_APP_NAME` and `HEROKU_API_KEY` environment variables.",
       contextInfo: getForwardedContextInfo('Update Error'),
     });
   }
@@ -266,14 +266,14 @@ keith({
         }
       );
       await zk.sendMessage(chatId, {
-        text: "*Your bot is getting updated.",
-        contextInfo: getForwardedContextInfo('Update'),
+        text: "*Your bot is getting updated.*",
+        contextInfo: getForwardedContextInfo('🟢 BELTAH-MD UPDATING 🟢'),
       });
     } catch (error) {
       const errorMessage = error.response?.data || error.message;
       await zk.sendMessage(chatId, {
         text: `*Failed to update and redeploy. ${errorMessage} Please check if you have set the Heroku API key and Heroku app name correctly.*`,
-        contextInfo: getForwardedContextInfo('Update Error'),
+        contextInfo: getForwardedContextInfo('Updating Error!!! '),
       });
     }
   }
