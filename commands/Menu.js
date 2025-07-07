@@ -57,7 +57,7 @@ const DEFAULT_PARTICIPANT = '0@s.whatsapp.net';
 const DEFAULT_REMOTE_JID = 'status@broadcast';
 const DEFAULT_THUMBNAIL_URL = 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg';
 const DEFAULT_TITLE = "BELTAH-MD AI";
-const DEFAULT_BODY = "Your AI Assistant Chuddy Buddy";
+const DEFAULT_BODY = "🟢 Powering Smart Automation 🟢";
 
 // Default message configuration
 const fgg = {
@@ -214,7 +214,7 @@ try{
         const senderName = message.sender || message.from;
         await client.sendMessage(message, {
              text: responseMessage + commandsList,
-             contextInfo: getContextInfo("BELTAH-MD AI", senderName, 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg')
+             contextInfo: getContextInfo("BELTAH-MD INFO", senderName, 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg')
          }, { quoted: ms });
     } catch (error) {
         console.error("Menu error: ", error);
