@@ -129,7 +129,7 @@ keith(
               DEFAULTS.THUMBNAIL_URL
             ),
           },
-          { quoted: ms}
+          { quoted: DEFAULT_MESSAGE }
         );
       } else {
         repondre('An error occurred while fetching the repository data.');
