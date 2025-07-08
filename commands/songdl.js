@@ -24,6 +24,7 @@ const getContextInfo = (title = '', userJid = '', thumbnailUrl = '', sourceUrl =
   }
 });
 
+// Helper to fetch metadata and download link
 const getSongOrVideo = async (query, format) => {
   const search = await yts(query);
   const video = search.videos[0];
@@ -31,11 +32,31 @@ const getSongOrVideo = async (query, format) => {
   const safeTitle = video.title.replace(/[\\/:*?"<>|]/g, '');
   const fileName = `${safeTitle}.${format}`;
   const apiURL = `${BASE_URL}/dipto/ytDl3?link=${encodeURIComponent(video.videoId)}&format=${format}`;
-  const response = await axios.get(apiURL);
-  const data = response.data;
-  if (!data.downloadLink) return { error: `Failed to retrieve the ${format.toUpperCase()} download link.` };
-  return { video, fileName, downloadLink: data.downloadLink };
+  try {
+    const response = await axios.get(apiURL);
+    const data = response.data;
+    if (!data.downloadLink) return { error: `Failed to retrieve the ${format.toUpperCase()} download link.` };
+    return { video, fileName, downloadLink: data.downloadLink };
+  } catch (e) {
+    return { error: `API error: Unable to fetch download link (${e.message})` };
+  }
 };
+
+// Unified display formatter
+function buildCaption(type, video) {
+  const banner = type === "video" ? "BELTAH-MD VIDEO PLAYER" : "BELTAH-MD SONG PLAYER";
+  return (
+    `*${banner}*\n\n` +
+    `╭───────────────◆\n` +
+    `│⿻ *Title:* ${video.title}\n` +
+    `│⿻ *Duration:* ${video.timestamp}\n` +
+    `│⿻ *Views:* ${video.views.toLocaleString()}\n` +
+    `│⿻ *Uploaded:* ${video.ago}\n` +
+    `│⿻ *Channel:* ${video.author.name}\n` +
+    `╰────────────────◆\n\n` +
+    `🔗 ${video.url}`
+  );
+}
 
 // PLAY COMMAND (Audio)
 keith({ nomCom: "play", categorie: "Search", reaction: "🎵" }, async (origineMessage, zk, commandeOptions, conf = {}) => {
@@ -48,26 +69,19 @@ keith({ nomCom: "play", categorie: "Search", reaction: "🎵" }, async (origineM
     if (res.error) return repondre(res.error);
 
     const { video, fileName, downloadLink } = res;
+    // Send metadata card
     await zk.sendMessage(
       origineMessage,
       {
         image: { url: video.thumbnail },
-        caption:
-          `*BELTAH-MD SONG PLAYER*\n\n` +
-          `╭───────────────◆\n` +
-          `│⿻ *Title:* ${video.title}\n` +
-          `│⿻ *Duration:* ${video.timestamp}\n` +
-          `│⿻ *Views:* ${video.views.toLocaleString()}\n` +
-          `│⿻ *Uploaded:* ${video.ago}\n` +
-          `│⿻ *Channel:* ${video.author.name}\n` +
-          `╰────────────────◆\n\n` +
-          `🔗 ${video.url}`,
+        caption: buildCaption("audio", video)
       },
-      { 
+      {
         quoted: ms,
         contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url, conf)
       }
     );
+    // Send audio
     await zk.sendMessage(
       origineMessage,
       {
@@ -75,7 +89,7 @@ keith({ nomCom: "play", categorie: "Search", reaction: "🎵" }, async (origineM
         mimetype: 'audio/mpeg',
         fileName,
       },
-      { 
+      {
         quoted: ms,
         contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url, conf)
       }
@@ -97,26 +111,19 @@ keith({ nomCom: "song", categorie: "Search", reaction: "🎶" }, async (origineM
     if (res.error) return repondre(res.error);
 
     const { video, fileName, downloadLink } = res;
+    // Send metadata card
     await zk.sendMessage(
       origineMessage,
       {
         image: { url: video.thumbnail },
-        caption:
-          `*BELTAH-MD SONG PLAYER*\n\n` +
-          `╭───────────────◆\n` +
-          `│⿻ *Title:* ${video.title}\n` +
-          `│⿻ *Duration:* ${video.timestamp}\n` +
-          `│⿻ *Views:* ${video.views.toLocaleString()}\n` +
-          `│⿻ *Uploaded:* ${video.ago}\n` +
-          `│⿻ *Channel:* ${video.author.name}\n` +
-          `╰────────────────◆\n\n` +
-          `🔗 ${video.url}`,
+        caption: buildCaption("audio", video)
       },
-      { 
+      {
         quoted: ms,
         contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url, conf)
       }
     );
+    // Send audio as document
     await zk.sendMessage(
       origineMessage,
       {
@@ -124,7 +131,7 @@ keith({ nomCom: "song", categorie: "Search", reaction: "🎶" }, async (origineM
         mimetype: 'audio/mpeg',
         fileName,
       },
-      { 
+      {
         quoted: ms,
         contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url, conf)
       }
@@ -146,26 +153,19 @@ keith({ nomCom: "video", categorie: "Search", reaction: "🎬" }, async (origine
     if (res.error) return repondre(res.error);
 
     const { video, fileName, downloadLink } = res;
+    // Send metadata card
     await zk.sendMessage(
       origineMessage,
       {
         image: { url: video.thumbnail },
-        caption:
-          `*BELTAH-MD VIDEO PLAYER*\n\n` +
-          `╭───────────────◆\n` +
-          `│⿻ *Title:* ${video.title}\n` +
-          `│⿻ *Duration:* ${video.timestamp}\n` +
-          `│⿻ *Views:* ${video.views.toLocaleString()}\n` +
-          `│⿻ *Uploaded:* ${video.ago}\n` +
-          `│⿻ *Channel:* ${video.author.name}\n` +
-          `╰────────────────◆\n\n` +
-          `🔗 ${video.url}`,
+        caption: buildCaption("video", video)
       },
-      { 
+      {
         quoted: ms,
         contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url, conf)
       }
     );
+    // Send video file
     await zk.sendMessage(
       origineMessage,
       {
@@ -173,7 +173,7 @@ keith({ nomCom: "video", categorie: "Search", reaction: "🎬" }, async (origine
         mimetype: 'video/mp4',
         fileName,
       },
-      { 
+      {
         quoted: ms,
         contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url, conf)
       }
