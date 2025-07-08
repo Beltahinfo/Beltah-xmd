@@ -24,7 +24,9 @@ keith({
   • Author: ${author}
   • Node.js: ${nodeVersion}
   • Platform: ${platform} ${arch}
-  • RAM: ${memory} GB`;
+  • RAM: ${memory} GB
+  
+  > Powered by Beltah Tech`;
 
   await repondre(info);
 });
@@ -64,5 +66,5 @@ keith({
   reaction: "🆘",
   description: "Get support group link."
 }, async (_origineMessage, zk, { ms, repondre }) => {
-  await repondre("🆘 Support Group: https://chat.whatsapp.com/LINK_HERE");
+  await repondre("🆘 Support Group: https://chat.whatsapp.com/LVvp9x9lPtN0S9RWfwwoWh?mode=r_t");
 });
