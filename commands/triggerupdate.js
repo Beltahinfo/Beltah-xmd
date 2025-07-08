@@ -4,7 +4,7 @@ const axios = require('axios');
 const { HEROKU_API_KEY, HEROKU_APP_NAME } = process.env;
 
 keith({
-  nomCom: "trigger",
+  nomCom: "commit",
   categorie: "Heroku",
   reaction: "🛠️",
   ownerOnly: true,
