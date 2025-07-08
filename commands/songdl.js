@@ -17,8 +17,8 @@ const getContextInfo = (title = '', userJid = '', thumbnailUrl = '', sourceUrl =
     showAdAttribution: true,
     title: conf.BOT || 'Music Downloader',
     body: title || "🟢 Powering Smart Automation 🟢",
-    thumbnailUrl: thumbnailUrl || conf.URL || '',
-    sourceUrl: sourceUrl || '',
+    thumbnailUrl: thumbnailUrl || '',
+    sourceUrl: sourceUrl || 'https://wa.me/254114141192',
     mediaType: 1,
     renderLargerThumbnail: false,
   }
@@ -64,7 +64,7 @@ keith({ nomCom: "play", categorie: "Search", reaction: "🎵" }, async (origineM
   const query = arg.join(' ');
   if (!query) return repondre("Please provide a song name or keyword.");
   try {
-    repondre("Searching YouTube, please wait...");
+    repondre("Searching Your request, please wait...");
     const res = await getSongOrVideo(query, 'mp3');
     if (res.error) return repondre(res.error);
 
@@ -78,7 +78,7 @@ keith({ nomCom: "play", categorie: "Search", reaction: "🎵" }, async (origineM
       },
       {
         quoted: ms,
-        contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url, conf)
+        contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url)
       }
     );
     // Send audio
@@ -120,7 +120,7 @@ keith({ nomCom: "song", categorie: "Search", reaction: "🎶" }, async (origineM
       },
       {
         quoted: ms,
-        contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url, conf)
+        contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url)
       }
     );
     // Send audio as document
@@ -133,7 +133,7 @@ keith({ nomCom: "song", categorie: "Search", reaction: "🎶" }, async (origineM
       },
       {
         quoted: ms,
-        contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url, conf)
+        contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url)
       }
     );
   } catch (e) {
