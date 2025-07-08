@@ -27,7 +27,7 @@ const getContextInfo = (title = '', userJid = '', thumbnailUrl = '', sourceUrl =
 //commands 
 keith(
   {
-    nomCommande: ["play", "song", "video", "ytmp3", "ytmp4"],
+    nomCom: ["play", "song", "video", "ytmp3", "ytmp4"],
     categorie: "Music"
   },
   async (zk, ms, args, origineMessage, conf) => {
