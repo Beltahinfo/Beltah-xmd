@@ -1,6 +1,7 @@
 const { keith } = require("../keizzah/keith");
 const yts = require('yt-search');
 const axios = require('axios');
+const conf = require(__dirname + "/../set");
 const BASE_URL = 'https://noobs-api.top';
 
 // ContextInfo configuration
@@ -78,7 +79,7 @@ keith({ nomCom: "play", categorie: "Search", reaction: "🎵" }, async (origineM
       },
       {
         quoted: ms,
-        contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url)
+        contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url, conf)
       }
     );
     // Send audio
@@ -120,7 +121,7 @@ keith({ nomCom: "song", categorie: "Search", reaction: "🎶" }, async (origineM
       },
       {
         quoted: ms,
-        contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url)
+        contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url, conf)
       }
     );
     // Send audio as document
@@ -133,7 +134,7 @@ keith({ nomCom: "song", categorie: "Search", reaction: "🎶" }, async (origineM
       },
       {
         quoted: ms,
-        contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url)
+        contextInfo: getContextInfo(video.title, ms?.key?.participant || '', video.thumbnail, video.url, conf)
       }
     );
   } catch (e) {
