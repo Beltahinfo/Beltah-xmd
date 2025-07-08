@@ -172,7 +172,7 @@ keith(
 
         let responseMessage = `Hello 👋   *${nomAuteurMessage || "User"}*
         
-        ╭───「 *${settings.BOT}* 」───╮ 
+╭───「 *${settings.BOT}* 」───╮ 
 ┃◦ *ᴏᴡɴᴇʀ:* ${settings.OWNER_NAME}
 ┃◦ *ᴘʀᴇғɪx:* *[ ${settings.PREFIXE} ]*
 ┃◦ *ᴛɪᴍᴇ:* ${formattedTime}
