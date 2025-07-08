@@ -12,7 +12,7 @@ const DEFAULTS = {
   REMOTE_JID: 'status@broadcast',
   THUMBNAIL_URL: 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg',
   TITLE: "𝐓𝐄𝐂𝐇 𝐓𝐄𝐀𝐌 𝐁𝐄𝐋𝐓𝐀𝐇",
-  BODY: "𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐈𝐍𝐆 𝐘𝐎𝐔 𝐓𝐎 𝐓𝐇𝐄 𝐖𝐎𝐑𝐋𝐃 🌐"
+  BODY: "🟢 Powering Smart Automation 🟢"
 };
 
 // Default message configuration
@@ -129,7 +129,7 @@ keith(
               DEFAULTS.THUMBNAIL_URL
             ),
           },
-          { quoted: DEFAULT_MESSAGE }
+          { quoted: ms}
         );
       } else {
         repondre('An error occurred while fetching the repository data.');
