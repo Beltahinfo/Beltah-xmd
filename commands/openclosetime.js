@@ -1,7 +1,7 @@
 const { keith } = require("../keizzah/keith");
 // const { getGroupe } = require("../bdd/groupe"); 
 const conf = require("../set");
-
+const { sendMessage, repondre } = require(__dirname + "/../keizzah/context");
 keith({
     nomCom: "opentime",
     reaction: "🔖",
