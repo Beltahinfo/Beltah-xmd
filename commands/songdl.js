@@ -9,6 +9,7 @@ const BASE_URL = 'https://noobs-api.top';
 // Function to get context info
 const getContextInfo = () => ({
   forwardingScore: 999,
+  isForwarded: true,
   forwardedNewsletterMessageInfo: {
     newsletterJid: "120363249464136503@newsletter",
     newsletterName: "Beltah Tech Updates",
