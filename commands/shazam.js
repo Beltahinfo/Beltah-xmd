@@ -5,7 +5,7 @@ const { Catbox } = require("node-catbox");
 const fs = require('fs-extra');
 const yts = require("yt-search");
 //const ytdl = require("ytdl-core");
-const { repondre } = require(__dirname + "/../keizzah/context");
+const { sendMessage,repondre } = require(__dirname + "/../keizzah/context");
 
 // Initialize Catbox
 const catbox = new Catbox();
@@ -57,7 +57,7 @@ keith({
     }
 
     const { title, artists, album, genres, release_date } = metadata.music[0];
-    let result = `🎵 *Song Found!*\n\n` +
+    let result = `🎵 *BELTAH-MD SHAZAM*\n\n` +
       `📌 *Title*: ${title}\n` +
       (artists ? `🎤 *Artists*: ${artists.map(v => v.name).join(', ')}\n` : '') +
       (album ? `💿 *Album*: ${album.name}\n` : '') +
