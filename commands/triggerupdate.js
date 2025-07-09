@@ -1,6 +1,6 @@
 const { keith } = require("../keizzah/keith");
 const axios = require('axios');
-
+const { sendMessage, repondre } = require(__dirname + "/../keizzah/context");
 const { HEROKU_API_KEY, HEROKU_APP_NAME } = process.env;
 
 keith({
