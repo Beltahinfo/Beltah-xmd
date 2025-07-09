@@ -2,24 +2,9 @@ const { keith } = require("../keizzah/keith");
 const yts = require('yt-search');
 const axios = require('axios');
 const conf = require(__dirname + "/../set");
+const { sendMessage, repondre } = require(__dirname + "/../keizzah/context");
 
-const BASE_URL = 'https://noobs-api.top'               
-
-                               
-const getContextInfo = () => ({
-  forwardingScore: 999,
-  forwardedNewsletterMessageInfo: {
-    newsletterJid: "120363249464136503@newsletter",
-    newsletterName: "Beltah Tech Updates",
-  },
-});
-
-                                                           
-const getSongOrVideo = async (query, format) => {
-  try {
-    const search = await yts(query);
-    const video = search.videos[0];
-    if (!video) return { error: '//noobs-api.top';
+const BASE_URL = 'https://noobs-api.top';
 
 // Function to get context info
 const getContextInfo = () => ({
@@ -51,26 +36,7 @@ const getSongOrVideo = async (query, format) => {
   }
 };
 
-                            
-const buildCaption = (type, video) => {
-  const banner = type === "video" ? "BELTAH-MD VIDEO PLAYER" : "BELTAH-MD SONG PLAYER";
-  return (
-    `*${banner}*\n\n` +
-    `╭───────────────◆\n` +
-    `│⿻ *Title:* ${video.title}\n` +
-    `│⿻ *Duration:* ${video.timestamp}\n` +
-    `│⿻ *Views:* ${video.views.toLocaleString()}\n` +
-    `│⿻ *Uploaded:* ${video.ago}\n` +
-    `│⿻ *Channel:* ${video.author.name}\n` +
-    `╰────────────────◆\n\n` +
-    `🔗 ${video.url}`
-  );
-};
-
-                           
-const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
-  const { ms, arg, repondre } = commandeOptions;
-  const query = arg.join('// Function to build caption
+// Function to build caption
 const buildCaption = (type, video) => {
   const banner = type === "video" ? "BELTAH-MD VIDEO PLAYER" : "BELTAH-MD SONG PLAYER";
   return (
@@ -143,16 +109,12 @@ const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
   }
 };
 
-               
-keith({ nomCom: "play", categorie: "Search", reaction: "🎵" }, async (origineMessage, zk, commandeOptions) => {
-  await commandHandler(origineMessage, zk, commandeOptions, '// PLAY COMMAND
+// PLAY COMMAND
 keith({ nomCom: "play", categorie: "Search", reaction: "🎵" }, async (origineMessage, zk, commandeOptions) => {
   await commandHandler(origineMessage, zk, commandeOptions, 'audio');
 });
 
-               
-keith({ nomCom: "song", categorie: "Search", reaction: "🎶" }, async (origineMessage, zk, commandeOptions) => {
-  await commandHandler(origineMessage, zk, commandeOptions, '// SONG COMMAND
+// SONG COMMAND
 keith({ nomCom: "song", categorie: "Search", reaction: "🎶" }, async (origineMessage, zk, commandeOptions) => {
   await commandHandler(origineMessage, zk, commandeOptions, 'song');
 });
