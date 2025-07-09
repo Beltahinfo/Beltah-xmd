@@ -6,7 +6,7 @@ const { addGroupToBanList, isGroupBanned, removeGroupFromBanList } = require("..
 const { isGroupOnlyAdmin, addGroupToOnlyAdminList, removeGroupFromOnlyAdminList } = require("../bdd/onlyAdmin");
 const { removeSudoNumber, addSudoNumber, issudo } = require("../bdd/sudo");
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
+const { sendMessage, repondre } = require(__dirname + "/../keizzah/context");
 //commands 
 keith({ nomCom: "vv", aliases: ["vv2", "view"], categorie: "Mods" }, async (dest, zk, commandeOptions) => {
   const { repondre, msgRepondu, superUser } = commandeOptions;
