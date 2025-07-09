@@ -2,7 +2,7 @@ const { keith } = require('../keizzah/keith');
 const gis = require('g-i-s');
 const axios = require('axios');
 const conf = require(__dirname + '/../set');
-
+const { sendMessage, repondre } = require(__dirname + "/../keizzah/context");
 keith({
   nomCom: "img",
   aliases: ["image", "images"],
