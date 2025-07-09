@@ -3,7 +3,7 @@ const axios = require("axios");
 const os = require("os");
 const moment = require("moment-timezone");
 const packageJson = require("../package.json");
-
+const { sendMessage, repondre } = require(__dirname + "/../keizzah/context");
 
 keith({
   nomCom: "botinfo",
@@ -26,7 +26,7 @@ keith({
   • Platform: ${platform} ${arch}
   • RAM: ${memory} GB
   
-  > Powered by Beltah Tech`;
+> Powered by Beltah Tech`;
 
   await repondre(info);
 });
