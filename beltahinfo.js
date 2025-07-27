@@ -57,7 +57,14 @@ const logger = logger_1.default.child({});
 logger.level = 'silent';
 const pino = require("pino");
 const axios = require('axios');
-const fetch = require('node-fetch');
+//const fetch = require('node-fetch');
+let fetch;
+async function getFetch() {
+  if (!fetch) {
+    fetch = (await import('node-fetch')).default;
+  }
+  return fetch;
+}
 const { DateTime } = require('luxon');
 const boom_1 = require("@hapi/boom");
 const conf = require("./set");
@@ -1297,28 +1304,38 @@ zk.ev.on('group-participants.update', async group => {
             };
             insertContact(contacts);
         });
-        zk.ev.on("connection.update", async (con) => {
-    const { lastDisconnect, connection } = con;
-    if (connection === "connecting") {
-        console.log("ℹ️BELTAH-MD connecting to your account...");
-    } else if (connection === "open") {
-      // ===> START: Fetch and log latest GitHub commits on connect <===
-        try {
-            const commitsUrl = 'https://api.github.com/repos/Beltahinfo/Beltah-xmd/commits';
-            const response = await fetch(commitsUrl);
-            if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
-            const commits = await response.json();
+        
+      setTimeout(() => {
+  async function main() {
+    // ... [other code above remains unchanged] ...
 
-            console.log('Latest commits on Beltah-xmd:');
-            for (let i = 0; i < Math.min(3, commits.length); i++) { // Show top 3 commits
-                const c = commits[i];
-                console.log(`- [${c.sha.substring(0, 7)}] ${c.commit.message.split('\n')[0]} (${c.commit.author.name}, ${c.commit.author.date})`);
-            }
+    zk.ev.on("connection.update", async (con) => {
+      const { lastDisconnect, connection } = con;
+      if (connection === "connecting") {
+        console.log("ℹ️BELTAH-MD connecting to your account...");
+      } else if (connection === "open") {
+        // ===> START: Fetch and log latest GitHub commits on connect <===
+        try {
+          const commitsUrl = 'https://api.github.com/repos/Beltahinfo/Beltah-xmd/commits';
+          const response = await (await getFetch())(commitsUrl);
+          if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
+          const commits = await response.json();
+
+          console.log('Latest commits on Beltah-xmd:');
+          for (let i = 0; i < Math.min(3, commits.length); i++) { // Show top 3 commits
+            const c = commits[i];
+            console.log(`- [${c.sha.substring(0, 7)}] ${c.commit.message.split('\n')[0]} (${c.commit.author.name}, ${c.commit.author.date})`);
+          }
         } catch (err) {
-            console.error('Could not fetch GitHub commits:', err.message);
+          console.error('Could not fetch GitHub commits:', err.message);
         }
         // ===> END: GitHub commit fetch <===
         await zk.newsletterFollow("120363249464136503@newsletter"); // main channel
+        // ... [rest of the code remains unchanged] ...
+      } else if (connection === "close") {
+        // ... [rest of the code remains unchanged] ...
+      }
+    });
         console.log("✅BELTAH MD Connected successful! ☺️");
         console.log("--");
         await (0, baileys_1.delay)(200);
