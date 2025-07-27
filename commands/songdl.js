@@ -60,7 +60,7 @@ const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
   if (!query) return repondre(`Please provide a ${type} name or keyword.`);
 
   try {
-    repondre(`Searching ${type === 'video' ? 'YouTube' : 'Your request'}, please wait...`);
+    repondre(`*${conf.BOT}* DOWNLOADING  ${type === 'video' ? 'YouTube' : 'Your request⬇️'}, please wait...`);
     const res = await getSongOrVideo(query, type === 'video' ? 'mp4' : 'mp3');
     if (res.error) return repondre(res.error);
 
