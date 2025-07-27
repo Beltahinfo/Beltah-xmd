@@ -1460,12 +1460,13 @@ zk.ev.on('group-participants.update', async group => {
     return zk;
   }
   let fichier = require.resolve(__filename);
-  fs.watchFile(fichier, () => {
-    fs.unwatchFile(fichier);
-    console.log(`Updated ${__filename}`);
-    delete require.cache[fichier];
-    require(fichier);
-  });
-  main(); // <-- call main inside setTimeout
+    fs.watchFile(fichier, () => {
+        fs.unwatchFile(fichier);
+        console.log(`Updated ${__filename}`);
+        delete require.cache[fichier];
+        require(fichier);
+    });
+    main();
+  }
+  main(); // <-- close setTimeout's async main
 }, 5000); // <-- close setTimeout
-      
