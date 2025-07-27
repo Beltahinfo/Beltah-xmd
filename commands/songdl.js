@@ -15,7 +15,7 @@ const CONTEXT_INFO = {
     body: "Subscribe to stay updated!",
     previewType: "PHOTO",
     thumbnailUrl: "https://i.ibb.co/hX7LrF1/beltah-tech-banner.jpg", // Replace with your own banner image if needed
-    sourceUrl: "https://github.com/Beltahinfo/Beltah-xmd",
+    sourceUrl: "https://github.com/Beltah254/BELTAH-MD-BOT",
     mediaType: 1,
     renderLargerThumbnail: true
   }
