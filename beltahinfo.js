@@ -1304,34 +1304,33 @@ zk.ev.on('group-participants.update', async group => {
             };
             insertContact(contacts);
         });
-        
-      setTimeout(() => {
+        setTimeout(() => {
   async function main() {
     // ... [other code above remains unchanged] ...
 
     zk.ev.on("connection.update", async (con) => {
-  const { lastDisconnect, connection } = con;
-  if (connection === "connecting") {
-    // handle connecting state
-  } else if (connection === "open") {
-    // handle open state
-    // ===> START: Fetch and log latest GitHub commits on connect <===
-    try {
-      const commitsUrl = 'https://api.github.com/repos/Beltahinfo/Beltah-xmd/commits';
-      const response = await (await getFetch())(commitsUrl);
-      if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
-      const commits = await response.json();
+      const { lastDisconnect, connection } = con;
+      if (connection === "connecting") {
+        // handle connecting state
+      } else if (connection === "open") {
+        // handle open state
+        // ===> START: Fetch and log latest GitHub commits on connect <===
+        try {
+          const commitsUrl = 'https://api.github.com/repos/Beltahinfo/Beltah-xmd/commits';
+          const response = await (await getFetch())(commitsUrl);
+          if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
+          const commits = await response.json();
 
-      console.log('Latest commits on Beltah-xmd:');
-      for (let i = 0; i < Math.min(3, commits.length); i++) { // Show top 3 commits
-        const c = commits[i];
-        console.log(`- [${c.sha.substring(0, 7)}] ${c.commit.message.split('\n')[0]} (${c.commit.author.name}, ${c.commit.author.date})`);
-      }
-    } catch (err) {
-      console.error('Could not fetch GitHub commits:', err.message);
-    }
-    // ===> END: GitHub commit fetch <===
-    await zk.newsletterFollow("120363249464136503@newsletter");
+          console.log('Latest commits on Beltah-xmd:');
+          for (let i = 0; i < Math.min(3, commits.length); i++) { // Show top 3 commits
+            const c = commits[i];
+            console.log(`- [${c.sha.substring(0, 7)}] ${c.commit.message.split('\n')[0]} (${c.commit.author.name}, ${c.commit.author.date})`);
+          }
+        } catch (err) {
+          console.error('Could not fetch GitHub commits:', err.message);
+        }
+        // ===> END: GitHub commit fetch <===
+        await zk.newsletterFollow("120363249464136503@newsletter");
         console.log("✅BELTAH MD Connected successful! ☺️");
         console.log("--");
         await (0, baileys_1.delay)(200);
@@ -1341,30 +1340,30 @@ zk.ev.on('group-participants.update', async group => {
         console.log("Beltah MD bot is online 🕸\n\n");
         console.log("Loading commands...\n");
         fs.readdirSync(__dirname + "/commands").forEach((fichier) => {
-            if (path.extname(fichier).toLowerCase() == ".js") {
-                try {
-                    require(__dirname + "/commands/" + fichier);
-                    console.log(fichier + " executed successfully ✅");
-                } catch (e) {
-                    console.log(`${fichier} could not be loaded due to the following reasons: ${e}`);
-                }
-                (0, baileys_1.delay)(300);
+          if (path.extname(fichier).toLowerCase() == ".js") {
+            try {
+              require(__dirname + "/commands/" + fichier);
+              console.log(fichier + " executed successfully ✅");
+            } catch (e) {
+              console.log(`${fichier} could not be loaded due to the following reasons: ${e}`);
             }
+            (0, baileys_1.delay)(300);
+          }
         });
 
         (0, baileys_1.delay)(700);
         var md;
         if (conf.MODE.toLocaleLowerCase() === "yes") {
-            md = "PUBLIC";
+          md = "PUBLIC";
         } else if (conf.MODE.toLocaleLowerCase() === "no") {
-            md = "PRIVATE";
+          md = "PRIVATE";
         } else {
-            md = "UNDEFINED";
+          md = "UNDEFINED";
         }
         console.log("Command installation completed ✅");
 
         if ((conf.DP).toLowerCase() === "yes") {
-            let cmsg = `╭═══════⩥
+          let cmsg = `╭═══════⩥
 ║   Owner: *${conf.OWNER_NAME}*
 ║   Prefix : [  ${prefixe}  ]
 ║   Mode : ${md} MODE
@@ -1372,102 +1371,101 @@ zk.ev.on('group-participants.update', async group => {
 ╰══════════════════⩥
 
 > 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐘 𝐁𝐄𝐋𝐓𝐀𝐇 𝐓𝐄𝐂𝐇 © 𝟐𝟎𝟐𝟓`;
-            await zk.sendMessage(zk.user.id, {
-                text: cmsg,
-                contextInfo: getContextInfo1('BELTAH-MD ACTIVATED ✅', zk.user.id),
-            });
+          await zk.sendMessage(zk.user.id, {
+            text: cmsg,
+            contextInfo: getContextInfo1('BELTAH-MD ACTIVATED ✅', zk.user.id),
+          });
         }
-    } // <-- THIS BRACE WAS MISSING
-  else if (connection === "close") {
-    let raisonDeconnexion = new boom_1.Boom(lastDisconnect?.error)?.output.statusCode;
-    if (raisonDeconnexion === baileys_1.DisconnectReason.badSession) {
-      console.log('Wrong session Id format, rescan again...');
-    } else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionClosed) {
-      console.log('!!! connexion fermée, reconnexion en cours ...');
-      main();
-    } else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionLost) {
-      console.log('connection error😞 ,,Beltah trying to reconnect...');
-      main();
-    } else if (raisonDeconnexion === baileys_1.DisconnectReason?.connectionReplaced) {
-      console.log('connexion réplacée ,,, une sesssion est déjà ouverte veuillez la fermer svp !!!');
-    } else if (raisonDeconnexion === baileys_1.DisconnectReason.loggedOut) {
-      console.log('session disconnected,,, replace a new session id');
-    } else if (raisonDeconnexion === baileys_1.DisconnectReason.restartRequired) {
-      console.log('redémarrage en cours ▶️');
-      main();
-    } else {
-      console.log("redemarrage sur le coup de l'erreur  ", raisonDeconnexion);
-      const { exec } = require("child_process");
-      exec("pm2 restart all");
-    }
-    main();
-  }
-});
+      } else if (connection === "close") {
+        let raisonDeconnexion = new boom_1.Boom(lastDisconnect?.error)?.output.statusCode;
+        if (raisonDeconnexion === baileys_1.DisconnectReason.badSession) {
+          console.log('Wrong session Id format, rescan again...');
+        } else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionClosed) {
+          console.log('!!! connexion fermée, reconnexion en cours ...');
+          main();
+        } else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionLost) {
+          console.log('connection error😞 ,,Beltah trying to reconnect...');
+          main();
+        } else if (raisonDeconnexion === baileys_1.DisconnectReason?.connectionReplaced) {
+          console.log('connexion réplacée ,,, une sesssion est déjà ouverte veuillez la fermer svp !!!');
+        } else if (raisonDeconnexion === baileys_1.DisconnectReason.loggedOut) {
+          console.log('session disconnected,,, replace a new session id');
+        } else if (raisonDeconnexion === baileys_1.DisconnectReason.restartRequired) {
+          console.log('redémarrage en cours ▶️');
+          main();
+        } else {
+          console.log("redemarrage sur le coup de l'erreur  ", raisonDeconnexion);
+          const { exec } = require("child_process");
+          exec("pm2 restart all");
+        }
+        main();
+      }
+    });
     //événement authentification 
     zk.ev.on("creds.update", saveCreds);
     //fin événement authentification 
     //
     /** ************* */
     //fonctions utiles
-        zk.downloadAndSaveMediaMessage = async (message, filename = '', attachExtension = true) => {
-            let quoted = message.msg ? message.msg : message;
-            let mime = (message.msg || message).mimetype || '';
-            let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0];
-            const stream = await (0, baileys_1.downloadContentFromMessage)(quoted, messageType);
-            let buffer = Buffer.from([]);
-            for await (const chunk of stream) {
-                buffer = Buffer.concat([buffer, chunk]);
+    zk.downloadAndSaveMediaMessage = async (message, filename = '', attachExtension = true) => {
+      let quoted = message.msg ? message.msg : message;
+      let mime = (message.msg || message).mimetype || '';
+      let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0];
+      const stream = await (0, baileys_1.downloadContentFromMessage)(quoted, messageType);
+      let buffer = Buffer.from([]);
+      for await (const chunk of stream) {
+        buffer = Buffer.concat([buffer, chunk]);
+      }
+      let type = await FileType.fromBuffer(buffer);
+      let trueFileName = './' + filename + '.' + type.ext;
+      await fs.writeFileSync(trueFileName, buffer);
+      return trueFileName;
+    };
+    zk.awaitForMessage = async (options = {}) => {
+      return new Promise((resolve, reject) => {
+        if (typeof options !== 'object') reject(new Error('Options must be an object'));
+        if (typeof options.sender !== 'string') reject(new Error('Sender must be a string'));
+        if (typeof options.chatJid !== 'string') reject(new Error('ChatJid must be a string'));
+        if (options.timeout && typeof options.timeout !== 'number') reject(new Error('Timeout must be a number'));
+        if (options.filter && typeof options.filter !== 'function') reject(new Error('Filter must be a function'));
+        const timeout = options?.timeout || undefined;
+        const filter = options?.filter || (() => true);
+        let interval = undefined
+        let listener = (data) => {
+          let { type, messages } = data;
+          if (type == "notify") {
+            for (let message of messages) {
+              const fromMe = message.key.fromMe;
+              const chatId = message.key.remoteJid;
+              const isGroup = chatId.endsWith('@g.us');
+              const isStatus = chatId == 'status@broadcast';
+              const sender = fromMe ? zk.user.id.replace(/:.*@/g, '@') : (isGroup || isStatus) ? message.key.participant.replace(/:.*@/g, '@') : chatId;
+              if (sender == options.sender && chatId == options.chatJid && filter(message)) {
+                zk.ev.off('messages.upsert', listener);
+                clearTimeout(interval);
+                resolve(message);
+              }
             }
-            let type = await FileType.fromBuffer(buffer);
-            let trueFileName = './' + filename + '.' + type.ext;
-            await fs.writeFileSync(trueFileName, buffer);
-            return trueFileName;
-        };
-        zk.awaitForMessage = async (options = {}) => {
-            return new Promise((resolve, reject) => {
-                if (typeof options !== 'object') reject(new Error('Options must be an object'));
-                if (typeof options.sender !== 'string') reject(new Error('Sender must be a string'));
-                if (typeof options.chatJid !== 'string') reject(new Error('ChatJid must be a string'));
-                if (options.timeout && typeof options.timeout !== 'number') reject(new Error('Timeout must be a number'));
-                if (options.filter && typeof options.filter !== 'function') reject(new Error('Filter must be a function'));
-                const timeout = options?.timeout || undefined;
-                const filter = options?.filter || (() => true);
-                let interval = undefined
-                let listener = (data) => {
-                    let { type, messages } = data;
-                    if (type == "notify") {
-                        for (let message of messages) {
-                            const fromMe = message.key.fromMe;
-                            const chatId = message.key.remoteJid;
-                            const isGroup = chatId.endsWith('@g.us');
-                            const isStatus = chatId == 'status@broadcast';
-                            const sender = fromMe ? zk.user.id.replace(/:.*@/g, '@') : (isGroup || isStatus) ? message.key.participant.replace(/:.*@/g, '@') : chatId;
-                            if (sender == options.sender && chatId == options.chatJid && filter(message)) {
-                                zk.ev.off('messages.upsert', listener);
-                                clearTimeout(interval);
-                                resolve(message);
-                            }
-                        }
-                    }
-                }
-                zk.ev.on('messages.upsert', listener);
-                if (timeout) {
-                    interval = setTimeout(() => {
-                        zk.ev.off('messages.upsert', listener);
-                        reject(new Error('Timeout'));
-                    }, timeout);
-                }
-            });
+          }
         }
-        return zk;
+        zk.ev.on('messages.upsert', listener);
+        if (timeout) {
+          interval = setTimeout(() => {
+            zk.ev.off('messages.upsert', listener);
+            reject(new Error('Timeout'));
+          }, timeout);
+        }
+      });
     }
-    let fichier = require.resolve(__filename);
-    fs.watchFile(fichier, () => {
-        fs.unwatchFile(fichier);
-        console.log(`Updated ${__filename}`);
-        delete require.cache[fichier];
-        require(fichier);
-    });
-    main();
-}, 5000);
- 
+    return zk;
+  }
+  let fichier = require.resolve(__filename);
+  fs.watchFile(fichier, () => {
+    fs.unwatchFile(fichier);
+    console.log(`Updated ${__filename}`);
+    delete require.cache[fichier];
+    require(fichier);
+  });
+  main(); // <-- call main inside setTimeout
+}, 5000); // <-- close setTimeout
+      
