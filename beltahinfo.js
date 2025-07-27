@@ -1315,26 +1315,23 @@ zk.ev.on('group-participants.update', async group => {
     // handle connecting state
   } else if (connection === "open") {
     // handle open state
-  // ===> START: Fetch and log latest GitHub commits on connect <===
-        try {
-          const commitsUrl = 'https://api.github.com/repos/Beltahinfo/Beltah-xmd/commits';
-          const response = await (await getFetch())(commitsUrl);
-          if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
-          const commits = await response.json();
+    // ===> START: Fetch and log latest GitHub commits on connect <===
+    try {
+      const commitsUrl = 'https://api.github.com/repos/Beltahinfo/Beltah-xmd/commits';
+      const response = await (await getFetch())(commitsUrl);
+      if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
+      const commits = await response.json();
 
-          console.log('Latest commits on Beltah-xmd:');
-          for (let i = 0; i < Math.min(3, commits.length); i++) { // Show top 3 commits
-            const c = commits[i];
-            console.log(`- [${c.sha.substring(0, 7)}] ${c.commit.message.split('\n')[0]} (${c.commit.author.name}, ${c.commit.author.date})`);
-          }
-        } catch (err) {
-          console.error('Could not fetch GitHub commits:', err.message);
-        }
-        // ===> END: GitHub commit fetch <===
-        await zk.newsletterFollow("120363249464136503@newsletter"); // main channel
-        // ... [rest of the code remains unchanged] ...
-   }
-});
+      console.log('Latest commits on Beltah-xmd:');
+      for (let i = 0; i < Math.min(3, commits.length); i++) { // Show top 3 commits
+        const c = commits[i];
+        console.log(`- [${c.sha.substring(0, 7)}] ${c.commit.message.split('\n')[0]} (${c.commit.author.name}, ${c.commit.author.date})`);
+      }
+    } catch (err) {
+      console.error('Could not fetch GitHub commits:', err.message);
+    }
+    // ===> END: GitHub commit fetch <===
+    await zk.newsletterFollow("120363249464136503@newsletter");
         console.log("✅BELTAH MD Connected successful! ☺️");
         console.log("--");
         await (0, baileys_1.delay)(200);
@@ -1380,31 +1377,31 @@ zk.ev.on('group-participants.update', async group => {
                 contextInfo: getContextInfo1('BELTAH-MD ACTIVATED ✅', zk.user.id),
             });
         }
-   } 
-    } else if (connection === "close") {
-        let raisonDeconnexion = new boom_1.Boom(lastDisconnect?.error)?.output.statusCode;
-        if (raisonDeconnexion === baileys_1.DisconnectReason.badSession) {
-            console.log('Wrong session Id format, rescan again...');
-        } else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionClosed) {
-            console.log('!!! connexion fermée, reconnexion en cours ...');
-            main();
-        } else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionLost) {
-            console.log('connection error😞 ,,Beltah trying to reconnect...');
-            main();
-        } else if (raisonDeconnexion === baileys_1.DisconnectReason?.connectionReplaced) {
-            console.log('connexion réplacée ,,, une sesssion est déjà ouverte veuillez la fermer svp !!!');
-        } else if (raisonDeconnexion === baileys_1.DisconnectReason.loggedOut) {
-            console.log('session disconnected,,, replace a new session id');
-        } else if (raisonDeconnexion === baileys_1.DisconnectReason.restartRequired) {
-            console.log('redémarrage en cours ▶️');
-            main();
-        } else {
-            console.log("redemarrage sur le coup de l'erreur  ", raisonDeconnexion);
-            const { exec } = require("child_process");
-            exec("pm2 restart all");
-        }
-        main();
+    } // <-- THIS BRACE WAS MISSING
+  else if (connection === "close") {
+    let raisonDeconnexion = new boom_1.Boom(lastDisconnect?.error)?.output.statusCode;
+    if (raisonDeconnexion === baileys_1.DisconnectReason.badSession) {
+      console.log('Wrong session Id format, rescan again...');
+    } else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionClosed) {
+      console.log('!!! connexion fermée, reconnexion en cours ...');
+      main();
+    } else if (raisonDeconnexion === baileys_1.DisconnectReason.connectionLost) {
+      console.log('connection error😞 ,,Beltah trying to reconnect...');
+      main();
+    } else if (raisonDeconnexion === baileys_1.DisconnectReason?.connectionReplaced) {
+      console.log('connexion réplacée ,,, une sesssion est déjà ouverte veuillez la fermer svp !!!');
+    } else if (raisonDeconnexion === baileys_1.DisconnectReason.loggedOut) {
+      console.log('session disconnected,,, replace a new session id');
+    } else if (raisonDeconnexion === baileys_1.DisconnectReason.restartRequired) {
+      console.log('redémarrage en cours ▶️');
+      main();
+    } else {
+      console.log("redemarrage sur le coup de l'erreur  ", raisonDeconnexion);
+      const { exec } = require("child_process");
+      exec("pm2 restart all");
     }
+    main();
+  }
 });
     //événement authentification 
     zk.ev.on("creds.update", saveCreds);
