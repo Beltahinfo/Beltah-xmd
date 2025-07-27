@@ -220,7 +220,7 @@ zk.ev.on('call', async (callData) => {
     },
   });
     //Handle status reaction 
-    const loveEmojis = ["✅", "🟢", "🗿", "🟣", "⚪", "🫆", "⚫", "🟡", "👻"];
+    const loveEmojis = ["✅", "🔥", "🗿", "🤍", "🩵", "💙", "💚", "💦", "👻"];
 
 
 let lastReactionTime = 0;
