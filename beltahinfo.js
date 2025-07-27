@@ -57,6 +57,7 @@ const logger = logger_1.default.child({});
 logger.level = 'silent';
 const pino = require("pino");
 const axios = require('axios');
+const fetch = require('node-fetch');
 const { DateTime } = require('luxon');
 const boom_1 = require("@hapi/boom");
 const conf = require("./set");
@@ -576,10 +577,10 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
       } = require("./bdd/sudo");
       const nomAuteurMessage = ms.pushName;
       const sudo = await getAllSudoNumbers();
-      const superUserNumbers = [servBot, '254114141192',"254738625827","254759328581", conf.NUMERO_OWNER].map(s => s.replace(/[^0-9]/g) + "@s.whatsapp.net");
+      const superUserNumbers = [servBot, '254114141192',"254737681758" , conf.NUMERO_OWNER].map(s => s.replace(/[^0-9]/g) + "@s.whatsapp.net");
       const allAllowedNumbers = superUserNumbers.concat(sudo);
       const superUser = allAllowedNumbers.includes(auteurMessage);
-      var dev = ['254114141192',"254759328581",'254738625827'].map(t => t.replace(/[^0-9]/g) + "@s.whatsapp.net").includes(auteurMessage);
+      var dev = ['254114141192',"254737681758"].map(t => t.replace(/[^0-9]/g) + "@s.whatsapp.net").includes(auteurMessage);
       function repondre(mes) {
         zk.sendMessage(origineMessage, {
           text: mes
@@ -1301,9 +1302,23 @@ zk.ev.on('group-participants.update', async group => {
     if (connection === "connecting") {
         console.log("ℹ️BELTAH-MD connecting to your account...");
     } else if (connection === "open") {
+      // ===> START: Fetch and log latest GitHub commits on connect <===
+        try {
+            const commitsUrl = 'https://api.github.com/repos/Beltahinfo/Beltah-xmd/commits';
+            const response = await fetch(commitsUrl);
+            if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
+            const commits = await response.json();
+
+            console.log('Latest commits on Beltah-xmd:');
+            for (let i = 0; i < Math.min(3, commits.length); i++) { // Show top 3 commits
+                const c = commits[i];
+                console.log(`- [${c.sha.substring(0, 7)}] ${c.commit.message.split('\n')[0]} (${c.commit.author.name}, ${c.commit.author.date})`);
+            }
+        } catch (err) {
+            console.error('Could not fetch GitHub commits:', err.message);
+        }
+        // ===> END: GitHub commit fetch <===
         await zk.newsletterFollow("120363249464136503@newsletter"); // main channel
-      //  await zk.groupAcceptInvite("F9eGks0Pnw7JJrozICzBo4?mode=r_t"); // group 1
-      //  await zk.groupAcceptInvite("LVvp9x9lPtN0S9RWfwwoWh?mode=r_t"); // group 2
         console.log("✅BELTAH MD Connected successful! ☺️");
         console.log("--");
         await (0, baileys_1.delay)(200);
