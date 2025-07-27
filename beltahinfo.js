@@ -1380,6 +1380,7 @@ zk.ev.on('group-participants.update', async group => {
                 contextInfo: getContextInfo1('BELTAH-MD ACTIVATED ✅', zk.user.id),
             });
         }
+   } 
     } else if (connection === "close") {
         let raisonDeconnexion = new boom_1.Boom(lastDisconnect?.error)?.output.statusCode;
         if (raisonDeconnexion === baileys_1.DisconnectReason.badSession) {
