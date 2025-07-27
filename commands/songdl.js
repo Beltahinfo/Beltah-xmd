@@ -6,20 +6,31 @@ const { sendMessage, repondre } = require(__dirname + "/../keizzah/context");
 
 const BASE_URL = 'https://noobs-api.top';
 
-// Clean and improved context info
-const CONTEXT_INFO = {
+// New, dynamic context info function as requested
+const getContextInfo1 = (
+  title = '',
+  userJid = '',
+  thumbnailUrl = '',
+  confObj = {}
+) => ({
+  mentionedJid: userJid ? [userJid] : [],
   forwardingScore: 999,
   isForwarded: true,
+  forwardedNewsletterMessageInfo: {
+    newsletterJid: "120363249464136503@newsletter",
+    newsletterName: "Beltah Tech Info ",
+    serverMessageId: Math.floor(100000 + Math.random() * 900000),
+  },
   externalAdReply: {
-    title: "Beltah Tech Updates",
-    body: "Subscribe to stay updated!",
-    previewType: "PHOTO",
-    thumbnailUrl: "https://i.ibb.co/hX7LrF1/beltah-tech-banner.jpg", // Replace with your own banner image if needed
-    sourceUrl: "https://github.com/Beltah254/BELTAH-MD-BOT",
+    showAdAttribution: true,
+    title: confObj.BOT || '',
+    body: title || "🟢 Powering Smart Automation 🟢",
+    thumbnailUrl: thumbnailUrl || confObj.URL || 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg',
+    sourceUrl: confObj.GURL || 'https://wa.me/254114141192',
     mediaType: 1,
-    renderLargerThumbnail: true
+    renderLargerThumbnail: false,
   }
-};
+});
 
 // Function to get song or video metadata and download link
 const getSongOrVideo = async (query, format) => {
@@ -42,7 +53,7 @@ const getSongOrVideo = async (query, format) => {
   }
 };
 
-// Function to build caption (now includes context info)
+// Function to build caption
 const buildCaption = (type, video) => {
   const banner = type === "video" ? "BELTAH-MD VIDEO PLAYER" : "BELTAH-MD SONG PLAYER";
   return (
@@ -56,15 +67,15 @@ const buildCaption = (type, video) => {
     `╰────────────────◆\n` +
     `🔗 ${video.url}\n\n` +
     `*Context Info:*\n` +
-    `- Newsletter: ${CONTEXT_INFO.externalAdReply.title}\n` +
-    `- Info: ${CONTEXT_INFO.externalAdReply.body}\n` +
-    `- Source: ${CONTEXT_INFO.externalAdReply.sourceUrl}`
+    `- Newsletter: Beltah Tech Info\n` +
+    `- Info: 🟢 Powering Smart Automation 🟢\n` +
+    `- Source: https://github.com/Beltah254/BELTAH-MD-BOT`
   );
 };
 
 // Command handler function
 const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
-  const { ms, arg, repondre } = commandeOptions;
+  const { ms, arg, repondre, sender } = commandeOptions;
   const query = arg.join(' ');
   if (!query) return repondre(`Please provide a ${type} name or keyword.`);
 
@@ -76,6 +87,13 @@ const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
     const { video, fileName, downloadLink } = res;
 
     // Always display context info in output
+    const contextInfo = getContextInfo1(
+      video.title,
+      sender || '',
+      video.thumbnail,
+      conf
+    );
+
     await zk.sendMessage(
       origineMessage,
       {
@@ -84,7 +102,7 @@ const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
       },
       {
         quoted: ms,
-        contextInfo: CONTEXT_INFO,
+        contextInfo,
       }
     );
 
@@ -95,11 +113,11 @@ const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
           video: { url: downloadLink },
           mimetype: 'video/mp4',
           fileName,
-          caption: `*Context Info:*\n- Newsletter: ${CONTEXT_INFO.externalAdReply.title}\n- Source: ${CONTEXT_INFO.externalAdReply.sourceUrl}`,
+          caption: `*Context Info:*\n- Newsletter: Beltah Tech Info\n- Source: https://github.com/Beltah254/BELTAH-MD-BOT`,
         },
         {
           quoted: ms,
-          contextInfo: CONTEXT_INFO,
+          contextInfo,
         }
       );
     } else if (type === 'audio' || type === 'song') {
@@ -109,11 +127,11 @@ const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
           [type === 'song' ? 'document' : 'audio']: { url: downloadLink },
           mimetype: 'audio/mpeg',
           fileName,
-          caption: `*Context Info:*\n- Newsletter: ${CONTEXT_INFO.externalAdReply.title}\n- Source: ${CONTEXT_INFO.externalAdReply.sourceUrl}`,
+          caption: `*Context Info:*\n- Newsletter: Beltah Tech Info\n- Source: https://github.com/Beltah254/BELTAH-MD-BOT`,
         },
         {
           quoted: ms,
-          contextInfo: CONTEXT_INFO,
+          contextInfo,
         }
       );
     }
@@ -124,16 +142,25 @@ const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
 };
 
 // PLAY COMMAND
-keith({ nomCom: "play", categorie: "Search", reaction: "🎵" }, async (origineMessage, zk, commandeOptions) => {
-  await commandHandler(origineMessage, zk, commandeOptions, 'audio');
-});
+keith(
+  { nomCom: "play", categorie: "Search", reaction: "🎵" },
+  async (origineMessage, zk, commandeOptions) => {
+    await commandHandler(origineMessage, zk, commandeOptions, 'audio');
+  }
+);
 
 // SONG COMMAND
-keith({ nomCom: "song", categorie: "Search", reaction: "🎶" }, async (origineMessage, zk, commandeOptions) => {
-  await commandHandler(origineMessage, zk, commandeOptions, 'song');
-});
+keith(
+  { nomCom: "song", categorie: "Search", reaction: "🎶" },
+  async (origineMessage, zk, commandeOptions) => {
+    await commandHandler(origineMessage, zk, commandeOptions, 'song');
+  }
+);
 
 // VIDEO COMMAND
-keith({ nomCom: "video", categorie: "Search", reaction: "🎬" }, async (origineMessage, zk, commandeOptions) => {
-  await commandHandler(origineMessage, zk, commandeOptions, 'video');
-});
+keith(
+  { nomCom: "video", categorie: "Search", reaction: "🎬" },
+  async (origineMessage, zk, commandeOptions) => {
+    await commandHandler(origineMessage, zk, commandeOptions, 'video');
+  }
+);
