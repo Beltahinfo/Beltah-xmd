@@ -1310,11 +1310,12 @@ zk.ev.on('group-participants.update', async group => {
     // ... [other code above remains unchanged] ...
 
     zk.ev.on("connection.update", async (con) => {
-      const { lastDisconnect, connection } = con;
-      if (connection === "connecting") {
-        console.log("ℹ️BELTAH-MD connecting to your account...");
-      } else if (connection === "open") {
-        // ===> START: Fetch and log latest GitHub commits on connect <===
+  const { lastDisconnect, connection } = con;
+  if (connection === "connecting") {
+    // handle connecting state
+  } else if (connection === "open") {
+    // handle open state
+  // ===> START: Fetch and log latest GitHub commits on connect <===
         try {
           const commitsUrl = 'https://api.github.com/repos/Beltahinfo/Beltah-xmd/commits';
           const response = await (await getFetch())(commitsUrl);
@@ -1332,10 +1333,8 @@ zk.ev.on('group-participants.update', async group => {
         // ===> END: GitHub commit fetch <===
         await zk.newsletterFollow("120363249464136503@newsletter"); // main channel
         // ... [rest of the code remains unchanged] ...
-      } else if (connection === "close") {
-        // ... [rest of the code remains unchanged] ...
-      }
-    });
+   }
+});
         console.log("✅BELTAH MD Connected successful! ☺️");
         console.log("--");
         await (0, baileys_1.delay)(200);
