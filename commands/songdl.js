@@ -6,15 +6,20 @@ const { sendMessage, repondre } = require(__dirname + "/../keizzah/context");
 
 const BASE_URL = 'https://noobs-api.top';
 
-// Function to get context info
-const getContextInfo = () => ({
+// Clean and improved context info
+const CONTEXT_INFO = {
   forwardingScore: 999,
   isForwarded: true,
-  forwardedNewsletterMessageInfo: {
-    newsletterJid: "120363249464136503@newsletter",
-    newsletterName: "Beltah Tech Updates",
-  },
-});
+  externalAdReply: {
+    title: "Beltah Tech Updates",
+    body: "Subscribe to stay updated!",
+    previewType: "PHOTO",
+    thumbnailUrl: "https://i.ibb.co/hX7LrF1/beltah-tech-banner.jpg", // Replace with your own banner image if needed
+    sourceUrl: "https://github.com/Beltahinfo/Beltah-xmd",
+    mediaType: 1,
+    renderLargerThumbnail: true
+  }
+};
 
 // Function to get song or video metadata and download link
 const getSongOrVideo = async (query, format) => {
@@ -37,7 +42,7 @@ const getSongOrVideo = async (query, format) => {
   }
 };
 
-// Function to build caption
+// Function to build caption (now includes context info)
 const buildCaption = (type, video) => {
   const banner = type === "video" ? "BELTAH-MD VIDEO PLAYER" : "BELTAH-MD SONG PLAYER";
   return (
@@ -48,8 +53,12 @@ const buildCaption = (type, video) => {
     `│⿻ *Views:* ${video.views.toLocaleString()}\n` +
     `│⿻ *Uploaded:* ${video.ago}\n` +
     `│⿻ *Channel:* ${video.author.name}\n` +
-    `╰────────────────◆\n\n` +
-    `🔗 ${video.url}`
+    `╰────────────────◆\n` +
+    `🔗 ${video.url}\n\n` +
+    `*Context Info:*\n` +
+    `- Newsletter: ${CONTEXT_INFO.externalAdReply.title}\n` +
+    `- Info: ${CONTEXT_INFO.externalAdReply.body}\n` +
+    `- Source: ${CONTEXT_INFO.externalAdReply.sourceUrl}`
   );
 };
 
@@ -65,6 +74,8 @@ const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
     if (res.error) return repondre(res.error);
 
     const { video, fileName, downloadLink } = res;
+
+    // Always display context info in output
     await zk.sendMessage(
       origineMessage,
       {
@@ -73,7 +84,7 @@ const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
       },
       {
         quoted: ms,
-        contextInfo: getContextInfo(),
+        contextInfo: CONTEXT_INFO,
       }
     );
 
@@ -84,10 +95,11 @@ const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
           video: { url: downloadLink },
           mimetype: 'video/mp4',
           fileName,
+          caption: `*Context Info:*\n- Newsletter: ${CONTEXT_INFO.externalAdReply.title}\n- Source: ${CONTEXT_INFO.externalAdReply.sourceUrl}`,
         },
         {
           quoted: ms,
-          contextInfo: getContextInfo(),
+          contextInfo: CONTEXT_INFO,
         }
       );
     } else if (type === 'audio' || type === 'song') {
@@ -97,10 +109,11 @@ const commandHandler = async (origineMessage, zk, commandeOptions, type) => {
           [type === 'song' ? 'document' : 'audio']: { url: downloadLink },
           mimetype: 'audio/mpeg',
           fileName,
+          caption: `*Context Info:*\n- Newsletter: ${CONTEXT_INFO.externalAdReply.title}\n- Source: ${CONTEXT_INFO.externalAdReply.sourceUrl}`,
         },
         {
           quoted: ms,
-          contextInfo: getContextInfo(),
+          contextInfo: CONTEXT_INFO,
         }
       );
     }
