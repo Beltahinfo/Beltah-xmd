@@ -407,13 +407,13 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
   isForwarded: true,
   forwardedNewsletterMessageInfo: {
     newsletterJid: "120363249464136503@newsletter",
-    newsletterName: "Beltah Tech Info ",
+    newsletterName: "Beltah Tech Info🔥",
     serverMessageId: Math.floor(100000 + Math.random() * 900000),
   },
   externalAdReply: {
     showAdAttribution: true,
     title: conf.BOT || '',
-    body: title || "🟢 Powering Smart Automation 🟢",
+    body: title || "🟢 Made on earth 🟢",
     thumbnailUrl: thumbnailUrl || conf.URL || 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg',
     sourceUrl: conf.GURL || 'https://wa.me/254114141192',
     mediaType: 1,
@@ -1190,9 +1190,9 @@ function makeContextInfo(userJid = '', groupPicUrl = '' , groupName = '') {
     externalAdReply: {
       showAdAttribution: true,
       title: groupName,
-      body: '🟢 Powering Excellent Automation 🟢',
+      body: '🟢 Made on earth 🟢',
       thumbnailUrl: groupPicUrl,
-      sourceUrl: "https://beltah.tech",
+      sourceUrl: "https://wa.me/254114141192",
       mediaType: 1,
       renderLargerThumbnail: false,
     }
@@ -1346,7 +1346,7 @@ zk.ev.on('group-participants.update', async group => {
 > ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴇʟᴛᴀʜ ᴛᴇᴄʜ © 2025`;
             await zk.sendMessage(zk.user.id, {
                 text: cmsg,
-                contextInfo: getContextInfo1('*BELTAH-MD TRIGGERED*', zk.user.id, '🟢made on earth🟢'),
+                contextInfo: getContextInfo1(' *✅ BELTAH-MD ACTIVATED ✅* ', zk.user.id, ''),
             });
         }
     } else if (connection === "close") {
