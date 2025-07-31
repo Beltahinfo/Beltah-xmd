@@ -33,7 +33,7 @@ keith({
       return repondre(zk, dest, ms, "Could not retrieve video information. The link may be invalid or private.");
     }
 
-    // Prepare common contextInfo
+    /*/ Prepare common contextInfo
     const commonContextInfo = {
       externalAdReply: {
         showAdAttribution: true,
@@ -43,8 +43,62 @@ keith({
         sourceUrl: conf.GURL || '',
         mediaType: 1,
         renderLargerThumbnail: false
-      }
+      }conf.BOT
+    };*/
+    
+// Constants
+const DEFAULT_PARTICIPANT = '0@s.whatsapp.net';
+const DEFAULT_REMOTE_JID = 'status@broadcast';
+const DEFAULT_THUMBNAIL_URL = 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg';
+const DEFAULT_TITLE = "Beltah Tech Updates";
+const DEFAULT_BODY = "🟢 Powering Smart Automation 🟢";
+
+// Default message configuration
+const fgg = {
+  key: {
+    fromMe: false,
+    participant: DEFAULT_PARTICIPANT,
+    remoteJid: DEFAULT_REMOTE_JID,
+  },
+  message: {
+    contactMessage: {
+      displayName: `Beltah Tech Info`,
+      vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;BELTAH MD;;;\nFN:BELTAH MD\nitem1.TEL;waid=${DEFAULT_PARTICIPANT.split('@')[0]}:${DEFAULT_PARTICIPANT.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
+    },
+  },
+};
+
+/**
+ * Construct contextInfo object for messages.
+ * @param {string} title - Title for the external ad reply.
+ * @param {string} userJid - User JID to mention.
+ * @param {string} thumbnailUrl - Thumbnail URL.
+ * @returns {object} - ContextInfo object.
+ */
+function commonContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, thumbnailUrl = DEFAULT_THUMBNAIL_URL) {
+  try {
+    return {
+      mentionedJid: [userJid],
+      forwardingScore: 999,
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+         newsletterJid: "120363249464136503@newsletter",
+         newsletterName: "Beltah Tech Updates🇰🇪",
+         serverMessageId: Math.floor(100000 + Math.random() * 900000),
+     },
+      externalAdReply: {
+        showAdAttribution: true,
+        title: `${conf.BOT || 'Facebook Downloader'}`,
+        body: videoData.title || 'Facebook Video',
+        thumbnailUrl: videoData.thumbnail || '',
+        sourceUrl: conf.GURL || 'https://wa.me/254114141192',
+      },
     };
+  } catch (error) {
+    console.error(`Error in getContextInfo: ${error.message}`);
+    return {}; // Prevent breaking on error
+  }
+}
 
     // Prepare caption with video options
     const caption = `
