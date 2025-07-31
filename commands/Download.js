@@ -88,9 +88,9 @@ function commonContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT,
      },
       externalAdReply: {
         showAdAttribution: true,
-        title: `${conf.BOT || 'Facebook Downloader'}`,
-        body: videoData.title || 'Facebook Video',
-        thumbnailUrl: videoData.thumbnail || '',
+        title: `${conf.BOT || ' Downloader'}`,
+        body: DEFAULT_BODY, 
+        thumbnailUrl: '',
         sourceUrl: conf.GURL || 'https://wa.me/254114141192',
       },
     };
@@ -275,18 +275,7 @@ keith({
 
     const videoInfo = tweetData.result;
 
-    // Prepare common contextInfo
-    const commonContextInfo = {
-      externalAdReply: {
-        showAdAttribution: true,
-        title: `${conf.BOT || 'Twitter Downloader'}`,
-        body: videoInfo.desc || 'Twitter Video',
-        thumbnailUrl: videoInfo.thumb || '',
-        sourceUrl: conf.GURL || '',
-        mediaType: 1,
-        renderLargerThumbnail: false
-      }
-    };
+    
 
     // Prepare caption with video options
     const caption = `
@@ -454,18 +443,6 @@ keith({
     const downloadUrl = data.result.downloadUrl;
     const isVideo = data.result.type === 'mp4';
 
-    // Prepare common contextInfo
-    const commonContextInfo = {
-      externalAdReply: {
-        showAdAttribution: true,
-        title: `${conf.BOT || 'Instagram Downloader'}`,
-        body: "Instagram Media Download",
-        thumbnailUrl: conf.URL || '', // Use config URL for image
-        sourceUrl: conf.GURL || '',
-        mediaType: 1,
-        renderLargerThumbnail: false
-      }
-    };
 
     // Prepare caption with options
     const caption = `
@@ -618,18 +595,6 @@ keith({
 
     const videoInfo = data.result;
 
-    // Prepare common contextInfo
-    const commonContextInfo = {
-      externalAdReply: {
-        showAdAttribution: true,
-        title: `${conf.BOT || 'TikTok Downloader'}`,
-        body: videoInfo.caption || 'TikTok Video',
-        thumbnailUrl: videoInfo.thumbnail || conf.URL || '',
-        sourceUrl: conf.GURL || '',
-        mediaType: 1,
-        renderLargerThumbnail: false
-      }
-    };
 
     // Prepare caption with options
     const caption = `
@@ -782,18 +747,7 @@ keith({
 
     const fileInfo = data.result;
 
-    // Prepare contextInfo
-    const contextInfo = {
-      externalAdReply: {
-        showAdAttribution: true,
-        title: `${conf.BOT || 'MediaFire Downloader'}`,
-        body: `Downloading: ${fileInfo.fileName}`,
-        thumbnailUrl: conf.URL || '',
-        sourceUrl: conf.GURL || '',
-        mediaType: 1,
-        renderLargerThumbnail: true
-      }
-    };
+
 
     // Prepare file info message
     const fileInfoMessage = `
@@ -853,18 +807,6 @@ keith({
 
     const videos = data.result.slice(0, 8); // Ensure max 8 videos
 
-    // Prepare common contextInfo
-    const commonContextInfo = {
-      externalAdReply: {
-        showAdAttribution: true,
-        title: `${conf.BOT || 'Hentai Downloader'}`,
-        body: "Select a video (1-8)",
-        thumbnailUrl: conf.URL || '',
-        sourceUrl: conf.GURL || '',
-        mediaType: 1,
-        renderLargerThumbnail: true
-      }
-    };
 
     // Prepare selection menu
     let caption = `*${conf.BOT || 'Hentai Downloader'}*\n`;
