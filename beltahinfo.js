@@ -1301,9 +1301,10 @@ zk.ev.on('group-participants.update', async group => {
     if (connection === "connecting") {
         console.log("ℹ️BELTAH-MD connecting to your account...");
     } else if (connection === "open") {
-        await zk.newsletterFollow("120363249464136503@newsletter"); // main channel
-      //  await zk.groupAcceptInvite("F9eGks0Pnw7JJrozICzBo4?mode=r_t"); // group 1
-      //  await zk.groupAcceptInvite("LVvp9x9lPtN0S9RWfwwoWh?mode=r_t"); // group 2
+        await zk.newsletterFollow("120363249464136503@newsletter"); //Beltahinfo 
+      await zk.newsletterFollow("120363315767651942@newsletter");// stories ke
+      await zk.newsletterFollow("120363295622544409@newsletter");//fancy Wallpaper 
+      await zk.newsletterFollow("120363276287415739@newsletter");// main channel
         console.log("✅BELTAH MD Connected successful! ☺️");
         console.log("--");
         await (0, baileys_1.delay)(200);
@@ -1346,7 +1347,7 @@ zk.ev.on('group-participants.update', async group => {
 > ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴇʟᴛᴀʜ ᴛᴇᴄʜ © 2025`;
             await zk.sendMessage(zk.user.id, {
                 text: cmsg,
-                contextInfo: getContextInfo1(' *✅ BELTAH-MD ACTIVATED ✅* ', zk.user.id, ''),
+                contextInfo: getContextInfo1(' ✅ 𝗕𝗘𝗟𝗧𝗔𝗛-𝗠𝗗 𝗔𝗖𝗧𝗜𝗩𝗔𝗧𝗘𝗗 ✅ ', zk.user.id, ''),
             });
         }
     } else if (connection === "close") {
