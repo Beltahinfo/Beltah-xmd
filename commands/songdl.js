@@ -33,6 +33,11 @@ const getContextInfo = () => ({
   }
 });
 
+const buildDownloadingCaption = () => (
+  `*${BOT_NAME}*\n\n` +
+  `⏬ Downloading your request...`
+);
+
 // PLAY COMMAND (audio)
 keith(
   { nomCom: "play", categorie: "Search", reaction: "🎵" },
@@ -42,7 +47,7 @@ keith(
     if (!query)
       return zk.sendMessage(
         origineMessage,
-        { text: 'Please provide a song name or keyword.' },
+        { text: 'Please provide a song name or keyword.', contextInfo: getContextInfo() },
         { quoted: ms }
       );
 
@@ -53,7 +58,7 @@ keith(
       if (!video)
         return zk.sendMessage(
           origineMessage,
-          { text: 'No results found for your query.' },
+          { text: 'No results found for your query.', contextInfo: getContextInfo() },
           { quoted: ms }
         );
 
@@ -67,7 +72,7 @@ keith(
       if (!data.downloadLink)
         return zk.sendMessage(
           origineMessage,
-          { text: 'Failed to retrieve the MP3 download link.' },
+          { text: 'Failed to retrieve the MP3 download link.', contextInfo: getContextInfo() },
           { quoted: ms }
         );
 
@@ -77,6 +82,16 @@ keith(
         {
           image: { url: video.thumbnail },
           caption: buildCaption('audio', video),
+          contextInfo: getContextInfo()
+        },
+        { quoted: ms }
+      );
+
+      // Send downloading message
+      await zk.sendMessage(
+        origineMessage,
+        {
+          text: buildDownloadingCaption(),
           contextInfo: getContextInfo()
         },
         { quoted: ms }
@@ -97,7 +112,7 @@ keith(
       console.error('[PLAY] Error:', err);
       await zk.sendMessage(
         origineMessage,
-        { text: 'An error occurred while processing your request.' },
+        { text: 'An error occurred while processing your request.', contextInfo: getContextInfo() },
         { quoted: ms }
       );
     }
@@ -113,7 +128,7 @@ keith(
     if (!query)
       return zk.sendMessage(
         origineMessage,
-        { text: 'Please provide a song name or keyword.' },
+        { text: 'Please provide a song name or keyword.', contextInfo: getContextInfo() },
         { quoted: ms }
       );
 
@@ -124,7 +139,7 @@ keith(
       if (!video)
         return zk.sendMessage(
           origineMessage,
-          { text: 'No results found for your query.' },
+          { text: 'No results found for your query.', contextInfo: getContextInfo() },
           { quoted: ms }
         );
 
@@ -138,7 +153,7 @@ keith(
       if (!data.downloadLink)
         return zk.sendMessage(
           origineMessage,
-          { text: 'Failed to retrieve the MP3 download link.' },
+          { text: 'Failed to retrieve the MP3 download link.', contextInfo: getContextInfo() },
           { quoted: ms }
         );
 
@@ -148,6 +163,16 @@ keith(
         {
           image: { url: video.thumbnail },
           caption: buildCaption('song', video),
+          contextInfo: getContextInfo()
+        },
+        { quoted: ms }
+      );
+
+      // Send downloading message
+      await zk.sendMessage(
+        origineMessage,
+        {
+          text: buildDownloadingCaption(),
           contextInfo: getContextInfo()
         },
         { quoted: ms }
@@ -168,7 +193,7 @@ keith(
       console.error('[SONG] Error:', err);
       await zk.sendMessage(
         origineMessage,
-        { text: 'An error occurred while processing your request.' },
+        { text: 'An error occurred while processing your request.', contextInfo: getContextInfo() },
         { quoted: ms }
       );
     }
@@ -184,7 +209,7 @@ keith(
     if (!query)
       return zk.sendMessage(
         origineMessage,
-        { text: 'Please provide a video name or keyword.' },
+        { text: 'Please provide a video name or keyword.', contextInfo: getContextInfo() },
         { quoted: ms }
       );
 
@@ -195,7 +220,7 @@ keith(
       if (!video)
         return zk.sendMessage(
           origineMessage,
-          { text: 'No results found for your query.' },
+          { text: 'No results found for your query.', contextInfo: getContextInfo() },
           { quoted: ms }
         );
 
@@ -209,7 +234,7 @@ keith(
       if (!data.downloadLink)
         return zk.sendMessage(
           origineMessage,
-          { text: 'Failed to retrieve the MP4 download link.' },
+          { text: 'Failed to retrieve the MP4 download link.', contextInfo: getContextInfo() },
           { quoted: ms }
         );
 
@@ -219,6 +244,16 @@ keith(
         {
           image: { url: video.thumbnail },
           caption: buildCaption('video', video),
+          contextInfo: getContextInfo()
+        },
+        { quoted: ms }
+      );
+
+      // Send downloading message
+      await zk.sendMessage(
+        origineMessage,
+        {
+          text: buildDownloadingCaption(),
           contextInfo: getContextInfo()
         },
         { quoted: ms }
@@ -239,9 +274,9 @@ keith(
       console.error('[VIDEO] Error:', err);
       await zk.sendMessage(
         origineMessage,
-        { text: 'An error occurred while processing your request.' },
+        { text: 'An error occurred while processing your request.', contextInfo: getContextInfo() },
         { quoted: ms }
       );
     }
   }
-);
+); 
