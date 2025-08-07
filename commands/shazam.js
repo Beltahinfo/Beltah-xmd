@@ -5,7 +5,7 @@ const { Catbox } = require("node-catbox");
 const fs = require('fs-extra');
 const yts = require("yt-search");
 //const ytdl = require("ytdl-core");
-const { sendMessage,repondre } = require(__dirname + "/../keizzah/context");
+const { sendMessage, repondre } = require(__dirname + "/../keizzah/context");
 
 // Initialize Catbox
 const catbox = new Catbox();
@@ -15,6 +15,17 @@ const acr = new acrcloud({
   host: 'identify-ap-southeast-1.acrcloud.com',
   access_key: '26afd4eec96b0f5e5ab16a7e6e05ab37',
   access_secret: 'wXOZIqdMNZmaHJP1YDWVyeQLg579uK2CfY6hWMN8'
+});
+
+// Context info function as requested
+const getContextInfo = () => ({
+  forwardingScore: 1,
+  isForwarded: true,
+  forwardedNewsletterMessageInfo: {
+    newsletterJid: "120363276287415739@newsletter",
+    newsletterName: "Beltah Tech Team 🇰🇪",
+    serverMessageId: -1
+  }
 });
 
 // Function to upload a file to Catbox
@@ -65,7 +76,7 @@ keith({
 
     await zk.sendMessage(dest, { 
       text: result, 
-      contextInfo: { forwardingScore: 999 } 
+      contextInfo: getContextInfo()
     });
 
   } catch (error) {
