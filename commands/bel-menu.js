@@ -7,6 +7,8 @@ const DEFAULT_REMOTE_JID = 'status@broadcast';
 const DEFAULT_THUMBNAIL_URL = 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg';
 const DEFAULT_TITLE = "BELTAH-MD AI";
 const DEFAULT_BODY = "🟢 Powering Smart Automation 🟢";
+const DEFAULT_CHANNEL_JID = "120363276287415739@newsletter";
+const DEFAULT_CHANNEL_NAME = "Beltah Tech Team 🇰🇪";
 
 const fgg = {
     key: {
@@ -17,7 +19,7 @@ const fgg = {
     message: {
         contactMessage: {
             displayName: `Beltah Tech Info`,
-            vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;BELTAH MD;;;\nFN:BELTAH MD\nitem1.TEL;waid=${DEFAULT_PARTICIPANT.split('@')[0]}:${DEFAULT_PARTICIPANT.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`
+            vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;BELTAH MD;;;\nFN:BELTAH MD\nitem1.TEL;waid=${DEFAULT_PARTICIPANT.split('@')[0]}:${DEFAULT_PARTICIPANT.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
         },
     },
 };
@@ -25,6 +27,10 @@ const fgg = {
 function getContextInfo(title = DEFAULT_TITLE, userJid = DEFAULT_PARTICIPANT, thumbnailUrl = DEFAULT_THUMBNAIL_URL) {
     return {
         mentionedJid: [userJid],
+        channel: {
+            jid: DEFAULT_CHANNEL_JID,
+            name: DEFAULT_CHANNEL_NAME,
+        },
         externalAdReply: {
             showAdAttribution: true,
             title,
@@ -75,6 +81,7 @@ keith(
         const sortedCategories = Object.keys(categorizedCommands).sort();
 
         let chosenCategoryIndex = null;
+        // Accept only replies with a category number (no prefix required)
         if (arg && arg.length > 0) {
             const maybeIndex = parseInt(arg[0]);
             if (!isNaN(maybeIndex) && maybeIndex > 0 && maybeIndex <= sortedCategories.length) {
@@ -84,11 +91,12 @@ keith(
 
         if (chosenCategoryIndex === null) {
             let menuMessage = `Hello *${nomAuteurMessage || "User"}*\n\n`;
-            menuMessage += `*BOT:* ${settings.BOT}\n*OWNER:* ${settings.OWNER_NAME}\n*PREFIX:* [${settings.PREFIXE}]\n*MODE:* ${settings.MODE}\n*UPTIME:* ${formatUptime(process.uptime())}\n\n${readMore}\n*COMMAND CATEGORIES:*\n`;
+            menuMessage += `*BOT:* ${settings.BOT}\n*OWNER:* ${settings.OWNER_NAME}\n*PREFIX:* [${settings.PREFIXE}]\n*MODE:* ${settings.MODE}\n*UPTIME:* ${formatUptime(process.uptime())}\n\n${readMore}\n`;
             sortedCategories.forEach((cat, i) => {
                 menuMessage += `*${i + 1}.* ${cat}\n`;
             });
-            menuMessage += `\nReply or send "${prefix}menu <number>" to see commands in a category.\n`;
+            menuMessage += `\nReply with the *category number* only (e.g. "2") to see commands in that category.\n`;
+
             try {
                 const senderName = message.sender || message.from;
                 await client.sendMessage(
