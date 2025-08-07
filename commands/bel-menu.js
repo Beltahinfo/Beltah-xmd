@@ -134,6 +134,23 @@ const getRandomQuote = () => {
     return quotes[randomIndex];
 };
 
+/**
+ * React to a message using a given emoji
+ * @param {object} client - WhatsApp client instance
+ * @param {object} msg - Message to react to
+ * @param {string} emoji - Emoji string
+ */
+async function reactToMessage(client, msg, emoji = "✅") {
+    if (typeof client.sendMessage !== "function") return;
+    try {
+        if (msg && msg.key) {
+            await client.sendMessage(msg.key.remoteJid, { react: { text: emoji, key: msg.key } });
+        }
+    } catch (err) {
+        console.error("Error reacting to message: ", err);
+    }
+}
+
 keith(
     { nomCom: "bel", aliases: ["belli", "bell", "belcmd"], categorie: "SYSTEM" },
     async (message, client, config) => {
@@ -221,11 +238,12 @@ ${readMore}
             return;
         }
 
-        // Display chosen category commands
+        // Display chosen category commands and react with ✅ emoji
         const catName = sortedCategories[chosenCategoryIndex];
         const commandsList = categorizedCommands[catName].sort();
 
-        let categoryMessage = `╭───「 ${toFancyUppercaseFont(catName)} COMMANDS 」───╮\n`;
+        let categoryMessage = `✅ *Selected: ${toFancyUppercaseFont(catName)}*\n`;
+        categoryMessage += `╭───「 ${toFancyUppercaseFont(catName)} COMMANDS 」───╮\n`;
         commandsList.forEach(cmd => {
             categoryMessage += `┃ ◦ ${toFancyLowercaseFont(cmd)}\n`;
         });
@@ -233,6 +251,8 @@ ${readMore}
         categoryMessage += `\n${readMore}\n> 🔐 *𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐘 𝐁𝐄𝐋𝐓𝐀𝐇 𝐓𝐄𝐂𝐇 𝐓𝐄𝐀𝐌 ©𝟐𝟎𝟐𝟓* 🔐\n`;
 
         try {
+            // React to the original category selection message with ✅ emoji
+            await reactToMessage(client, message, "✅");
             const senderName = message.sender || message.from;
             await client.sendMessage(
                 message,
