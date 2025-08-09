@@ -11,23 +11,20 @@ const BOT_NAME = 'BELTAH-MD'; // Change as you want
 const NEWSLETTER_JID = '120363295622544409@newsletter';
 const NEWSLETTER_NAME = 'Beltah Tech Info🇰🇪';
 
-// Helper to render thumbnail in small display (Markdown style for WhatsApp, using image preview and emoji decorations)
+// Helper to render caption in small display (Markdown style for WhatsApp, using emoji decorations, NO image/thumbnail)
 const buildCaption = (type, video) => {
   const bannerEmoji = type === "video" ? "🎬" : "🎶";
   const banner = type === "video" ? `${BOT_NAME} SHAZAM KING` : `${BOT_NAME} SONG FINDER`;
-  // Emojis for each field
   return (
     `*${bannerEmoji} ${banner} ${bannerEmoji}*\n\n` +
     `╭───────────────◆\n` +
-    `│🖼️ *Thumbnail:*\n` +
-    `│        ${video.thumbnail}\n` +
     `│🎵 *Title:* ${video.title}\n` +
     `│⏱️ *Duration:* ${video.timestamp}\n` +
     `│👁️ *Views:* ${video.views.toLocaleString()}\n` +
     `│📅 *Uploaded:* ${video.ago}\n` +
     `│📺 *Channel:* ${video.author.name}\n` +
     `╰────────────────◆\n\n` +
-    `🔗 ${video.url}`
+    `> Powered by Beltah Tech Team 🇰🇪`
   );
 };
 
@@ -117,12 +114,11 @@ keith({
     const fileName = `${safeTitle}.mp3`;
     const apiURL = `${BASE_URL}/dipto/ytDl3?link=${encodeURIComponent(video.videoId)}&format=mp3`;
 
-    // Send caption with thumbnail first (thumbnail shows in WhatsApp preview, and link is displayed in caption)
+    // Send caption with NO thumbnail/image, only text
     await zk.sendMessage(
       dest,
       {
-        image: { url: video.thumbnail },
-        caption: buildCaption('audio', video),
+        text: buildCaption('audio', video),
         contextInfo: getContextInfo()
       },
       { quoted: ms }
