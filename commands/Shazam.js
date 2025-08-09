@@ -11,16 +11,21 @@ const BOT_NAME = 'BELTAH-MD'; // Change as you want
 const NEWSLETTER_JID = '120363295622544409@newsletter';
 const NEWSLETTER_NAME = 'Beltah Tech Info🇰🇪';
 
+// Helper to render thumbnail in small display (Markdown style for WhatsApp, using image preview and emoji decorations)
 const buildCaption = (type, video) => {
-  const banner = type === "video" ? `${BOT_NAME} VIDEO PLAYER` : `${BOT_NAME} SONG PLAYER`;
+  const bannerEmoji = type === "video" ? "🎬" : "🎶";
+  const banner = type === "video" ? `${BOT_NAME} SHAZAM KING` : `${BOT_NAME} SONG FINDER`;
+  // Emojis for each field
   return (
-    `*${banner}*\n\n` +
+    `*${bannerEmoji} ${banner} ${bannerEmoji}*\n\n` +
     `╭───────────────◆\n` +
-    `│⿻ *Title:* ${video.title}\n` +
-    `│⿻ *Duration:* ${video.timestamp}\n` +
-    `│⿻ *Views:* ${video.views.toLocaleString()}\n` +
-    `│⿻ *Uploaded:* ${video.ago}\n` +
-    `│⿻ *Channel:* ${video.author.name}\n` +
+    `│🖼️ *Thumbnail:*\n` +
+    `│        ${video.thumbnail}\n` +
+    `│🎵 *Title:* ${video.title}\n` +
+    `│⏱️ *Duration:* ${video.timestamp}\n` +
+    `│👁️ *Views:* ${video.views.toLocaleString()}\n` +
+    `│📅 *Uploaded:* ${video.ago}\n` +
+    `│📺 *Channel:* ${video.author.name}\n` +
     `╰────────────────◆\n\n` +
     `🔗 ${video.url}`
   );
@@ -37,8 +42,7 @@ const getContextInfo = () => ({
 });
 
 const buildDownloadingCaption = () => (
-  `*${BOT_NAME}*\n\n` +
-  `⏬ Downloading Shazam result...`
+  `*⏬ ${BOT_NAME}* Downloading Shazam result...`
 );
 
 // Initialize Catbox
@@ -65,8 +69,8 @@ async function uploadToCatbox(filePath) {
 }
 
 keith({
-  nomCom: 'tadam',
-  aliases: ['identity', 'findsongg'],
+  nomCom: 'shazam',
+  aliases: ['identify', 'findsong'],
   categorie: "Ai",
   reaction: '🎵'
 }, async (dest, zk, commandOptions) => {
@@ -113,7 +117,7 @@ keith({
     const fileName = `${safeTitle}.mp3`;
     const apiURL = `${BASE_URL}/dipto/ytDl3?link=${encodeURIComponent(video.videoId)}&format=mp3`;
 
-    // Send caption with thumbnail first
+    // Send caption with thumbnail first (thumbnail shows in WhatsApp preview, and link is displayed in caption)
     await zk.sendMessage(
       dest,
       {
