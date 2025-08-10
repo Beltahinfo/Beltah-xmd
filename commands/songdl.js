@@ -80,7 +80,7 @@ keith(
       await zk.sendMessage(
         origineMessage,
         {
-          image: { url: video.thumbnail },
+          image: { url: video.thumbnail, renderSmallThumbnail: true},
           caption: buildCaption('audio', video),
           contextInfo: getContextInfo()
         },
@@ -97,13 +97,17 @@ keith(
         { quoted: ms }
       );
 
-      // Send mp3
+      // Send mp3 with body and title, and include image with renderSmallThumbnail
       await zk.sendMessage(
         origineMessage,
         {
           audio: { url: data.downloadLink },
           mimetype: 'audio/mpeg',
-          fileName
+          fileName,
+          title: BOT_NAME,
+          body: `Requested song :${query}`,
+          image: { url: video.thumbnail, renderSmallThumbnail: true }, 
+          contextInfo: getContextInfo() 
         },
         { quoted: ms }
       );
