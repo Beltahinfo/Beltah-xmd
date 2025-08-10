@@ -5,7 +5,7 @@ const yts = require('yt-search');
 const BASE_URL = 'https://noobs-api.top';
 
 const BOT_NAME = 'BELTAH-MD'; // Change as you want
-const NEWSLETTER_JID = '120363295622544409@newsletter';
+const NEWSLETTER_JID = '120363276287415739@newsletter';
 const NEWSLETTER_NAME = 'Beltah Tech Info🇰🇪';
 
 const buildCaption = (type, video) => {
@@ -22,16 +22,19 @@ const buildCaption = (type, video) => {
     `🔗 ${video.url}`
   );
 };
-
-const getContextInfo = () => ({
+// getContextInfo now takes query and botName, and includes body and title
+const getContextInfo = (query = '', botName = BOT_NAME) => ({
   forwardingScore: 1,
   isForwarded: true,
   forwardedNewsletterMessageInfo: {
     newsletterJid: NEWSLETTER_JID,
     newsletterName: NEWSLETTER_NAME,
     serverMessageId: -1
-  }
-});
+  },
+  // Added fields as requested
+  body: query ? `Requested song: ${query}` : undefined,
+  title: botName
+}); 
 
 const buildDownloadingCaption = () => (
   `*${BOT_NAME}*\n\n` +
@@ -76,13 +79,13 @@ keith(
           { quoted: ms }
         );
 
-      // Send caption with thumbnail first
+// Send caption with thumbnail first, ensure renderSmallThumbnail: true
       await zk.sendMessage(
         origineMessage,
         {
-          image: { url: video.thumbnail, renderSmallThumbnail: true},
+          image: { url: video.thumbnail, renderSmallThumbnail: true },
           caption: buildCaption('audio', video),
-          contextInfo: getContextInfo()
+          contextInfo: getContextInfo(query)
         },
         { quoted: ms }
       );
