@@ -7,13 +7,7 @@ const { keith } = require(__dirname + "/../keizzah/keith");
 const settings = require(__dirname + "/../set");
 const activeMenus = new Map();
 
-const cm = require(__dirname + "/../keizzah/keith").cm;
-
 // ========== UTILS ==========
-
-function initializeCommands() {
-    // Here you could reload or update your command list if needed (stub for future use)
-}
 
 function formatMemory(bytes) {
     if (!bytes) return "0 MB";
@@ -43,90 +37,142 @@ function toFancyUppercaseFont(text) {
     return text.split('').map(char => fonts[char] || char).join('');
 }
 
-function toFancyLowercaseFont(text) {
-    const fonts = {
-        'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 'f': 'ғ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ', 'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ',
-        'n': 'ɴ', 'o': 'ᴏ', 'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': '𝚜', 't': 'ᴛ', 'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ'
-    };
-    return text.split('').map(char => fonts[char] || char).join('');
-}
-
-const quotes = [
-    "Dream big, work hard.",
-    "Stay humble, hustle hard.",
-    "Believe in yourself.",
-    "Success is earned, not given.",
-    "Actions speak louder than words.",
-    "The best is yet to come.",
-    "Keep pushing forward.",
-    "Do more than just exist.",
-    "Progress, not perfection.",
-    "Stay positive, work hard.",
-    "Be the change you seek.",
-    "Never stop learning.",
-    "Chase your dreams.",
-    "Be your own hero.",
-    "Life is what you make of it.",
-    "Do it with passion or not at all.",
-    "You are stronger than you think."
-];
-
 function getRandomQuote() {
+    const quotes = [
+        "Dream big, work hard.",
+        "Stay humble, hustle hard.",
+        "Believe in yourself.",
+        "Success is earned, not given.",
+        "Actions speak louder than words.",
+        "The best is yet to come.",
+        "Keep pushing forward.",
+        "Do more than just exist.",
+        "Progress, not perfection.",
+        "Stay positive, work hard.",
+        "Be the change you seek.",
+        "Never stop learning.",
+        "Chase your dreams.",
+        "Be your own hero.",
+        "Life is what you make of it.",
+        "Do it with passion or not at all.",
+        "You are stronger than you think."
+    ];
     return quotes[Math.floor(Math.random() * quotes.length)];
 }
 
-// Command grouping logic
-const categoryGroups = {
-    "AI": ["AI"],
-    "AUDIO EDIT": ["AUDIO-EDIT"],
-    "GROUP": ["GROUP"],
-    "BUG-CMDS": ["BUG-CMDS"],
-    "CODING": ["CODING"],
-    "CONVERT CMDS": ["CONVERSATION"],
-    "DOWNLOAD": ["DOWNLOAD"],
-    "EDITTING": ["EDITTING"],
-    "FUN": ["FUN"],
-    "GENERAL": ["GENERAL"],
-    "IMAGES": ["IMAGES"],
-    "MODERN-LOGO": ["MODERN-LOGO"],
-    "MODS": ["MODS"],
-    "OWNER": ["OWNER"],
-    "REACTION": ["REACTION"],
-    "SCREENSHOTS": ["SCREENSHOTS"],
-    "SEARCH": ["SEARCH"],
-    "SPORTS": ["SPORTS"],
-    "STALKER": ["STALKER"],
-    "SYSTEM": ["SYSTEM"],
-    "WA CHANNEL": ["CHANNEL"],
-    "TOOLS": ["TOOLS"],
-    "TRADE": ["TRADE"],
-    "TTS": ["TTS"],
-    "UTILITY": ["SEARCH"],
-    "SETTINGS": ["SETTING"],
-    "HEROKU": ["HEROKU-CLIENT"]
-};
-
-// Build command lists by category
-const commandList = {};
-Object.keys(categoryGroups).forEach(cat => {
-    commandList[cat] = cm.filter(c =>
-        categoryGroups[cat].some(group => c.categorie && c.categorie.toUpperCase().includes(group))
-    ).map(c => c.nomCom);
-});
+// Replace cm logic with static command list per your request:
+const categoryCommands = [
+    {
+        name: "AI",
+        commands: ["ɢᴘᴛ", "ɴᴇᴡ𝚜", "𝚜ʜᴀᴢᴀᴍ"]
+    },
+    {
+        name: "AUDIO-EDIT",
+        commands: ["ʙᴀ𝚜𝚜", "ʙʟᴏᴡɴ", "ᴅᴇᴇᴘ", "ᴇᴀʀʀᴀᴘᴇ", "ғᴀᴛ", "ɴɪɢʜᴛᴄᴏʀᴇ", "ʀᴇᴠᴇʀ𝚜ᴇ", "ʀᴏʙᴏᴛ", "𝚜ʟᴏᴡ", "𝚜ᴍᴏᴏᴛʜ", "ᴛᴇᴍᴘᴏ", "ᴛᴜᴘᴀɪ"]
+    },
+    {
+        name: "BUG-CMDS",
+        commands: ["ᴀᴍᴏᴜɴᴛʙᴜɢ", "ʙᴏᴍʙᴜɢ", "ʙᴜɢ", "ᴄʀᴀ𝚜ʜ", "ᴄʀᴀ𝚜ʜʙᴜɢ", "ᴅᴇʟᴀʏʙᴜɢ", "ᴅᴏᴄᴜʙᴜɢ", "ʟᴀɢʙᴜɢ", "ʟᴏᴄᴄʀᴀ𝚜ʜ", "ᴘᴍʙᴜɢ", "ᴛʀᴏʟʟʏʙᴜɢ", "ᴜɴʟɪᴍɪᴛᴇᴅʙᴜɢ", "🐛"]
+    },
+    {
+        name: "CODING",
+        commands: ["ʙᴀ𝚜ᴇ64", "ʙɪɴᴀʀʏ", "ᴄᴀʀʙᴏɴ", "ᴄᴏʟᴏʀ", "ᴅʙɪɴᴀʀʏ", "ᴅᴇʙɪɴᴀʀʏ", "ᴇʙɪɴᴀʀʏ", "ᴇɴᴄ", "ғᴇᴛᴄʜ", "ʀᴜɴ-ᴄ", "ʀᴜɴ-ᴄ++", "ʀᴜɴ-ᴊᴀᴠᴀ", "ʀᴜɴ-ᴊ𝚜", "ʀᴜɴ-ᴘʏ", "𝚜ᴄʀᴀᴘ", "𝚜ʜᴇʟʟ", "ᴛᴇʀᴍɪɴᴀᴛᴇ", "ᴜɴʙᴀ𝚜ᴇ64", "ᴜʀʟᴅᴇᴄᴏᴅᴇ", "ᴜʀʟᴇɴᴄᴏᴅᴇ", "ᴡᴇʙ"]
+    },
+    {
+        name: "CONVERSION",
+        commands: ["ᴇᴍᴏᴍɪx", "ᴘʜᴏᴛᴏ", "𝚜ᴄʀᴏᴘ", "𝚜ᴛɪᴄᴋᴇʀ", "ᴛᴀᴋᴇ", "ᴡʀɪᴛᴇ"]
+    },
+    {
+        name: "CONVERTER",
+        commands: ["ʙᴄʀᴏᴘ", "ʙ𝚜ᴛɪᴄᴋᴇʀ", "ʙᴛᴀᴋᴇ", "ǫᴜᴏᴛʟʏ", "ᴛᴏᴍᴘ3", "ᴛᴏᴜʀʟ𝚜"]
+    },
+    {
+        name: "DOWNLOAD",
+        commands: ["ᴀᴘᴋ", "ᴀᴘᴘᴠɴ", "ᴄᴀᴘᴄᴜᴛ", "ғᴀᴄᴇʙᴏᴏᴋ", "ғᴀᴄᴇʙᴏᴏᴋ2", "ғʙᴅʟ", "ɢɪᴛᴄʟᴏɴᴇ", "ʜᴇɴᴛᴀɪᴠɪᴅ", "ɪɴ𝚜ᴛᴀɢʀᴀᴍ", "ʟɪᴋᴇᴇ", "ᴍᴇᴅɪᴀғɪʀᴇ", "ᴘɪɴᴛᴇʀᴇ𝚜ᴛ", "ᴘᴏʀɴ", "𝚜ᴘᴏᴛɪғʏ", "ᴛɪᴋᴛᴏᴋ", "ᴛɪᴋᴛᴏᴋ2", "ᴛᴡɪᴛᴛᴇʀ"]
+    },
+    {
+        name: "FUN",
+        commands: ["ᴀᴅᴠɪᴄᴇ", "ᴀᴍᴏᴜɴᴛǫᴜɪᴢ", "ᴀɴɢʀʏ", "ᴄᴏɪɴғʟɪᴘ", "ᴅᴀʀᴇ", "ᴅɪᴄᴇ", "ᴇᴍᴏᴊɪғʏ", "ғᴀᴄᴛ", "ғᴀɴᴄʏ", "ғʟɪᴘ", "ʜᴀᴄᴋ", "ʜᴀɴᴅ", "ʜᴀᴘᴘʏ", "ʜʀᴛ", "ᴊᴏᴋᴇ", "ᴍᴏᴏɴ", "ɴɪᴋᴀʟ", "ᴘɪᴄᴋ", "ǫᴜᴇ𝚜ᴛɪᴏɴ", "ǫᴜᴏᴛ𝚎𝚜", "ʀᴀɴɪᴍᴇ", "ʀᴀɴᴋ", "𝚜ᴀᴅ", "𝚜ʜʏ", "ᴛᴏᴘʀᴀɴᴋ", "ᴛʀɪᴠɪᴀ", "ᴛʀᴜᴛʜ"]
+    },
+    {
+        name: "GAMES",
+        commands: ["ʀɪᴅᴅʟᴇ"]
+    },
+    {
+        name: "GENERAL",
+        commands: ["ᴀʟɪᴠᴇ", "ʙᴏᴛɪɴғᴏ", "ʙᴜɢᴍᴇɴᴜ", "ɢɪᴛʜᴜʙ", "ᴏᴡɴᴇʀ", "ʀᴇᴘᴏ", "𝚜ᴜᴘᴘᴏʀᴛ", "ᴛᴇᴍᴘᴍᴀɪʟ", "ᴛɪᴍᴇ", "ᴜʀʟ"]
+    },
+    {
+        name: "GROUP",
+        commands: ["ᴀᴅᴅ", "ᴀɴᴛɪʙᴏᴛ", "ᴀɴᴛɪᴅᴇᴍᴏᴛᴇ", "ᴀɴᴛɪʟɪɴᴋ", "ᴀɴᴛɪᴘʀᴏᴍᴏᴛᴇ", "ᴀᴘᴘʀᴏᴠᴇ", "ᴀᴜᴛᴏᴍᴜᴛᴇ", "ᴀᴜᴛᴏᴜɴᴍᴜᴛᴇ", "ʙʀᴏᴀᴅᴄᴀ𝚜ᴛ", "ᴄʟᴏ𝚜ᴇᴛɪᴍᴇ", "ᴄᴏᴍᴘɪʟᴇ", "ᴅᴇʟ", "ᴅᴇᴍᴏᴛᴇ", "ᴅɪ𝚜ᴀᴘ", "ᴅɪ𝚜ᴀᴘ-ᴏғғ", "ᴅɪ𝚜ᴀᴘ1", "ᴅɪ𝚜ᴀᴘ7", "ᴅɪ𝚜ᴀᴘ90", "ғᴋɪᴄᴋ", "ɢᴅᴇ𝚜ᴄ", "ɢɴᴀᴍᴇ", "ɢᴏᴏᴅʙʏᴇ", "ɢᴘᴘ", "ɢʀᴏᴜᴘ", "ɪɴғᴏ", "ɪɴᴠɪᴛᴇ", "ᴋɪᴄᴋᴀʟʟ", "ɴ𝚜ғᴡ", "ᴏɴʟʏᴀᴅᴍɪɴ", "ᴏᴘᴇɴᴛɪᴍᴇ", "ᴘʀᴏᴍᴏᴛᴇ", "ʀᴇᴊᴇᴄᴛ", "ʀᴇᴍᴏᴠᴇ", "ʀᴇǫ", "ᴛᴀɢ", "ᴛᴀɢᴀʟʟ", "ᴠᴄғ", "ᴡᴀʀɴ", "ᴡᴇʟᴄᴏᴍᴇ"]
+    },
+    {
+        name: "HEROKU",
+        commands: ["ᴄᴏᴍᴍɪᴛ"]
+    },
+    {
+        name: "HEROKU-CLIENT",
+        commands: ["ᴀɪʙᴏᴛ", "ᴀɴᴛɪᴄᴀʟʟ", "ᴀɴᴛɪᴅᴇʟᴇᴛᴇ", "ᴀɴᴛɪᴠᴠ", "ᴀʀᴇᴀᴄᴛ", "ᴄʜᴀᴛʙᴏᴛ", "ᴅᴏᴡɴʟᴏᴀᴅ𝚜ᴛᴀᴛᴜ𝚜", "ɢʀᴇᴇᴛ", "ʟɪᴋᴇ𝚜ᴛᴀᴛᴜ𝚜", "ᴍᴇɴᴜʟɪɴᴋ𝚜", "ᴏɴʟɪɴᴇ", "ᴘᴍ-ᴘᴇʀᴍɪᴛ", "ᴘʀɪᴠᴀᴛᴇᴍᴏᴅᴇ", "ᴘᴜʙʟɪᴄᴍᴏᴅᴇ", "ʀᴇᴀᴅᴍᴇ𝚜𝚜ᴀɢᴇ", "ʀᴇᴀᴅ𝚜ᴛᴀᴛᴜ𝚜", "ʀᴇᴄᴏʀᴅɪɴɢ", "𝚜ᴇᴛᴘʀᴇғɪx", "𝚜ᴇᴛᴛɪɴɢ𝚜", "𝚜ᴛᴀʀᴛᴍᴇ𝚜𝚜ᴀɢᴇ", "ᴛʏᴘɪɴɢ"]
+    },
+    {
+        name: "IMAGE-EDIT",
+        commands: ["ᴀғғᴇᴄᴛ", "ʙᴇᴀᴜᴛɪғᴜʟ", "ʙʟᴜʀ", "ᴄɪʀᴄʟᴇ", "ғᴀᴄᴇᴘᴀʟᴍ", "ɢʀᴇʏ𝚜ᴄᴀʟᴇ", "ʜɪᴛʟᴇʀ", "ɪɴᴠᴇʀᴛ", "ᴊᴀɪʟ", "ᴊᴏᴋᴇ", "ʀᴀɪɴʙᴏᴡ", "ʀɪᴘ", "𝚜ᴇᴘɪᴀ", "𝚜ʜɪᴛ", "ᴛʀᴀ𝚜ʜ", "ᴛʀɪɢɢᴇʀ", "ᴡᴀɴᴛᴇᴅ", "ᴡᴀ𝚜ᴛᴇᴅ"]
+    },
+    {
+        name: "IMAGES",
+        commands: ["ʙʟᴏᴡᴊᴏʙ", "ʜɴᴇᴋᴏ", "ɪᴍɢ", "ᴍᴇ𝚜𝚜ɪ", "ᴛʀᴀᴘ", "ᴡᴀɪғᴜ"]
+    },
+    {
+        name: "MEDIA",
+        commands: ["ᴇɴʜᴀɴᴄᴇ"]
+    },
+    {
+        name: "MODERN-LOGO",
+        commands: ["ʟᴏɢᴏ", "ᴠɪᴅᴇᴏʟᴏɢᴏ"]
+    },
+    {
+        name: "MODS",
+        commands: ["#", "ʙᴀɴ", "ʙᴀɴɢʀᴏᴜᴘ", "ʙʟᴏᴄᴋ", "ᴄʀᴇᴡ", "ᴊɪᴅ", "ᴊᴏɪɴ", "ʟᴇғᴛ", "ᴍᴇɴᴛɪᴏɴ", "𝚜ᴀᴠᴇ", "𝚜ᴜᴅᴏ", "ᴛɢ𝚜", "ᴜɴʙʟᴏᴄᴋ", "ᴠᴠ"]
+    },
+    {
+        name: "REACTION",
+        commands: ["ᴀᴡᴏᴏ", "ʙɪᴛᴇ", "ʙʟᴜ𝚜ʜ", "ʙᴏɴᴋ", "ʙᴜʟʟʏ", "ᴄʀɪɴɢᴇ", "ᴄʀʏ", "ᴄᴜᴅᴅʟᴇ", "ᴅᴀɴᴄᴇ", "ɢʟᴏᴍᴘ", "ʜᴀɴᴅʜᴏʟᴅ", "ʜᴀᴘᴘʏ", "ʜɪɢʜғɪᴠᴇ", "ʜᴜɢ", "ᴋɪᴄᴋ", "ᴋɪʟʟ", "ᴋɪ𝚜𝚜", "ʟɪᴄᴋ", "ɴᴏᴍ", "ᴘᴀᴛ", "ᴘᴏᴋᴇ", "𝚜ʟᴀᴘ", "𝚜ᴍɪʟᴇ", "𝚜ᴍᴜɢ", "ᴡᴀᴠᴇ", "ᴡɪɴᴋ", "ʏᴇᴇᴛ"]
+    },
+    {
+        name: "SEARCH",
+        commands: ["ʙɪʙʟᴇ", "ʙʟᴏᴄᴋʟɪ𝚜ᴛ", "ᴅᴇғɪɴᴇ", "ᴇʟᴇᴍᴇɴᴛ", "ғᴏᴏᴛʙᴀʟʟ", "ɢɪᴛʜᴜʙ", "ɢᴏᴏɢʟᴇ", "ʟᴏɢᴏ", "ʟʏʀɪᴄ𝚜", "ᴍᴏᴠɪᴇ", "ᴘʟᴀʏ", "ᴘᴘ", "𝚜ᴏɴɢ", "𝚜ᴛɪᴄᴋᴇʀ𝚜ᴇᴀʀᴄʜ", "ᴛᴇᴄʜɴᴇᴡ𝚜", "ᴛɪᴋᴛᴏᴋ𝚜ᴇᴀʀᴄʜ", "ᴛᴡɪᴛᴛᴇʀ𝚜ᴇᴀʀᴄʜ", "ᴠɪᴅᴇᴏ", "ᴠɪ𝚜ɪᴏɴ", "ᴡɪᴋɪ", "ʏᴛ𝚜", "ʏᴛ𝚜ᴇᴀʀᴄʜ"]
+    },
+    {
+        name: "SOCCER",
+        commands: ["ᴄʀɪᴄᴋᴇᴛ"]
+    },
+    {
+        name: "SYSTEM",
+        commands: ["ᴀʟʟᴠᴀʀ", "ʙᴇʟ", "ʙxᴅ", "ᴍᴇɴᴜ", "ᴍᴏᴅᴅᴇ", "ᴘᴀɪʀ", "ᴘɪɴɢ", "ʀᴇ𝚜ᴛᴀʀᴛ", "𝚜ᴇ𝚜𝚜ɪᴏɴ", "𝚜ᴇᴛᴠᴀʀ", "ᴛᴇ𝚜ᴛ", "ᴜᴘᴅᴀᴛᴇ", "ᴜᴘᴛɪᴍᴇ"]
+    },
+    {
+        name: "TOOLS",
+        commands: ["ᴄᴀʟᴄᴜʟᴀᴛᴇ", "ᴅᴀᴛᴇ", "ᴛɪᴍᴇɴᴏᴡ", "ᴛɪᴍᴇᴢᴏɴᴇ"]
+    },
+    {
+        name: "TTS",
+        commands: ["ᴅɪᴛ", "ɪᴛᴛᴀ", "𝚜ᴀʏ"]
+    },
+    {
+        name: "UNIVERSAL",
+        commands: ["ᴅᴇ𝚜ᴄ"]
+    }
+];
 
 // Returns category commands text
-function getCategoryCommands(groups, selectedNumber) {
-    const categories = Object.keys(groups);
-    const catName = categories[selectedNumber - 1];
-    const commands = commandList[catName] || [];
-
-    let text = `*╭─「 ${toFancyUppercaseFont(catName)} COMMANDS 」─╮*\n`;
-    if (commands.length) {
-        text += commands.map((cmd, idx) => `│ ${idx + 1}. ${toFancyLowercaseFont(cmd)}`).join("\n");
-    } else {
-        text += "│ No commands found.";
+function getCategoryCommandsStatic(selectedNumber) {
+    const cat = categoryCommands[selectedNumber - 1];
+    if (!cat) {
+        return { text: "No such category." };
     }
-    text += `\n╰─────────────────────┈⊷\nReply '0' to go back to main menu.`;
+    let text = `*╭─「 ${toFancyUppercaseFont(cat.name)} 」─╮*\n`;
+    text += cat.commands.map(cmd => `┃ ◦ ${cmd}`).join("\n");
+    text += `\n╰──────────────╯\nReply '0' to go back to main menu.`;
     return { text };
 }
 
@@ -140,7 +186,6 @@ keith({
     const userId = auteurMessage;
 
     try {
-        initializeCommands();
         moment.tz.setDefault(settings.TZ || "Africa/Nairobi");
 
         // Clean up existing session
@@ -162,7 +207,7 @@ keith({
         const formattedDate = moment().format("MMMM Do YYYY");
         const mode = settings.MODE === "public" ? "Public" : "Private";
         const randomQuote = getRandomQuote();
-        const totalCommands = cm.length;
+        const totalCommands = categoryCommands.reduce((a, b) => a + b.commands.length, 0);
         const totalMemory = formatMemory(os.totalmem());
         const usedMemory = formatMemory(os.totalmem() - os.freemem());
         const uptime = formatUptime(process.uptime());
@@ -183,10 +228,9 @@ keith({
 ││▸ 𝗧𝗶𝗺𝗲: ${formattedTime}
 ╰──────────────────────⊷
 
-
 ╭───◇ *𝗖𝗔𝗧𝗘𝗚𝗢𝗥𝗜𝗘𝗦* ◇──────⊷
 │「 𝗥𝗲𝗽𝗹𝘆 𝘄𝗶𝘁𝗵 𝗻𝘂𝗺𝗯𝗲𝗿𝘀 𝗯𝗲𝗹𝗼𝘄 」
-${Object.keys(categoryGroups).map((cat, index) => `> │◦➛ ${index + 1}. ${toFancyUppercaseFont(cat)}`).join("\n")}
+${categoryCommands.map((cat, index) => `> │◦➛ ${index + 1}. ${toFancyUppercaseFont(cat.name)}`).join("\n")}
 ╰─────────────────────┈⊷
 `.trim();
 
@@ -242,22 +286,21 @@ ${Object.keys(categoryGroups).map((cat, index) => `> │◦➛ ${index + 1}. ${t
                     return;
                 }
 
-                const categories = Object.keys(categoryGroups);
-                if (selectedNumber < 1 || selectedNumber > categories.length) {
-                    await repondre(`❌ Invalid number. Please choose between 1-${categories.length} or "0" to return`);
+                if (isNaN(selectedNumber) || selectedNumber < 1 || selectedNumber > categoryCommands.length) {
+                    await repondre(`❌ Invalid number. Please choose between 1-${categoryCommands.length} or "0" to return`);
                     await zk.sendMessage(dest, { react: { text: '⚠️', key: message.key } });
                     return;
                 }
 
                 // Get and send category commands
-                const { text: commandsText } = getCategoryCommands(categoryGroups, selectedNumber);
+                const { text: commandsText } = getCategoryCommandsStatic(selectedNumber);
                 const categoryMessage = await zk.sendMessage(dest, {
                     text: commandsText,
                     contextInfo: {
                         mentionedJid: [dest],
                         externalAdReply: {
-                            title: `${categories[selectedNumber - 1]} Commands`,
-                            body: `Total: ${commandList[categories[selectedNumber - 1]]?.length || 0} commands`,
+                            title: `${categoryCommands[selectedNumber - 1].name} Commands`,
+                            body: `Total: ${categoryCommands[selectedNumber - 1].commands.length} commands`,
                             thumbnailUrl: settings.URL,
                             sourceUrl: settings.GURL,
                             mediaType: 1,
