@@ -10,7 +10,7 @@ const conf = require(__dirname + "/../set");
 const DEFAULTS = {
   PARTICIPANT: '0@s.whatsapp.net',
   REMOTE_JID: 'status@broadcast',
-  THUMBNAIL_URL: 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg',
+  THUMBNAIL_URL: 'https://files.catbox.moe/bstm82.jpg',
   TITLE: "𝐓𝐄𝐂𝐇 𝐓𝐄𝐀𝐌 𝐁𝐄𝐋𝐓𝐀𝐇",
   BODY: "🟢 Powering Smart Automation 🟢"
 };
@@ -62,8 +62,8 @@ function getContextInfo(
       forwardingScore: 999,
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
-        newsletterJid: "120363249464136503@newsletter",
-        newsletterName: "Beltah Tech Updates",
+        newsletterJid: "120363276287415739@newsletter",
+        newsletterName: "BELTAH-MD BOT",
         serverMessageId: Math.floor(100000 + Math.random() * 900000),
       },
       externalAdReply: {
@@ -85,7 +85,7 @@ keith(
   {
     nomCom: 'repo',
     aliases: ['script', 'sc'],
-    reaction: '🚸',
+    reaction: '📃',
     nomFichier: __filename,
   },
   async (command, reply, context) => {
@@ -107,17 +107,14 @@ keith(
         const uptimeSeconds = Math.floor(process.uptime());
         const formattedUptime = formatRuntime(uptimeSeconds);
 
-        const message = `🤖 *${conf.BOT} WhatsApp Bot Information*\n\n` +
+        const message = `Hello 👋, ${nomAuteurMessage}, Don't forget to ⭐ and 🍴 our repo\n\n` +
           `📌 *Uptime*: ${formattedUptime}\n` +
           `⭐ *Total Stars*: ${repoInfo.stars}\n` +
           `🍴 *Total Forks*: ${repoInfo.forks}\n` +
           `👤 *Repository Owner*: ${repoInfo.owner}\n\n` +
-          `📆 *Repository Created*: ${repoInfo.created}\n` +
-          `📆 *Last Updated*: ${repoInfo.updated}\n\n` +
           `🔗 *Repository Link*: ${repoData.html_url}\n` +
-          `✅ *Session ID*: https://bel-tah-md-codes.onrender.com\n\n` +
-          `Thank you, ${nomAuteurMessage}, for your interest in our project. Don't forget to ⭐ star our repository for updates and improvements!\n\n` +
-          `> Powered by *Beltah Tech Team* 🚀`;
+          `✅ *Session ID*: https://bel-tah-md-codes.onrender.com` +
+          `> Powered by Beltah Tech Team`;
 
         await reply.sendMessage(
           command,
