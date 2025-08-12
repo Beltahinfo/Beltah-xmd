@@ -406,15 +406,15 @@ const getContextInfo1 = (title = '', userJid = '', thumbnailUrl = '', conf = {})
   forwardingScore: 999,
   isForwarded: true,
   forwardedNewsletterMessageInfo: {
-    newsletterJid: "120363249464136503@newsletter",
-    newsletterName: "Beltah Tech Info🔥",
+    newsletterJid: "120363276287415739@newsletter",
+    newsletterName: "BELTAH-MD BOT",
     serverMessageId: Math.floor(100000 + Math.random() * 900000),
   },
   externalAdReply: {
     showAdAttribution: true,
     title: conf.BOT || '',
     body: title || "🟢 Made on earth 🟢",
-    thumbnailUrl: thumbnailUrl || conf.URL || 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg',
+    thumbnailUrl: thumbnailUrl || conf.URL || 'https://files.catbox.moe/bstm82.jpg',
     sourceUrl: conf.GURL || 'https://wa.me/254114141192',
     mediaType: 1,
     renderLargerThumbnail: false,
@@ -1183,8 +1183,8 @@ function makeContextInfo(userJid = '', groupPicUrl = '' , groupName = '') {
     forwardingScore: 999,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-      newsletterJid: "120363249464136503@newsletter",
-      newsletterName: "Beltah Tech Updates",
+      newsletterJid: "120363276287415739@newsletter",
+      newsletterName: "BELTAH-MD BOT",
       serverMessageId: Math.floor(100000 + Math.random() * 900000),
     },
     externalAdReply: {
