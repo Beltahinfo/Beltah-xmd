@@ -21,34 +21,28 @@ keith({
     const data = response.data;
 
     if (data.result && typeof data.result === "string") {
-  const isImage = data.result.endsWith(".jpg") || data.result.endsWith(".png");
-  const caption = `*BELTAH-MD*\n🔗 Downloaded from: ${url}`;
-  const messageContent = {
-    caption,
-    contextInfo: {
-      externadata.resultlAdReply: {
-        title: "BELTAH-MD SO LIT 🔥",
-        body: "🟢 Powering Smart Automation 🟢",
-        mediaType: 1,
-        thumbnailUrl: (typeof data.imageUrl === "string" ? data.imageUrl : "") || "",
-        sourceUrl: url,
-        renderLargerThumbnail: false,
-        showAdAttribution: true
+      const isImage = data.result.endsWith(".jpg") || data.result.endsWith(".png");
+      const caption = `*BELTAH-MD*\n🔗 Downloaded from: ${url}`;
+      const messageContent = {
+        caption,
+        contextInfo: {
+          externalAdReply: { // <-- Fixed the property name here
+            title: "BELTAH-MD SO LIT 🔥",
+            body: "🟢 Powering Smart Automation 🟢",
+            mediaType: 1,
+            thumbnailUrl: (typeof data.imageUrl === "string" ? data.imageUrl : "") || "",
+            sourceUrl: url,
+            renderLargerThumbnail: false,
+            showAdAttribution: true
+          }
+        }
+      };
+
+      if (isImage) {
+        messageContent.image = { url: data.result };
+      } else {
+        messageContent.video = { url: data.result };
       }
-    }
-  };
-
-  if (isImage) {
-    messageContent.image = { url: data.result };
-  } else {
-    messageContent.video = { url: data.result };
-  }
-
-  await zk.sendMessage(ms.key.remoteJid, messageContent, { quoted: ms });
-  await repondre("✅ *Download complete!*");
-} else {
-  await repondre("❌ No media found or invalid URL.");
-}
 
       await zk.sendMessage(ms.key.remoteJid, messageContent, { quoted: ms });
       await repondre("✅ *Download complete!*");
@@ -59,4 +53,4 @@ keith({
     console.error("[ALLDL ERROR]", error);
     await repondre("⚠️ An error occurred while processing your request.");
   }
-});
+}); 
