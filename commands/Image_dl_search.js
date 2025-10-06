@@ -3,214 +3,264 @@ const gis = require('g-i-s');
 const axios = require('axios');
 const conf = require(__dirname + '/../set');
 const { sendMessage, repondre } = require(__dirname + "/../keizzah/context");
-keith({
-  nomCom: "img",
-  aliases: ["image", "images"],
-  categorie: "Images",
-  reaction: "📷"
-}, async (dest, zk, commandeOptions) => {
-  const { repondre, ms, arg } = commandeOptions;
 
-  if (!arg[0]) {
-    repondre('Which image?');
-    return;
-  }
+// Utility to build common contextInfo for messages
+function buildContextInfo(title, body, thumbnailUrl, sourceUrl) {
+  return {
+    externalAdReply: {
+      title,
+      body,
+      thumbnailUrl,
+      sourceUrl,
+      mediaType: 1,
+      showAdAttribution: true,
+    },
+    forwardingScore: 999,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: "120363276287415739@newsletter",
+      newsletterName: "BELTAH-MD BOT",
+      serverMessageId: Math.floor(100000 + Math.random() * 900000),
+    },
+  };
+}
 
-  const searchTerm = arg.join(" ");
-  gis(searchTerm, (error, results) => sendImage(error, results));
+// Image Search Command
+keith(
+  {
+    nomCom: "img",
+    aliases: ["image", "images"],
+    categorie: "Images",
+    reaction: "📷",
+  },
+  async (dest, zk, commandeOptions) => {
+    const { repondre, ms, arg } = commandeOptions;
 
-  function sendImage(error, results) {
-    if (error) {
-      repondre("Oops, an error occurred.");
+    if (!arg[0]) {
+      repondre('Which image?');
       return;
     }
 
-    if (!results || results.length === 0) {
-      repondre("No images found.");
-      return;
-    }
+    const searchTerm = arg.join(" ");
+    gis(searchTerm, (error, results) => sendImage(error, results));
 
-    for (let i = 0; i < Math.min(results.length, 5); i++) {
-      zk.sendMessage(dest, {
-        image: { url: results[i].url },
-        caption: `*Downloaded by ${conf.BOT}*`,
-        contextInfo: {
-          externalAdReply: {
-            title: "Image Search Result",
-            body: `Here's the image you searched for: ${searchTerm}`,
-            thumbnailUrl: results[i].url,
-            sourceUrl: conf.GURL,
-            mediaType: 1,
-            showAdAttribution: true
-          }
-        }
-      }, { quoted: ms });
+    function sendImage(error, results) {
+      if (error) {
+        repondre("Oops, an error occurred.");
+        return;
+      }
+
+      if (!results || results.length === 0) {
+        repondre("No images found.");
+        return;
+      }
+
+      for (let i = 0; i < Math.min(results.length, 5); i++) {
+        zk.sendMessage(
+          dest,
+          {
+            image: { url: results[i].url },
+            caption: `*Downloaded by ${conf.BOT}*`,
+            contextInfo: buildContextInfo(
+              "Image Search Result",
+              `Here's the image you searched for: ${searchTerm}`,
+              results[i].url,
+              conf.GURL
+            ),
+          },
+          { quoted: ms }
+        );
+      }
     }
   }
-});
+);
 
-keith({
-  nomCom: 'messi',
-  categorie: 'images',
-  reaction: '😋'
-}, async (dest, zk, context) => {
-  const { repondre: sendMessage, ms } = context;
-  try {
-    const response = await axios.get("https://raw.githubusercontent.com/Guru322/api/Guru/BOT-JSON/Messi.json");
-    const images = response.data;
+// Messi Images Command
+keith(
+  {
+    nomCom: 'messi',
+    categorie: 'images',
+    reaction: '😋',
+  },
+  async (dest, zk, context) => {
+    const { repondre: sendMessage, ms } = context;
+    try {
+      const response = await axios.get("https://raw.githubusercontent.com/Guru322/api/Guru/BOT-JSON/Messi.json");
+      const images = response.data;
 
-    if (!Array.isArray(images) || images.length === 0) {
-      throw new Error("No images found in the response.");
+      if (!Array.isArray(images) || images.length === 0) {
+        throw new Error("No images found in the response.");
+      }
+
+      for (let i = 0; i < 5; i++) {
+        const randomImage = Math.floor(Math.random() * images.length);
+        const image = images[randomImage];
+        await zk.sendMessage(
+          dest,
+          {
+            image: { url: image },
+            caption: `*Downloaded by ${conf.BOT}*`,
+            contextInfo: buildContextInfo(
+              "Modern-Logo Search Result",
+              `Here's an inspiring logo related to: messi`,
+              image,
+              conf.GURL
+            ),
+          },
+          { quoted: ms }
+        );
+      }
+    } catch (error) {
+      console.error("Error occurred while retrieving data:", error);
+      sendMessage("Error occurred while retrieving data: " + error.message);
     }
-
-    for (let i = 0; i < 5; i++) {
-      const randomImage = Math.floor(Math.random() * images.length);
-      const image = images[randomImage];
-      await zk.sendMessage(dest, {
-        image: { url: image },
-        caption: `*Downloaded by ${conf.BOT}*`,
-        contextInfo: {
-          externalAdReply: {
-            title: "Modern-Logo Search Result",
-            body: `Here's an inspiring logo related to: messi`,
-            thumbnailUrl: image,
-            sourceUrl: conf.GURL,
-            mediaType: 1,
-            showAdAttribution: true
-          }
-        }
-      }, { quoted: ms });
-    }
-  } catch (error) {
-    console.error("Error occurred while retrieving data:", error);
-    sendMessage("Error occurred while retrieving data: " + error.message);
   }
-});
-keith({
-  nomCom: "waifu",
-  categorie: "images",
-  reaction: "🙄"
-}, async (origineMessage, zk, commandeOptions) => {
-  const { repondre, ms } = commandeOptions;
-  const url = 'https://api.waifu.pics/nsfw/waifu'; // Replace with your actual URL
+);
 
-  try {
-    for (let i = 0; i < 5; i++) {
-      const response = await axios.get(url);
-      const imageUrl = response.data.url;
+// Waifu Command
+keith(
+  {
+    nomCom: "waifu",
+    categorie: "images",
+    reaction: "🙄",
+  },
+  async (origineMessage, zk, commandeOptions) => {
+    const { repondre, ms } = commandeOptions;
+    const url = 'https://api.waifu.pics/nsfw/waifu';
 
-      await zk.sendMessage(origineMessage, {
-        image: { url: imageUrl },
-        caption: `*Downloaded by ${conf.BOT}*`,
-        contextInfo: {
-          externalAdReply: {
-            title: "Image Search Result",
-            body: `Here's a great image related to: waifu`,
-            thumbnailUrl: imageUrl,
-            sourceUrl: conf.GURL,
-            mediaType: 1,
-            showAdAttribution: true
-          }
-        }
-      }, { quoted: ms });
+    try {
+      for (let i = 0; i < 5; i++) {
+        const response = await axios.get(url);
+        const imageUrl = response.data.url;
+
+        await zk.sendMessage(
+          origineMessage,
+          {
+            image: { url: imageUrl },
+            caption: `*Downloaded by ${conf.BOT}*`,
+            contextInfo: buildContextInfo(
+              "Image Search Result",
+              `Here's a great image related to: waifu`,
+              imageUrl,
+              conf.GURL
+            ),
+          },
+          { quoted: ms }
+        );
+      }
+    } catch (error) {
+      repondre('Error retrieving data: ' + error.message);
     }
-  } catch (error) {
-    repondre('Error retrieving data: ' + error.message);
   }
-});
-keith({
-  nomCom: "trap",
-  categorie: "images",
-  reaction: "🙄"
-}, async (origineMessage, zk, commandeOptions) => {
-  const { repondre, ms } = commandeOptions;
-  const url = 'https://api.waifu.pics/nsfw/trap'; // Replace with your actual URL
+);
 
-  try {
-    for (let i = 0; i < 5; i++) {
-      const response = await axios.get(url);
-      const imageUrl = response.data.url;
+// Trap Command
+keith(
+  {
+    nomCom: "trap",
+    categorie: "images",
+    reaction: "🙄",
+  },
+  async (origineMessage, zk, commandeOptions) => {
+    const { repondre, ms } = commandeOptions;
+    const url = 'https://api.waifu.pics/nsfw/trap';
 
-      await zk.sendMessage(origineMessage, {
-        image: { url: imageUrl },
-        caption: `*Downloaded by ${conf.BOT}*`,
-        contextInfo: {
-          externalAdReply: {
-            title: "Image Search Result",
-            body: `Here's a great image related to: waifu`,
-            thumbnailUrl: imageUrl,
-            sourceUrl: conf.GURL,
-            mediaType: 1,
-            showAdAttribution: true
-          }
-        }
-      }, { quoted: ms });
+    try {
+      for (let i = 0; i < 5; i++) {
+        const response = await axios.get(url);
+        const imageUrl = response.data.url;
+
+        await zk.sendMessage(
+          origineMessage,
+          {
+            image: { url: imageUrl },
+            caption: `*Downloaded by ${conf.BOT}*`,
+            contextInfo: buildContextInfo(
+              "Image Search Result",
+              `Here's a great image related to: waifu`,
+              imageUrl,
+              conf.GURL
+            ),
+          },
+          { quoted: ms }
+        );
+      }
+    } catch (error) {
+      repondre('Error retrieving data: ' + error.message);
     }
-  } catch (error) {
-    repondre('Error retrieving data: ' + error.message);
   }
-});
-keith({
-  nomCom: "hneko",
-  categorie: "images",
-  reaction: "🙄"
-}, async (origineMessage, zk, commandeOptions) => {
-  const { repondre, ms } = commandeOptions;
-  const url = 'https://api.waifu.pics/nsfw/neko'; // Replace with your actual URL
+);
 
-  try {
-    for (let i = 0; i < 5; i++) {
-      const response = await axios.get(url);
-      const imageUrl = response.data.url;
+// HNeko Command
+keith(
+  {
+    nomCom: "hneko",
+    categorie: "images",
+    reaction: "🙄",
+  },
+  async (origineMessage, zk, commandeOptions) => {
+    const { repondre, ms } = commandeOptions;
+    const url = 'https://api.waifu.pics/nsfw/neko';
 
-      await zk.sendMessage(origineMessage, {
-        image: { url: imageUrl },
-        caption: `*Downloaded by ${conf.BOT}*`,
-        contextInfo: {
-          externalAdReply: {
-            title: "Image Search Result",
-            body: `Here's a great image related to: waifu`,
-            thumbnailUrl: imageUrl,
-            sourceUrl: conf.GURL,
-            mediaType: 1,
-            showAdAttribution: true
-          }
-        }
-      }, { quoted: ms });
+    try {
+      for (let i = 0; i < 5; i++) {
+        const response = await axios.get(url);
+        const imageUrl = response.data.url;
+
+        await zk.sendMessage(
+          origineMessage,
+          {
+            image: { url: imageUrl },
+            caption: `*Downloaded by ${conf.BOT}*`,
+            contextInfo: buildContextInfo(
+              "Image Search Result",
+              `Here's a great image related to: waifu`,
+              imageUrl,
+              conf.GURL
+            ),
+          },
+          { quoted: ms }
+        );
+      }
+    } catch (error) {
+      repondre('Error retrieving data: ' + error.message);
     }
-  } catch (error) {
-    repondre('Error retrieving data: ' + error.message);
   }
-});
-keith({
-  nomCom: "blowjob",
-  categorie: "images",
-  reaction: "🙄"
-}, async (origineMessage, zk, commandeOptions) => {
-  const { repondre, ms } = commandeOptions;
-  const url = 'https://api.waifu.pics/nsfw/blowjob'; // Replace with your actual URL
+);
 
-  try {
-    for (let i = 0; i < 5; i++) {
-      const response = await axios.get(url);
-      const imageUrl = response.data.url;
+// Blowjob Command
+keith(
+  {
+    nomCom: "blowjob",
+    categorie: "images",
+    reaction: "🙄",
+  },
+  async (origineMessage, zk, commandeOptions) => {
+    const { repondre, ms } = commandeOptions;
+    const url = 'https://api.waifu.pics/nsfw/blowjob';
 
-      await zk.sendMessage(origineMessage, {
-        image: { url: imageUrl },
-        caption: `*Downloaded by ${conf.BOT}*`,
-        contextInfo: {
-          externalAdReply: {
-            title: "Image Search Result",
-            body: `Here's a great image related to: waifu`,
-            thumbnailUrl: imageUrl,
-            sourceUrl: conf.GURL,
-            mediaType: 1,
-            showAdAttribution: true
-          }
-        }
-      }, { quoted: ms });
+    try {
+      for (let i = 0; i < 5; i++) {
+        const response = await axios.get(url);
+        const imageUrl = response.data.url;
+
+        await zk.sendMessage(
+          origineMessage,
+          {
+            image: { url: imageUrl },
+            caption: `*Downloaded by ${conf.BOT}*`,
+            contextInfo: buildContextInfo(
+              "Image Search Result",
+              `Here's a great image related to: waifu`,
+              imageUrl,
+              conf.GURL
+            ),
+          },
+          { quoted: ms }
+        );
+      }
+    } catch (error) {
+      repondre('Error retrieving data: ' + error.message);
     }
-  } catch (error) {
-    repondre('Error retrieving data: ' + error.message);
   }
-});
+);
