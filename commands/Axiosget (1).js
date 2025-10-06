@@ -315,7 +315,7 @@ keith({
   const githubUsername = arg.join(" ");
 
   if (!githubUsername) {
-    return repondre("Give me a valid GitHub username like: github keithkeizzah");
+    return repondre("Give me a valid GitHub username like: github Beltah254");
   }
 
   try {
