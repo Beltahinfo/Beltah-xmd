@@ -2,7 +2,7 @@
 // Cleans up code, improves error handling, and updates command triggers.
 
 const { keith } = require("../keizzah/keith");
-const { uploadtoimgur } = require("../keizzah/imgur");
+const { uploadtoimgur } = require("../keizzah/imgurr");
 const axios = require("axios");
 
 // Configure your Gemini Vision API endpoint here.
