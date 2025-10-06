@@ -107,14 +107,14 @@ keith(
         const uptimeSeconds = Math.floor(process.uptime());
         const formattedUptime = formatRuntime(uptimeSeconds);
 
-        const message = `Hello 👋, ${nomAuteurMessage}, Don't forget to ⭐ and 🍴 our repo\n\n` +
-          `📌 *Uptime*: ${formattedUptime}\n` +
-          `⭐ *Total Stars*: ${repoInfo.stars}\n` +
-          `🍴 *Total Forks*: ${repoInfo.forks}\n` +
-          `👤 *Repository Owner*: ${repoInfo.owner}\n\n` +
-          `🔗 *Repository Link*: ${repoData.html_url}\n` +
-          `✅ *Session ID*: https://bel-tah-md-codes.onrender.com` +
-          `> Powered by Beltah Tech Team`;
+        const message = `Hello 👋, ${nomAuteurMessage}`+
+          `┏──────────────⊷\n` +
+          `┃Uptime: ${formattedUptime}\n` +
+          `┃Stars: ${repoInfo.stars}\n` +
+          `┃Forks: ${repoInfo.forks}\n` +
+          `┃Repo : github.com/Beltah254/BELTAH-MD-BOT\n` +
+          `┗──────────────⊷\n\n` +
+          `> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴇʟᴛᴀʜ ᴛᴇᴄʜ`;
 
         await reply.sendMessage(
           command,
