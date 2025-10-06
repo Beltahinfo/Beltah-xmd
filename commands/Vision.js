@@ -1,4 +1,4 @@
-const { Keith } = require("../keizzah/keith");
+const { keith } = require(__dirname + "/../keizzah/keith"); 
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
