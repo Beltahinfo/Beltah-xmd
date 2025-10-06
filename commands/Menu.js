@@ -172,7 +172,7 @@ function getCategoryCommandsStatic(selectedNumber) {
     }
     let text = `*╭─「 ${toFancyUppercaseFont(cat.name)} 」─╮*\n`;
     text += cat.commands.map(cmd => `┃ ◦ ${cmd}`).join("\n");
-    text += `\n╰──────────────╯\nReply '0' to go back to main menu.`;
+    text += `\n╰──────────────╯\nReply '${settings.PREFIXE} menu' to go back to main menu.`;
     return { text };
 }
 
@@ -215,23 +215,21 @@ keith({
         // Main menu message
         const menuMessage = `
 *╰► ${toFancyUppercaseFont(greeting)} ${nomAuteurMessage}!*
-╭───〔  *${toFancyUppercaseFont(settings.BOT)}* 〕──────┈⊷
-| *motivational quote*
-> ${randomQuote}
-├──────────────
-││▸ 𝗣𝗿𝗲𝗳𝗶𝘅: [ ${settings.PREFIXE} ]
-││▸ 𝗠𝗼𝗱𝗲: ${mode}
-││▸ 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: ${totalCommands}
-││▸ 𝗥𝗔𝗠: ${usedMemory}/${totalMemory}
-││▸ 𝗨𝗽𝘁𝗶𝗺𝗲: ${uptime}
-││▸ 𝗗𝗮𝘁𝗲: ${formattedDate}
-││▸ 𝗧𝗶𝗺𝗲: ${formattedTime}
-╰──────────────────────⊷
+┏──〘*${toFancyUppercaseFont(settings.BOT)}* 〙───⊷
+┃▸ 𝗣𝗿𝗲𝗳𝗶𝘅: [ ${settings.PREFIXE} ]
+┃▸ 𝗠𝗼𝗱𝗲: ${mode}
+┃▸ 𝗖𝗺𝗱𝘀: ${totalCommands}
+┃▸ 𝗥𝗔𝗠: ${totalMemory}
+┃▸ 𝗧𝗶𝗺𝗲: ${formattedTime}
+┃▸ 𝗗𝗮𝘁𝗲: ${formattedDate}
+┃▸ 𝗨𝗽𝘁𝗶𝗺𝗲: ${uptime}
+┗──────────────⊷
 
-╭───◇ *𝗖𝗔𝗧𝗘𝗚𝗢𝗥𝗜𝗘𝗦* ◇──────⊷
-│「 𝗥𝗲𝗽𝗹𝘆 𝘄𝗶𝘁𝗵 𝗻𝘂𝗺𝗯𝗲𝗿𝘀 𝗯𝗲𝗹𝗼𝘄 」
+©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴇʟᴛᴀʜ ᴛᴇᴄʜ/n${readmore} 
+┏──◇ *𝗖𝗔𝗧𝗘𝗚𝗢𝗥𝗜𝗘𝗦* ◇───⊷
+┃「 𝗥𝗲𝗽𝗹𝘆 𝘄𝗶𝘁𝗵 𝗻𝘂𝗺𝗯𝗲𝗿𝘀 𝗯𝗲𝗹𝗼𝘄 」
 ${categoryCommands.map((cat, index) => `> │◦➛ ${index + 1}. ${toFancyUppercaseFont(cat.name)}`).join("\n")}
-╰─────────────────────┈⊷
+┗─────────────────⊷
 `.trim();
 
         // Send loading reaction
@@ -244,7 +242,7 @@ ${categoryCommands.map((cat, index) => `> │◦➛ ${index + 1}. ${toFancyUpper
                 mentionedJid: [dest],
                 externalAdReply: {
                     title: `${settings.BOT} Menu`,
-                    body: `By ${settings.OWNER_NAME}`,
+                    body: `${randomQuote}`,
                     thumbnailUrl: settings.URL,
                     sourceUrl: settings.GURL,
                     mediaType: 1,
