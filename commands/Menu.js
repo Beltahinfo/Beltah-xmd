@@ -222,7 +222,7 @@ const getContextInfo = (title = '', userJid = '', thumbnailUrl = '') => ({
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
         newsletterJid: "120363249464136503@newsletter",
-        newsletterName: "Beltah Tech Updates",
+        newsletterName: " ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴇʟᴛᴀʜ ᴛᴇᴄʜ",
         serverMessageId: Math.floor(100000 + Math.random() * 900000),
     },
     externalAdReply: {
@@ -238,7 +238,7 @@ const getContextInfo = (title = '', userJid = '', thumbnailUrl = '') => ({
         // Main menu message
         const menuMessage = `
 
-┏──〘*${toFancyUppercaseFont(settings.BOT)}* 〙───⊷
+┏──〘 ${toFancyUppercaseFont(settings.BOT)} 〙───⊷
 ┃▸ 𝗣𝗿𝗲𝗳𝗶𝘅: [ ${settings.PREFIXE} ]
 ┃▸ 𝗠𝗼𝗱𝗲: ${mode}
 ┃▸ 𝗖𝗺𝗱𝘀: ${totalCommands}
