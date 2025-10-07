@@ -63,7 +63,7 @@ function getContextInfo(
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
         newsletterJid: "120363276287415739@newsletter",
-        newsletterName: "BELTAH-MD BOT",
+        newsletterName: "ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴇʟᴛᴀʜ ᴛᴇᴄʜ",
         serverMessageId: Math.floor(100000 + Math.random() * 900000),
       },
       externalAdReply: {
@@ -107,7 +107,7 @@ keith(
         const uptimeSeconds = Math.floor(process.uptime());
         const formattedUptime = formatRuntime(uptimeSeconds);
 
-        const message = `Hello 👋, ${nomAuteurMessage}`+
+        const message = `Hello 👋, ${nomAuteurMessage}\n\n`+
           `┏──────────────⊷\n` +
           `┃Uptime: ${formattedUptime}\n` +
           `┃Stars: ${repoInfo.stars}\n` +
