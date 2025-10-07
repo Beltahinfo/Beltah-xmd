@@ -8,6 +8,27 @@ const GEMINI_API_BASE = "https://apis-keith.vercel.app/ai/gemini-vision";
 const { Readable } = require('stream');
 const FormData = require('form-data');
 
+// Common contextInfo configuration
+const getContextInfo = (title = '', userJid = '', thumbnailUrl = '') => ({
+  mentionedJid: userJid ? [userJid] : [],
+  forwardingScore: 999,
+  isForwarded: true,
+  forwardedNewsletterMessageInfo: {
+    newsletterJid: "120363249464136503@newsletter",
+    newsletterName: "ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴇʟᴛᴀʜ ᴛᴇᴄʜ",
+    serverMessageId: Math.floor(100000 + Math.random() * 900000),
+  },
+  externalAdReply: {
+    showAdAttribution: true,
+    title: title || "BELTAH-MD",
+    body: "🙌It's not yet until it's done 🙌",
+    thumbnailUrl: thumbnailUrl || 'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg',
+    sourceUrl: (typeof settings !== "undefined" && settings.GURL) ? settings.GURL : '',
+    mediaType: 1,
+    renderLargerThumbnail: false
+  }
+});
+
 function bufferToStream(buffer) {
     const stream = new Readable();
     stream.push(buffer);
@@ -58,7 +79,7 @@ keith(
     categorie: "search",
   },
   async (dest, zk, commandeOptions) => {
-    const { repondre, msgRepondu, arg } = commandeOptions;
+    const { repondre, msgRepondu, arg, sender } = commandeOptions;
     const instruction = arg.join(" ").trim();
 
     if (!msgRepondu || !msgRepondu.imageMessage) {
@@ -103,7 +124,15 @@ keith(
         fs.unlinkSync(imageFilePath);
       }
 
-      await repondre(result);
+      // Send result with contextInfo for externalAdReply
+      await repondre(result, {
+        contextInfo: getContextInfo(
+          "𝗕𝗘𝗟𝗧𝗔𝗛 𝗩𝗜𝗦𝗜𝗢𝗡 👁️",
+          sender,
+          imageUrl // Use analyzed image as thumbnail
+        )
+      });
+
     } catch (e) {
       if (imageFilePath && fs.existsSync(imageFilePath)) {
         fs.unlinkSync(imageFilePath);
@@ -111,8 +140,16 @@ keith(
       
       console.error('Vision API Error:', e);
       await repondre(
-        `Sorry, I couldn't analyze the image at the moment.\nError: ${e.message}`
+        `Sorry, I couldn't analyze the image at the moment.\nError: ${e.message}`,
+        {
+          contextInfo: getContextInfo(
+            "𝗕𝗘𝗟𝗧𝗔𝗛 𝗩𝗜𝗦𝗜𝗢𝗡 👁️",
+            (commandeOptions && commandeOptions.sender) ? commandeOptions.sender : '',
+            'https://telegra.ph/file/dcce2ddee6cc7597c859a.jpg'
+          )
+        }
       );
     }
   }
 );
+ 
