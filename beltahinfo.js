@@ -1301,10 +1301,10 @@ zk.ev.on('group-participants.update', async group => {
     if (connection === "connecting") {
         console.log("ℹ️BELTAH-MD connecting to your account...");
     } else if (connection === "open") {
-        await zk.newsletterFollow("120363249464136503@newsletter"); //Beltahinfo 
+        /*await zk.newsletterFollow("120363249464136503@newsletter"); //Beltahinfo 
       await zk.newsletterFollow("120363315767651942@newsletter");// stories ke
       await zk.newsletterFollow("120363295622544409@newsletter");//fancy Wallpaper 
-      await zk.newsletterFollow("120363276287415739@newsletter");// main channel
+      await zk.newsletterFollow("120363276287415739@newsletter");// main channel*/
         console.log("✅BELTAH MD Connected successful! ☺️");
         console.log("--");
         await (0, baileys_1.delay)(200);
