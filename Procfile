@@ -1,1 +1,2 @@
-worker: node beltahinfo.js
+web: node server.js
+worker: node beltahinfo.js 
