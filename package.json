@@ -8,9 +8,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "s": "node beltahinfo.js",
     "start": "node beltahinfo.js",
-    "beltahinc": "pm2 start beltahinfo.js --attach --max-memory-restart 490M",
+    "beltahinc": "node beltahinfo.js",
     "c": "tsc"
-  },
+  }
+  }, 
   "keywords": [
     "bot",
     "Baileys",
@@ -155,6 +156,7 @@
     "youtubedl-core": "^4.11.7"
   }
   }
+
 
 
 
