@@ -304,7 +304,9 @@ setTimeout(() => {
                       groupInfo = `\n• Group: ${groupMetadata.subject}`;
                     } catch { groupInfo = '\n• Group information unavailable.'; }
                   }
-                  const notification = `🫟 *BELTAH-MD ANTIDELETE* 🫟\n• Deleted by: @${deleterJid.split("@")[0]}\n• Original sender: @${originalSenderJid.split("@")[0]}\n${groupInfo}\n•[...]`;
+
+                  // fixed: close the template string properly
+                  const notification = `🫟 *BELTAH-MD ANTIDELETE* 🫟\n• Deleted by: @${deleterJid.split("@")[0]}\n• Original sender: @${originalSenderJid.split("@")[0]}\n${groupInfo}\n• Message recovered`;
                   const contextInfo = {
                     mentionedJid: [deleterJid, originalSenderJid],
                     forwardingScore: 999,
@@ -747,7 +749,8 @@ setTimeout(() => {
  ╰═══════════════⩥
 
 > ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴇʟᴛᴀʜ ᴛᴇᴄʜ © 2025`;
-              await zk.sendMessage(zk.user.id, { text: cmsg, contextInfo: getContextInfo(' ✅ 𝗕𝗘𝗟𝗧𝗔𝗛-𝗠𝗗 𝗔𝗖𝗧𝗜𝗩𝗔𝗧𝗘𝗗 ✅ ', zk.user.id) }).catch(([...]
+              // fixed: avoid broken/corrupted ".catch" and ensure proper empty handler
+              await zk.sendMessage(zk.user.id, { text: cmsg, contextInfo: getContextInfo(' ✅ 𝗕𝗘𝗟𝗧𝗔𝗛-𝗠𝗗 𝗔𝗖𝗧𝗜𝗩𝗔𝗧𝗘𝗗 ✅ ', zk.user.id) }).catch(() => {});
             }
           } else if (connection === "close") {
             const reasonCode = new Boom(lastDisconnect?.error)?.output.statusCode;
