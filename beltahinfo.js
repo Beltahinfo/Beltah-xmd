@@ -304,7 +304,7 @@ setTimeout(() => {
                       groupInfo = `\n• Group: ${groupMetadata.subject}`;
                     } catch { groupInfo = '\n• Group information unavailable.'; }
                   }
-                  const notification = `🫟 *BELTAH-MD ANTIDELETE* 🫟\n• Deleted by: @${deleterJid.split("@")[0]}\n• Original sender: @${originalSenderJid.split("@")[0]}\n${groupInfo}\n• Chat type: ${isGroup ? 'Group' : 'Private'}`;
+                  const notification = `🫟 *BELTAH-MD ANTIDELETE* 🫟\n• Deleted by: @${deleterJid.split("@")[0]}\n• Original sender: @${originalSenderJid.split("@")[0]}\n${groupInfo}\n•[...]`;
                   const contextInfo = {
                     mentionedJid: [deleterJid, originalSenderJid],
                     forwardingScore: 999,
@@ -605,7 +605,8 @@ setTimeout(() => {
                       let req = await isGroupBanned(origineMessage).catch(() => false);
                       if (req) continue;
                     }
-                    if (!verifAdmin && verifGroupe) {
+                    // Fixed: verifAdmin was undefined; use superUser flag for this check
+                    if (!superUser && verifGroupe) {
                       let req = await isGroupOnlyAdmin(origineMessage).catch(() => false);
                       if (req) continue;
                     }
@@ -738,15 +739,15 @@ setTimeout(() => {
             if ((conf.DP || "").toLowerCase() === "yes") {
               let md = (conf.MODE || "").toLowerCase() === "yes" ? "PUBLIC" : "PRIVATE";
               let cmsg = `╭══════════⩥
-║ 🅰︎🅳︎🅼︎🅸︎🅽︎ :  *${conf.OWNER_NAME || ''}*
-║ 🅿︎🆁︎🅴︎🆅︎🅸︎🅾︎ : [  ${prefixe}  ]
-║ 🅼︎🅾︎🅳︎🅴︎ :  ${md} MODE
-║ 🅿︎🅻︎🆄︎🅶︎🅸︎🅽︎🆂︎ : ${evt.cm?.length || 0}
-║ 🅿︎🅾︎🆆︎🅴︎🆁︎🆂︎ : *BELTAH TECH TEAM*
-╰═══════════════⩥
+ ║ 🅰︎🅳︎🅼︎🅸︎🅽︎ :  *${conf.OWNER_NAME || ''}*
+ ║ 🅿︎🆁︎🅴︎🆅︎🅸︎🅾︎ : [  ${prefixe}  ]
+ ║ 🅼︎🅾︎🅳︎🅴︎ :  ${md} MODE
+ ║ 🅿︎🅻︎🆄︎🅶︎🅸︎🅽︎🆂︎ : ${evt.cm?.length || 0}
+ ║ 🅿︎🅾︎🆆︎🅴︎🆁︎🆂︎ : *BELTAH TECH TEAM*
+ ╰═══════════════⩥
 
 > ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴇʟᴛᴀʜ ᴛᴇᴄʜ © 2025`;
-              await zk.sendMessage(zk.user.id, { text: cmsg, contextInfo: getContextInfo(' ✅ 𝗕𝗘𝗟𝗧𝗔𝗛-𝗠𝗗 𝗔𝗖𝗧𝗜𝗩𝗔𝗧𝗘𝗗 ✅ ', zk.user.id) }).catch(() => {});
+              await zk.sendMessage(zk.user.id, { text: cmsg, contextInfo: getContextInfo(' ✅ 𝗕𝗘𝗟𝗧𝗔𝗛-𝗠𝗗 𝗔𝗖𝗧𝗜𝗩𝗔𝗧𝗘𝗗 ✅ ', zk.user.id) }).catch(([...]
             }
           } else if (connection === "close") {
             const reasonCode = new Boom(lastDisconnect?.error)?.output.statusCode;
